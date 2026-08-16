@@ -1,0 +1,2214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cycling Manager 2026</title>
+<style>
+:root{
+  --bg:#0e1420;--panel:#161e2e;--panel2:#1c2638;--line:#2a3650;
+  --txt:#e8edf5;--dim:#8fa0b8;--acc:#ffcc33;--ok:#4cd97b;--warn:#ff6b5e;--info:#4da3ff;
+  --wt:#4da3ff;--pt:#c78bff;
+  font-size:15px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:30px}
+button{font-family:inherit}
+.wrap{max-width:1050px;margin:0 auto;padding:10px}
+/* Top bar */
+#top{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#101828,#0e1420ee);border-bottom:1px solid var(--line);padding:8px 12px;display:flex;gap:10px;align-items:center;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+#top::-webkit-scrollbar{display:none}
+#top .tn{max-width:30vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--acc)}
+#top .jersey{width:18px;height:18px}
+#top b{color:var(--acc)}
+#top .it{font-size:.8rem;color:var(--dim)}
+#top .it b{font-size:.9rem}
+.jersey{display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:6px;vertical-align:-2px;border:1px solid rgba(255,255,255,.25)}
+/* Tabs */
+.tabs{display:flex;gap:6px;margin:10px 0;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{background:var(--panel);border:1px solid var(--line);color:var(--dim);padding:7px 12px;border-radius:8px;cursor:pointer;font-size:.84rem;white-space:nowrap;flex:0 0 auto}
+.tabs button.on{background:var(--acc);color:#1a1a1a;border-color:var(--acc);font-weight:600}
+.btn{background:var(--acc);color:#1a1a1a;border:none;padding:10px 20px;border-radius:9px;font-weight:700;cursor:pointer;font-size:.95rem}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.sec{background:var(--panel2);color:var(--txt);border:1px solid var(--line);font-weight:500}
+.btn.warn{background:var(--warn);color:#fff}
+/* Tables / cards */
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{color:var(--dim);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap;user-select:none}
+td{padding:6px 8px;border-bottom:1px solid var(--panel2);white-space:nowrap}
+tr:hover td{background:var(--panel)}
+tr.me td{background:#1e2a1e}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.card h3{font-size:1rem;color:var(--acc);margin-bottom:8px}
+.stat{color:var(--dim);font-size:.78rem}
+.n90{color:var(--acc);font-weight:700}.n80{color:var(--ok)}.n70{color:var(--txt)}.nlo{color:var(--dim)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){
+.grid2{grid-template-columns:1fr}
+:root{font-size:13px}
+table{font-size:.7rem}
+td,th{padding:4px 5px}
+.tabs button{padding:6px 9px;font-size:.76rem}
+#top{gap:8px;padding:6px 8px}
+#top .it{font-size:.7rem}
+.selrow{font-size:.76rem;gap:6px;padding:6px 6px}
+.selrow .nm{min-width:108px}
+.btn{padding:9px 15px;font-size:.85rem}
+}
+.btn.sm{padding:6px 10px;font-size:.78rem}
+/* Fiches coureur / équipe */
+#panel{position:fixed;inset:0;background:#0a0f18cc;display:none;z-index:60;align-items:flex-end;justify-content:center}
+#panel.on{display:flex}
+#pbox{background:var(--panel);border:1px solid var(--line);border-radius:16px 16px 0 0;max-height:82vh;overflow-y:auto;width:100%;max-width:640px;padding:16px}
+.lnk{cursor:pointer;text-decoration:underline dotted rgba(255,255,255,.22);text-underline-offset:3px}
+.attr{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:8px 0}
+.attr div{background:var(--panel2);border-radius:8px;text-align:center;padding:6px 2px;font-size:.68rem;color:var(--dim)}
+.attr b{display:block;font-size:.95rem}
+/* Frise d'étapes */
+.frise{display:flex;gap:2px;flex-wrap:wrap;margin-top:4px}
+.fs{width:20px;height:20px;border-radius:4px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--dim)}
+.fs.done{opacity:.35}
+.fs.cur{background:var(--acc);color:#111;font-weight:700}
+/* Lignes compactes */
+.selrow.one{flex-wrap:nowrap;overflow:hidden}
+.selrow.one .nm{flex:1 1 auto;min-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.selrow.dis{opacity:.45}
+.pk{font-size:.68rem;color:var(--dim);white-space:nowrap}
+.pk.hot{color:var(--ok);font-weight:700}
+/* Couverture des périodes */
+.covgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:8px}
+.cov{border-radius:8px;padding:6px 2px;text-align:center;font-size:.66rem;display:flex;flex-direction:column;gap:2px}
+.cok{background:#1f4d2c;color:#9fe8b5}.cmid{background:#4d3d1f;color:#ffd97a}.cko{background:#4d1f1f;color:#ffb0a8}
+.jbtn{cursor:pointer}.jon{box-shadow:0 0 0 2px var(--txt)}
+.jrow{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin:4px 0;scrollbar-width:none}
+.jrow::-webkit-scrollbar{display:none}
+.jrow .pill{white-space:nowrap;flex:0 0 auto}
+@media(max-width:700px){.selrow.one{font-size:.72rem;gap:5px}}
+.stick th:first-child,.stick td:first-child{position:sticky;left:0;background:var(--bg);z-index:2}
+.stick tr:hover td:first-child{background:var(--panel)}
+.stick tr.me td:first-child{background:#1e2a1e}
+/* Fatigue / forme bars */
+.bar{display:inline-block;width:52px;height:8px;background:var(--panel2);border-radius:4px;overflow:hidden;vertical-align:middle}
+.bar i{display:block;height:100%}
+/* Selection */
+.selrow{display:flex;align-items:center;gap:8px;padding:7px 8px;border-bottom:1px solid var(--panel2);font-size:.84rem;flex-wrap:wrap}
+.selrow.on{background:#20301f}
+.selrow input[type=checkbox]{width:17px;height:17px;accent-color:var(--acc)}
+.selrow input[type=radio]{accent-color:var(--warn)}
+.selrow .nm{min-width:150px;font-weight:600}
+select{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:5px 8px;border-radius:7px;font-size:.82rem}
+.tag{font-size:.68rem;padding:1px 7px;border-radius:10px;font-weight:600;background:var(--panel2);color:var(--dim)}
+.tag.mon{background:#3d2b52;color:#d9b8ff}.tag.spr{background:#14324a;color:#8fd0ff}.tag.gc{background:#4a3812;color:#ffd97a}
+.tag.warn{background:#4a1f1c;color:#ffb0a8}
+.ldr{color:#ffd97a!important;font-weight:800}.lt{color:#cdd8ea!important;font-weight:700}.tag.fla{background:#4a2418;color:#ff9a70}
+.tag.rou{background:#143d33;color:#7fe0c3}.tag.chrt{background:#2a3550;color:#aab8e8}
+.tag.pchamp{background:#4a1230;color:#ff9ad5}.tag.plead{background:#4a3812;color:#ffd97a}.tag.plt{background:#2e3a4d;color:#cdd8ea}.tag.peq{background:var(--panel2);color:var(--dim)}
+.pill{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.72rem;background:var(--panel2);color:var(--dim);margin-right:6px}
+/* Overlays */
+#veil{position:fixed;inset:0;background:#0a0f18e6;display:none;align-items:center;justify-content:center;z-index:50;flex-direction:column;gap:14px}
+#veil.on{display:flex}
+.pkchips{display:flex;gap:5px;margin-top:6px}
+.pkc{flex:1;text-align:center;padding:7px 0;border-radius:8px;border:1px solid var(--panel2);color:var(--dim);font-size:.75rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.pkc.on{background:#1d4a30;border-color:#2e7d4f;color:#9fe6b4;font-weight:700}
+.dgt{margin-top:8px;display:flex;flex-direction:column;gap:4px}
+.dgtrow{display:flex;gap:5px;align-items:center;font-size:.72rem;min-width:0}
+.dgtrow b{width:52px;flex:none;color:var(--dim)}
+.ddot{padding:2px 6px;border-radius:8px;font-size:.66rem;max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ddot.don{background:#1d4a30;color:#9fe6b4}
+.ddot.dko{background:#3a1d1d;color:#c98a8a}
+.seltab{font-size:.78rem}
+.seltab td{white-space:nowrap;padding:6px 3px}
+.seltab th{padding:6px 3px;white-space:nowrap}
+.seltab th.srt{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.seltab th.srt.on{color:var(--acc)}
+.seltab .bar{width:28px}
+.seltab .tag{font-size:.6rem;padding:1px 4px}
+.seltab td.selnm{max-width:27vw;overflow:hidden;text-overflow:ellipsis}
+.seltab tr.son td{background:#1d2f1c}
+.seltab tr.sdis{opacity:.4}
+.seltab input{width:15px;height:15px}
+#notice{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:var(--panel2);border:1px solid var(--acc);color:var(--txt);padding:10px 16px;border-radius:10px;font-size:.85rem;z-index:70;display:none;max-width:90vw;text-align:center;box-shadow:0 4px 18px #0008}
+.spin{width:38px;height:38px;border:4px solid var(--panel2);border-top-color:var(--acc);border-radius:50%;animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* Accueil */
+.home{max-width:760px;margin:40px auto;text-align:center;padding:14px}
+.home h1{font-size:1.8rem;color:var(--acc);margin-bottom:6px}
+.home p{color:var(--dim);margin-bottom:18px}
+.tlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;text-align:left}
+.tpick{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;cursor:pointer;font-size:.85rem}
+.tpick:hover{border-color:var(--acc)}
+.tpick .stat{display:block;margin-top:3px}
+.hl{color:var(--acc);font-weight:700}
+.ok{color:var(--ok)}.ko{color:var(--warn)}
+h2.sec{font-size:1.1rem;color:var(--acc);margin:14px 0 8px}
+.evt{font-size:.82rem;color:var(--dim);padding:3px 0}
+.evt b{color:var(--txt)}
+</style>
+</head>
+<body>
+<div id="top" style="display:none"></div>
+<div class="wrap" id="app"></div>
+<div id="veil"><div class="spin"></div><div id="veiltxt" class="stat">Simulation…</div></div>
+<div id="panel"><div id="pbox"></div></div>
+<div id="notice"></div>
+
+<script>
+"use strict";
+// [nom, nat, tier(0 WT/1 PT), gt, budget M€, couleur maillot, accent]
+const TEAMS=[["UAE Team Emirates XRG","UAE",0,7,55,"#ffffff","#d71920"],["Visma Lease a Bike","NED",0,7,46,"#f9e300","#111111"],["Red Bull BORA hansgrohe","GER",0,7,50,"#0a1e3c","#e30613"],["Lidl-Trek","GER",0,7,46,"#0050aa","#e4002b"],["Netcompany INEOS","GBR",0,7,44,"#c8102e","#001a3a"],["Soudal Quick-Step","BEL",0,7,36,"#1a3668","#e3001b"],["Alpecin-Premier Tech","BEL",0,7,28,"#f4f4f4","#1c3f94"],["Decathlon CMA CGM","FRA",0,7,40,"#0082c3","#e0004d"],["EF Education-EasyPost","USA",0,7,26,"#ff65b1","#111111"],["Groupama-FDJ United","FRA",0,7,32,"#0f1f4b","#e2001a"],["Lotto Intermarché","BEL",0,7,26,"#e30613","#ffffff"],["Movistar Team","ESP",0,7,28,"#00286c","#00b8ec"],["NSN Cycling Team","SUI",0,7,32,"#0f4c81","#f4f4f4"],["Team Jayco AlUla","AUS",0,7,25,"#5a2d81","#ffd200"],["Team Picnic PostNL","NED",0,7,24,"#1f3564","#ff7900"],["Bahrain-Victorious","BRN",0,7,30,"#c8102e","#f7b500"],["Uno-X Mobility","NOR",0,7,22,"#ffd500","#e4002b"],["XDS Astana Team","KAZ",0,7,26,"#00c1d5","#ffd700"],["Tudor Pro Cycling","SUI",1,7,20,"#111111","#e10600"],["Pinarello-Q36.5","SUI",1,7,18,"#4a5d5a","#f4f4f4"],["Cofidis","FRA",1,6,15,"#e4002b","#ffffff"],["TotalEnergies","FRA",1,2,12,"#c8102e","#003da5"],["Unibet Rose Rockets","FRA",1,1,11,"#147b45","#ffffff"],["Team Polti VisitMalta","ITA",1,1,7,"#e2001a","#ffffff"],["Bardiani CSF Faizanè","ITA",1,1,7,"#00a651","#e2001a"],["Caja Rural-Seguros RGA","ESP",1,2,8,"#00843d","#ffffff"],["Burgos Burpellet BH","ESP",1,4,7,"#5b2a86","#ffd200"],["Equipo Kern Pharma","ESP",1,4,8,"#00a19a","#ffffff"],["Euskaltel-Euskadi","ESP",1,0,7,"#ff7f00","#ffffff"],["Team Flanders-Baloise","BEL",1,0,6,"#ffd700","#111111"],["Team Novo Nordisk","USA",1,0,6,"#00b5e2","#003a70"],["MBH Bank CSB Telecom Fort","HUN",1,0,5,"#0f6b3c","#ffffff"],["Modern Adventure Pro Cycling","USA",1,0,6,"#1c2b4a","#f2a900"],["Solution Tech NIPPO Rali","ITA",1,0,5,"#0a3d62","#e84118"]];
+
+// [nom, nat, naissance, PLA,MON,SPR,CHR,PUN,END,POT]
+const ROSTERS=[
+// UAE Team Emirates XRG
+[["T. Pogačar","SLO",1998,85,95,62,89,91,93,86],["J. Almeida","POR",1998,80,91,63,89,82,92,83],["I. Del Toro","MEX",2003,76,90,64,83,86,89,84],["A. Morgado","POR",2004,89,64,83,78,77,83,83],["J. Narváez","ECU",1997,83,76,72,70,87,82,78],["T. Wellens","BEL",1991,86,58,74,85,83,81,78],["B. McNulty","USA",1997,82,82,60,84,74,83,78],["J. Christen","SUI",2004,75,87,57,82,74,86,81],["N. Politt","GER",1994,86,59,74,85,71,82,76],["B. Cosnefroy","FRA",1995,73,76,66,69,83,79,74],["J. Vine","AUS",1995,64,83,53,82,73,83,73],["P. Torres","ESP",2005,66,87,52,71,77,81,78],["A. Yates","GBR",1992,67,83,54,71,77,81,72],["F. Vermeersch","BEL",1998,83,54,73,70,71,76,71],["M. Bjerg","DEN",1998,77,64,59,81,69,76,71],["K. Vermaerke","USA",2000,69,79,53,75,69,79,71],["F. Baroncini","ITA",2000,83,53,73,68,72,75,71],["P. Sivakov","FRA",1997,62,82,52,70,72,83,70],["M. Soler","ESP",1993,62,83,48,67,73,81,69],["A. Pericas","ESP",2006,67,79,52,71,68,77,77],["I. Arrieta","ESP",2002,61,80,49,69,69,80,70],["J. S. Molano","COL",1994,77,48,79,59,64,70,66],["I. Oliveira","POR",1996,70,57,54,75,63,75,66],["F. Großschartner","AUT",1993,57,77,49,64,69,75,65],["R. Oliveira","POR",1996,73,48,65,66,65,69,64],["J. Johansen","DEN",1999,71,55,51,74,59,70,63],["R. Herregodts","BEL",1998,66,57,48,75,60,71,63],["D. Novak","SLO",1995,53,74,43,61,67,74,62],["L. Giaimi","ITA",2004,63,50,45,67,56,64,62],["V. S. Laengen","NOR",1989,53,64,39,62,53,66,56]],
+// Visma Lease a Bike
+[["W. Van Aert","BEL",1994,89,63,87,86,84,91,83],["M. Brennan","GBR",2005,83,85,84,83,76,85,89],["J. Vingegaard","DEN",1996,79,93,63,90,78,93,83],["M. Jorgenson","USA",1999,77,87,62,87,84,87,81],["C. Laporte","FRA",1992,83,56,83,74,75,82,76],["D. Piganzoli","ITA",2002,72,83,57,77,74,85,77],["J. Nordhagen","NOR",2004,68,83,51,75,71,83,76],["P. S. Hagenes","NOR",2003,83,54,74,72,70,77,75],["E. Affini","ITA",1996,75,63,59,82,68,82,72],["S. Kuss","USA",1994,62,85,52,69,76,83,71],["L. van Belle","NED",2002,68,70,66,65,80,75,73],["V. Campenaerts","BEL",1991,73,61,59,81,69,76,70],["A. Zingle","FRA",1998,66,68,62,62,80,75,69],["B. Tulett","GBR",2001,62,80,49,69,72,80,69],["B. Armirail","FRA",1994,72,61,55,80,67,77,69],["B. Lemmen","NED",1995,62,82,50,64,69,78,68],["T. Kielich","BEL",1999,77,52,71,66,66,73,68],["N. Behrens","GER",2003,77,52,67,67,67,75,71],["W. Kelderman","NED",1991,66,76,47,70,68,77,67],["L. Barré","FRA",2000,59,81,50,67,70,76,67],["F. Fiorelli","ITA",1994,63,68,62,61,76,72,67],["F. Jakobsen","NED",1996,77,49,79,58,62,69,66],["A. Schiffer","GER",1999,62,77,46,69,63,76,66],["T. Graat","NED",2002,63,76,44,69,63,72,66],["M. Huising","NED",2003,67,58,51,72,60,71,66],["T. Rex","BEL",2003,60,68,42,64,62,71,64],["O. Doull","GBR",1993,69,45,59,59,58,64,59],["P. Mattio","ITA",2003,56,57,54,54,67,61,61],["S. Kruijswijk","NED",1987,57,68,41,61,56,66,58]],
+// Red Bull BORA hansgrohe
+[["R. Evenepoel","BEL",2000,80,90,67,94,86,92,85],["F. Lipowitz","GER",2000,78,91,59,86,81,91,81],["P. Roglič","SLO",1989,76,85,57,83,75,89,78],["M. Van Gils","BEL",1999,74,77,68,71,84,80,76],["A. Vlasov","RUS",1996,69,84,56,80,75,85,75],["L. Pithie","NZL",2002,81,59,75,72,70,80,75],["F. Fisher-Black","NZL",2001,69,80,52,77,71,79,71],["J. Hindley","AUS",1996,62,86,54,68,73,83,71],["J. Meeus","BEL",1998,80,51,84,65,68,77,71],["G. Pellizzari","ITA",2003,64,84,52,69,74,81,74],["L. Tuckwell","AUS",2004,69,79,49,76,68,81,74],["D. F. Martínez","COL",1996,66,79,52,72,71,77,70],["J. Tratnik","SLO",1990,75,60,55,82,65,79,69],["G. Vermeersch","BEL",1992,78,52,69,67,69,76,68],["N. Denz","GER",1994,80,54,70,65,68,74,68],["E. Herzog","GER",2004,79,54,70,67,67,73,72],["M. van Dijke","NED",2000,66,67,63,64,78,70,68],["T. van Dijke","NED",2000,77,51,68,66,69,74,68],["D. van Poppel","NED",1993,80,50,82,60,61,71,67],["F. Wandahl","DEN",2001,77,52,68,67,65,72,67],["M. Cattaneo","ITA",1990,72,58,52,79,64,73,66],["J. Drizners","AUS",1999,74,51,68,65,65,70,66],["A. Boichis","FRA",2002,60,66,57,61,76,71,67],["G. Aleotti","ITA",1999,58,77,46,64,67,77,65],["A. Marit","BEL",1999,75,44,76,60,59,70,64],["H. Etxeberria","ESP",2003,75,48,63,62,63,72,67],["B. Zwiehoff","GER",1994,58,76,42,61,67,72,63],["A. Hajek","AUT",2003,61,72,42,66,63,72,66],["C. Thornley","GBR",2003,66,56,48,74,60,67,65],["G. Moscon","ITA",1994,69,44,62,59,61,65,60]],
+// Lidl-Trek
+[["M. Pedersen","DEN",1995,90,63,88,82,78,90,82],["M. Skjelmose","DEN",2000,76,90,62,82,85,88,80],["J. Ayuso","ESP",2002,79,89,61,87,79,87,82],["J. Milan","ITA",2000,80,59,92,74,72,88,78],["D. Gee","CAN",1997,72,85,59,85,74,85,77],["M. Vacek","CZE",2002,86,60,76,83,75,78,78],["T. Nys","BEL",2002,75,75,70,71,84,81,78],["G. Ciccone","ITA",1994,63,85,55,72,84,83,74],["Q. Simmons","USA",2001,84,58,75,72,70,80,73],["T. Skujiņš","LAT",1991,68,72,64,67,82,73,71],["J. Söderqvist","SWE",2003,77,65,55,82,66,76,73],["A. Withen Philipsen","DEN",2006,81,55,72,68,66,77,78],["A. Bagioli","ITA",1999,64,71,63,64,77,75,69],["C. Verona","ESP",1992,63,79,47,71,68,78,68],["S. Kragh Andersen","DEN",1994,79,51,69,65,68,73,68],["M. Sobrero","ITA",1997,74,58,55,77,62,74,67],["E. Theuns","BEL",1991,78,49,69,65,67,72,67],["J. Bernard","FRA",1992,63,76,46,71,63,74,66],["B. Mollema","NED",1986,57,79,43,65,69,74,64],["T. T. Teutenberg","GER",2002,72,46,80,60,60,69,66],["S. Consonni","ITA",1994,73,45,79,60,59,68,64],["M. Walscheid","GER",1993,71,45,76,59,61,69,64],["A. Ghebreigzabhier","ERI",1994,63,71,44,67,63,73,64],["J. Mosca","ITA",1993,59,61,58,59,74,69,63],["T. Geoghegan Hart","GBR",1995,60,72,43,66,62,74,63],["P. Konrad","AUT",1991,55,76,43,63,65,75,63],["S. Oomen","NED",1995,59,70,43,68,62,71,62],["O. Vergaerde","BEL",1994,69,42,60,58,56,65,58],["M. Norsgaard","DEN",1997,64,52,44,67,56,65,58],["L. Kämna","GER",1996,48,68,36,53,60,66,55]],
+// Netcompany INEOS
+[["O. Onley","GBR",2003,76,88,60,80,78,88,81],["F. Ganna","ITA",1996,85,68,62,88,75,89,78],["A. Laurance","FRA",2001,82,76,68,70,86,77,76],["C. Rodríguez","ESP",2001,75,84,56,82,75,86,76],["J. Tarling","GBR",2004,80,71,63,85,72,85,80],["T. Arensman","NED",1999,73,87,57,80,74,84,76],["E. Bernal","COL",1997,73,83,56,78,75,83,75],["D. Godon","FRA",1996,70,77,68,69,83,77,74],["M. Sheffield","USA",2002,76,62,60,83,81,81,76],["K. Vauquelin","FRA",2001,68,81,53,75,73,80,72],["S. Watson","GBR",2001,82,57,71,69,70,79,71],["B. Turner","GBR",1999,68,72,62,64,81,73,70],["M. Kwiatkowski","POL",1990,69,72,64,64,78,73,70],["S. Welsford","AUS",1996,77,52,82,65,65,76,70],["A. Shmidt","USA",2004,78,53,69,67,68,73,72],["T. Foss","NOR",1997,72,59,55,80,67,74,68],["A. August","USA",2005,63,70,60,64,75,73,74],["K. Heiduk","GER",2000,75,50,70,67,64,74,67],["E. Svestad-Bårdseng","NOR",2002,63,75,47,69,68,75,68],["C. Swift","GBR",1995,75,49,67,67,66,72,66],["J. Haig","AUS",1993,58,77,43,63,67,73,64],["L. Hamilton","AUS",1996,57,74,42,61,64,74,62],["B. Rivera","COL",1996,55,74,40,62,65,70,61],["B. Jungels","LUX",1993,65,52,47,69,56,65,59],["B. Swift","GBR",1988,67,40,72,54,54,64,58],["L. De Plus","BEL",1995,55,67,42,63,56,68,58],["P. Øxenberg","DEN",2006,62,50,46,72,54,66,66],["Ó. Rodríguez","ESP",1995,54,64,34,60,54,63,55]],
+// Soudal Quick-Step
+[["P. Magnier","FRA",2004,88,64,86,76,78,85,84],["T. Merlier","BEL",1992,78,58,93,73,74,81,76],["E. Hayter","GBR",1998,84,57,83,82,72,77,76],["J. Stuyven","BEL",1992,80,55,74,72,73,78,72],["I. Van Wilder","BEL",2000,68,81,54,75,71,83,72],["V. Paret-Peintre","FRA",2001,65,85,53,71,75,83,72],["D. van Baarle","NED",1992,84,56,71,71,70,80,72],["M. Schachmann","GER",1994,72,63,57,79,79,78,71],["J. Lecerf","BEL",2002,69,78,50,73,72,79,72],["M. Vansevenant","BEL",1999,66,69,62,67,79,77,70],["L. Rex","BEL",1999,81,52,70,69,69,76,70],["Y. Lampaert","BEL",1991,81,53,70,68,68,77,70],["A. Raccagni Noviero","ITA",2004,67,68,60,62,78,74,72],["F. Zana","ITA",1999,61,80,48,65,73,80,68],["G. Gelders","BEL",2003,68,68,60,62,76,73,71],["M. Landa","ESP",1989,59,81,46,64,72,78,67],["F. Van Den Bossche","BEL",2000,77,48,67,66,67,70,66],["G. Garofoli","ITA",2002,58,78,44,63,68,78,67],["C. Pedersen","DEN",1996,74,48,63,63,65,72,64],["L. Vervaeke","BEL",1993,57,77,46,63,67,74,64],["P. Eenkhoorn","NED",1997,72,50,65,64,62,71,64],["M. Svrček","SVK",2003,56,79,43,64,65,74,67],["B. Van Lerberghe","BEL",1992,77,44,77,56,60,67,64],["W. Vangheluwe","BEL",2001,70,46,77,54,56,66,62],["P. Reinderink","NED",2002,70,46,64,59,63,66,63],["J. Vervenne","BEL",2003,65,52,47,69,55,69,63],["A. Bastiaens","BEL",1996,54,66,39,65,57,70,58]],
+// Alpecin-Premier Tech
+[["M. van der Poel","NED",1995,93,67,84,84,88,90,84],["J. Philipsen","BEL",1998,84,62,91,70,76,82,78],["K. Groves","AUS",1998,82,54,85,66,67,78,72],["T. Del Grosso","NED",2003,68,68,62,63,80,76,73],["S. Dillier","SUI",1990,76,52,68,65,66,75,67],["L. De Vylder","BEL",1995,75,52,65,65,67,74,66],["E. Planckaert","BEL",1995,78,52,69,65,63,70,66],["F. Busatto","ITA",2002,63,65,58,62,78,70,68],["O. Riesebeek","NED",1992,76,48,69,66,66,70,66],["E. Verstrynge","BEL",2002,56,79,45,65,70,78,68],["J. Rickaert","BEL",1994,76,51,65,62,64,71,65],["G. Thijssen","BEL",1998,74,48,78,58,62,68,65],["G. Glivar","SLO",2002,62,65,60,59,75,67,67],["R. Debruyne","BEL",2002,59,75,44,63,66,77,66],["H. Uhlig","GER",2001,61,66,58,60,72,66,64],["L. Vergallito","ITA",1997,57,76,47,63,66,73,64],["S. Remijn","NED",2006,73,45,64,64,60,70,71],["J. Price-Pejtersen","DEN",1999,67,54,51,75,58,70,62],["J. Plowright","AUS",2000,69,46,78,54,60,64,62],["J. Geens","BEL",1998,57,70,44,66,60,70,61],["T. Bayer","AUT",1999,73,43,61,62,62,65,61],["F. Sénéchal","FRA",1993,70,46,60,59,61,69,61],["H. Houle","CAN",1990,55,71,41,64,59,70,60],["S. Dehairs","BEL",2001,70,44,73,55,55,62,60],["M. Gogl","AUT",1993,70,46,63,59,57,64,60],["S. Sentjens","BEL",2005,68,37,69,52,51,59,62],["T. Marsman","NED",2000,64,37,72,51,52,60,56],["M. Ballerstedt","GER",2000,68,38,56,53,57,64,56],["L. Belmans","BEL",2001,62,37,52,50,51,58,52],["A. Dockx","BEL",2004,44,63,31,50,55,60,54]],
+// Decathlon CMA CGM
+[["P. Seixas","FRA",2006,76,86,61,85,79,88,87],["T. Benoot","BEL",1994,82,57,72,72,82,81,74],["O. Kooij","NED",2001,80,57,87,68,72,81,74],["P. Lapeira","FRA",2000,70,75,67,67,84,78,74],["F. Gall","AUT",1998,67,84,52,72,77,84,73],["T. Lund Andresen","DEN",2002,80,54,87,65,66,76,73],["M. Riccitello","USA",2002,65,85,51,68,71,80,72],["S. Bissegger","SUI",1998,75,62,56,81,65,78,70],["G. Mühlberger","AUT",1994,66,79,50,72,67,80,69],["P. Gautherat","FRA",2003,67,69,62,61,77,75,71],["S. Dewulf","BEL",1997,78,52,68,68,69,76,68],["N. Isidore","FRA",2005,66,68,64,62,77,71,74],["A. L'Hote","FRA",2005,65,78,49,73,67,76,74],["N. Prodhomme","FRA",1997,61,80,47,65,71,78,67],["O. Naesen","BEL",1990,79,49,70,65,66,71,67],["A. Paret-Peintre","FRA",1996,61,82,46,64,68,77,66],["J. Staune-Mittet","NOR",2002,57,80,47,66,71,75,68],["R. Ghys","BEL",1996,74,50,66,67,65,74,66],["D. Hoole","NED",1999,72,59,52,75,62,73,66],["L. Bisiaux","FRA",2005,57,80,46,63,69,76,71],["C. Scotson","AUS",1996,68,54,50,74,61,73,63],["J. Labrosse","FRA",2002,55,74,43,63,67,75,65],["S. De Pestel","BEL",1998,73,48,62,59,63,70,62],["T. Gudmestad","NOR",2001,73,44,79,55,57,65,62],["O. Chamberlain","AUS",2005,66,55,50,71,60,70,68],["C. Bol","NED",1995,71,45,77,55,57,65,62],["R. S. Pedersen","DEN",2002,70,40,76,55,57,65,62],["G. Pollefliet","BEL",2001,67,36,70,51,53,62,56]],
+// EF Education-EasyPost
+[["B. Healy","IRL",2000,73,83,72,84,87,81,80],["N. Powless","USA",1996,80,73,66,69,82,77,74],["R. Carapaz","ECU",1993,64,84,54,72,76,86,73],["A. Baudin","FRA",2001,72,73,67,67,80,76,72],["S. Quinn","USA",2000,68,84,55,76,70,82,72],["K. Asgreen","DEN",1995,81,53,70,80,69,77,72],["V. Albanese","ITA",1996,68,72,63,64,81,72,70],["M. Beloki","ESP",2005,67,77,52,72,71,79,76],["L. Lamperti","USA",2003,80,54,69,70,70,75,73],["M. van den Berg","NED",1999,82,55,71,67,69,74,70],["M. Valgren","DEN",1992,68,70,62,66,77,73,69],["M. Honoré","DEN",1997,79,53,70,68,67,75,69],["H. Sweeny","AUS",1998,75,53,68,68,68,73,68],["J.A. Cepeda","ECU",1998,66,76,46,71,65,74,66],["M. Mihkels","EST",2003,74,49,79,62,61,71,69],["G. Steinhauser","GER",2001,58,78,46,67,70,75,66],["M. Leonard","CAN",2004,69,58,53,76,62,74,69],["D. Rafferty","IRL",2003,57,79,45,66,68,75,68],["A. Ryan","IRL",2001,57,77,47,64,67,77,65],["L. Nerurkar","GBR",2003,55,79,46,64,66,76,67],["J.C. van der Lee","NED",2001,60,71,43,69,62,74,63],["J. Shaw","GBR",1996,54,77,42,64,65,75,63],["N. Hobbs","GBR",2004,70,45,77,56,58,68,66],["M. Walker","GBR",2001,65,53,46,72,56,68,60],["A. Mackellar","AUS",2001,63,52,47,68,54,66,58],["M. Schwarzbacher","SVK",2005,59,47,45,69,53,64,62],["C. Simmons","USA",2003,65,39,70,48,51,59,58],["S. Battistella","ITA",1998,52,54,50,48,64,62,55],["M. Agostinacchio","ITA",2007,46,45,40,43,55,50,55]],
+// Groupama-FDJ United
+[["R. Grégoire","FRA",2003,82,79,68,73,86,82,81],["V. Madouas","FRA",1996,83,55,73,69,80,78,73],["D. Gaudu","FRA",1996,66,83,53,68,74,83,71],["E. Costiou","FRA",2002,67,82,50,75,68,81,72],["T. Gruel","FRA",2004,67,73,63,65,78,75,74],["P. Penhoët","FRA",2001,79,52,84,64,65,77,70],["Q. Pacher","FRA",1992,66,66,63,64,79,71,68],["E. Paleni","FRA",2001,73,62,52,79,65,77,68],["A. Huens","FRA",2001,76,52,67,67,65,75,67],["C. Berthet","FRA",1997,58,79,47,65,68,77,66],["L. Germani","ITA",2002,75,50,66,63,67,73,68],["K. Geniets","LUX",1997,77,52,68,63,64,70,66],["G. Martin","FRA",1993,57,78,48,66,69,75,66],["R. Cavagna","FRA",1995,72,56,54,76,62,73,66],["C. Russo","FRA",1995,75,51,65,64,65,72,65],["C. Braz Afonso","FRA",1999,58,76,45,66,66,77,65],["B. Rolland","FRA",2003,58,77,46,64,68,74,67],["M. Decomble","FRA",2005,70,58,51,73,59,71,70],["J. Kench","NZL",2001,59,73,44,70,63,73,64],["T. Donnenwirth","FRA",1998,59,66,58,60,71,66,63],["J. Jacobs","SUI",1997,75,48,65,60,60,69,63],["B. Tronchon","FRA",2002,71,45,65,62,64,70,65],["R. Molard","FRA",1989,56,76,43,61,68,72,63],["C. Barthe","FRA",1996,60,61,57,56,70,67,62],["R. Rochas","FRA",1996,54,73,42,60,63,73,61],["L. Bower","GBR",2005,63,34,70,50,51,59,60],["M. Milan","ITA",2003,63,37,66,46,48,56,56],["O. Le Gac","FRA",1993,59,33,51,49,50,58,50],["T. Fontaine","FRA",2005,51,39,34,56,41,55,52]],
+// Lotto Intermarché
+[["A. De Lie","BEL",2002,84,55,87,69,80,76,77],["L. Van Eetvelt","BEL",2001,64,83,50,71,74,84,71],["J. Berckmoes","BEL",2001,67,69,62,66,80,73,70],["G. Zimmermann","GER",1997,64,69,64,63,80,74,69],["M. Menten","BEL",1996,78,54,69,69,66,74,68],["H. Artz","NED",2001,64,69,63,61,79,72,68],["V. Braet","BEL",2000,66,68,63,63,78,70,68],["L. Slock","BEL",2000,65,78,47,74,67,75,68],["S. De Schuyteneer","BEL",2004,78,50,79,63,63,70,71],["S. Gualdi","ITA",2005,76,50,69,65,64,72,72],["T. Aerts","BEL",1993,66,65,60,59,76,70,66],["L. Taminiaux","BEL",1995,76,48,68,64,64,73,66],["L. Craps","BEL",2001,63,74,47,68,66,72,65],["B. Veistroffer","FRA",2000,64,63,56,61,73,70,64],["M. Kockelmann","LUX",2003,62,65,58,59,74,68,67],["M. Fox","AUS",2002,61,75,43,69,64,71,66],["J. De Buyst","BEL",1993,74,50,65,63,62,69,64],["S. Grignard","BEL",1998,73,46,63,63,65,72,64],["M. Grisel","FRA",2005,75,46,77,56,58,68,69],["L. Rota","ITA",1995,71,48,66,62,62,69,63],["L. Van Boven","BEL",1999,76,47,64,61,61,68,63],["J. Widar","BEL",2005,54,75,42,62,65,73,68],["J. Rutsch","GER",1997,74,44,62,60,61,68,62],["C. Beullens","BEL",1996,71,46,63,60,59,65,61],["R. Thompson","NZL",2001,55,68,38,64,56,67,58],["R. Van Sintmaartensdijk","NED",2001,53,65,39,60,59,68,57],["F. Ørn-Kristoff","NOR",2005,55,64,37,62,58,68,63],["J. Giddings","GBR",2003,66,38,69,51,51,61,59],["M. Place","FRA",2003,52,64,39,58,56,66,59],["T. van der Hoorn","NED",1993,60,35,51,51,50,57,51]],
+// Movistar Team
+[["E. Mas","ESP",1995,72,88,58,83,78,87,78],["C. Uijtdebroeks","BEL",2003,71,87,57,79,73,85,78],["I. Romeo","ESP",2003,80,65,62,86,70,83,77],["N. Tesfatsion","ERI",1999,68,72,64,65,80,77,71],["P. Sánchez","ESP",2000,66,72,63,66,79,74,70],["C. Canal","ESP",2001,78,55,70,69,69,77,70],["N. Quintana","COL",1990,64,80,51,72,69,79,69],["J. Barrenetxea","ESP",2000,79,52,72,68,68,74,69],["O. Aular","VEN",1996,76,48,82,58,78,68,68],["M. Hessmann","GER",2001,71,62,55,79,65,73,68],["P. Castrillo","ESP",2000,60,83,48,66,70,77,67],["J. Romo","ESP",1999,60,81,47,66,70,80,67],["I. García Cortina","ESP",1995,78,50,69,68,67,71,67],["J.P. López","ESP",1997,60,79,47,66,68,78,66],["L. Milesi","ITA",2002,70,59,54,76,63,74,68],["R. García Pierna","ESP",2001,59,77,49,66,69,75,66],["E. Rubio","COL",1998,57,81,47,63,69,77,66],["D. Pescador","ESP",2005,59,79,46,65,69,73,71],["J. Cepeda","ECU",1996,57,77,46,63,70,77,65],["R. Adrià","ESP",1998,74,48,66,66,65,70,65],["D. Formolo","ITA",1992,56,75,42,64,67,74,63],["J. Arcas","ESP",1992,74,47,62,64,62,67,63],["N. Oliveira","POR",1989,69,53,47,71,58,72,62],["F. Maciejuk","POL",1999,64,56,49,73,57,68,61],["P. Novák","CZE",2004,57,67,41,62,61,67,63],["G. Serrano","ESP",1994,57,61,51,53,66,63,58],["M. Moro","ITA",2002,70,44,60,55,55,64,60],["A. Torres","ESP",1990,50,62,34,59,51,62,53]],
+// NSN Cycling Team
+[["B. Girmay","ERI",1999,85,53,85,66,80,76,74],["J. Blackmore","GBR",2003,71,84,54,77,74,84,77],["C. Strong","NZL",2000,72,73,67,68,82,80,74],["A. Lutsenko","KAZ",1992,67,72,64,80,83,75,74],["S. Williams","GBR",1996,68,72,64,68,82,75,72],["J. Stewart","GBR",1999,80,55,80,67,70,75,71],["R. Sheehan","USA",2000,82,56,71,69,71,77,71],["L. Askey","GBR",2001,80,53,72,71,70,75,70],["A. Pinarello","ITA",2003,68,68,65,64,78,74,73],["E. Vernon","GBR",2000,76,50,84,64,65,72,68],["B. Gilmore","AUS",2001,67,69,62,62,76,74,68],["M. Frigo","ITA",2000,79,53,68,67,69,74,68],["K. Neilands","LAT",1994,67,70,63,62,75,70,68],["O. Kogut","ISR",2001,78,53,70,68,64,73,68],["J. Hirt","CZE",1991,62,75,49,70,68,77,67],["H. Hofstetter","FRA",1994,78,52,66,64,64,75,66],["P. Martí","ESP",2004,75,51,69,67,64,72,70],["F. Van Tricht","BEL",2001,76,47,65,64,64,71,64],["G. Bennett","NZL",1990,56,77,45,64,67,76,64],["P.-A. Côté","CAN",1997,72,47,67,65,62,72,64],["N. Raisberg","ISR",2001,72,50,65,63,63,72,64],["M. Kretschy","GER",2002,60,74,44,70,63,72,66],["M. Louvel","FRA",1999,74,50,64,63,62,69,64],["T. Van Asbroeck","BEL",1990,73,47,65,60,60,69,62],["G. Boivin","CAN",1989,72,45,64,61,62,69,62],["D. Smith","NZL",1993,57,61,56,58,72,66,62],["R. Mullen","IRL",1994,66,54,45,69,57,66,60],["I. Einhorn","ISR",1997,66,43,72,53,57,64,59],["N. Schultz","AUS",1994,53,70,41,57,60,68,58]],
+// Team Jayco AlUla
+[["B. O'Connor","AUS",1995,76,88,59,83,76,84,78],["M. Schmid","SUI",1999,84,58,76,81,75,82,76],["L. Plapp","AUS",2000,78,80,57,84,68,82,75],["M. Matthews","AUS",1990,82,72,66,65,83,76,74],["A. Foldager","DEN",2001,69,70,66,66,81,75,71],["A. Covi","ITA",1998,68,71,65,65,81,74,71],["A. Vendrame","ITA",1994,66,70,64,67,78,75,70],["F. Engelhardt","GER",2000,77,54,68,69,66,76,68],["D. De Pretto","ITA",2002,66,68,62,62,77,73,70],["P. Double","GBR",1996,59,82,48,69,70,77,68],["A. Hatherly","RSA",1996,67,76,48,72,67,75,68],["K. O'Brien","AUS",1998,79,50,70,64,64,71,66],["P. Ackermann","GER",1994,77,46,82,59,62,69,66],["D. De Bondt","BEL",1991,75,51,68,67,63,70,66],["D. De Pooter","BEL",2003,62,62,58,56,74,69,67],["C. Juul-Jensen","DEN",1989,71,49,65,62,62,71,63],["R. Donaldson","GBR",2002,71,46,76,59,58,69,65],["P. Gamper","AUT",1997,70,56,48,76,58,69,63],["F. Pickering","GBR",2003,52,76,42,62,64,73,65],["A. Capiot","BEL",1993,70,46,64,62,59,65,61],["L. Mezgec","SLO",1988,70,45,73,53,59,65,61],["J. Sütterlin","GER",1992,67,54,49,71,56,67,61],["K. Bouwman","NED",1993,56,70,43,66,58,71,61],["J. Krijnsen","NED",2001,57,68,40,64,59,69,60],["A. Hellemose","DEN",1999,56,68,42,62,58,70,59],["R. Porter","AUS",2001,56,70,39,64,56,70,59],["L. Durbridge","AUS",1991,62,53,44,71,56,65,58],["H. McKenzie","AUS",2004,54,56,48,48,62,57,58],["F. Conca","ITA",1998,41,64,32,48,50,58,49]],
+// Team Picnic PostNL
+[["M. Poole","GBR",2002,62,80,52,69,72,82,72],["F. van den Broek","NED",2000,64,67,61,65,78,74,68],["P. Bittner","CZE",2002,76,52,80,64,63,73,70],["S. Flynn","GBR",1999,66,66,62,62,74,72,67],["F. Biesterbos","NED",2001,78,49,67,67,64,74,66],["C. van Uden","NED",2001,76,50,79,60,64,69,66],["C. Hamilton","AUS",1994,63,74,47,69,66,76,66],["B. Koerdt","RSA",2004,62,64,61,59,75,69,69],["G. Leemreize","NED",1999,59,76,44,62,66,77,64],["W. Barguil","FRA",1991,59,78,43,64,66,73,64],["N. Märkl","GER",1998,72,49,64,65,61,71,64],["T. Naberman","NED",1998,69,55,50,74,62,69,63],["J. Degenkolb","GER",1989,75,49,62,60,61,69,63],["H.-F. Renard-Haquin","FRA",2002,59,61,58,57,73,67,64],["J.G. Martinez","COL",2004,59,71,44,65,63,71,66],["R. Dhondt","BEL",2003,60,69,45,64,60,72,65],["M. Dinham","AUS",1999,72,42,63,57,58,67,60],["M. Gaffuri","ITA",1999,54,73,41,58,61,70,60],["B. Welten","NED",1997,68,42,72,53,55,65,59],["A. Faure Prost","FRA",2003,55,67,42,61,59,70,62],["N. Eekhoff","NED",1998,68,39,72,52,55,62,58],["J. van den Berg","NED",1996,66,42,73,53,52,62,58],["O. Peace","GBR",2004,54,56,52,52,68,61,61],["J. Knox","GBR",1995,54,63,38,61,55,63,56],["T. Roosen","NED",1993,64,41,56,55,53,64,56],["T. de Jong","NED",1998,64,35,69,47,52,57,54],["D. Corkery","IRL",1998,58,30,63,40,43,50,47]],
+// Bahrain-Victorious
+[["A. Tiberi","ITA",2001,74,87,59,78,74,83,76],["M. Mohorič","SLO",1994,83,58,72,71,82,78,74],["L. Martinez","FRA",2003,67,84,53,70,75,84,75],["S. Buitrago","COL",1999,64,85,54,72,75,82,72],["E. Zambanini","ITA",2001,70,70,63,66,80,73,70],["A. Eulálio","POR",2001,61,83,51,69,73,81,70],["P. Bilbao","ESP",1990,60,81,48,69,73,80,68],["J. Omrzel","SLO",2005,65,77,51,71,69,76,74],["A. Segaert","BEL",2003,73,59,54,78,67,76,71],["P. Bauhaus","GER",1994,74,49,82,61,63,71,67],["R. Stannard","AUS",1998,63,67,60,60,78,70,66],["D. Caruso","ITA",1987,60,79,45,66,69,78,66],["A. Valter","HUN",1998,58,80,48,66,68,77,66],["M. Govekar","SLO",2000,61,65,58,60,75,71,65],["Ž. Eržen","SLO",2005,75,51,64,63,65,69,70],["N. Arndt","GER",1991,73,47,66,65,63,71,64],["K. Gradek","POL",1990,69,55,52,73,58,69,63],["A. Borgo","ITA",2004,73,46,65,63,60,68,66],["F. Miholjević","CRO",2002,57,72,44,64,60,72,64],["M. Paasschens","NED",1996,60,70,42,66,60,71,62],["R. Ermakov","SLO",2004,70,42,63,61,61,67,65],["D. Skerl","ITA",2003,66,42,70,53,56,63,61],["V. Van Mechelen","BEL",2004,68,41,73,51,55,61,62],["A. Bruttomesso","ITA",2003,65,37,71,53,55,60,60],["R. Kepplinger","AUT",1997,53,65,40,59,56,65,56],["O. Stockwell","GBR",2002,53,54,46,47,63,59,56],["M. van der Meulen","NED",2003,48,52,43,45,61,57,54]],
+// Uno-X Mobility
+[["S. Wærenskjold","NOR",2000,82,57,82,81,72,80,76],["T.H. Johannessen","NOR",1999,67,83,54,73,74,81,72],["A. Leknessund","NOR",1999,74,65,58,83,67,80,71],["J. Abrahamsen","NOR",1995,80,52,69,71,70,85,71],["A. Charmig","DEN",1998,65,71,64,65,80,73,70],["A. Kron","DEN",1998,68,70,60,64,76,75,69],["F. Dversnes","NOR",1997,77,51,68,69,68,73,68],["A.H. Johannessen","NOR",1999,66,76,47,74,66,76,68],["S.K. Løland","NOR",2001,63,68,60,63,77,74,68],["R. Tiller","NOR",1996,79,54,67,65,65,74,67],["A. Kamp","DEN",1993,65,68,60,62,78,71,67],["M. Tjøtta","NOR",2001,62,76,49,71,64,75,66],["M. Cort","DEN",1993,62,68,60,60,78,69,66],["M. Hoelgaard","NOR",1994,78,49,68,64,67,71,66],["C.-F. Bévort","DEN",2003,71,57,55,76,62,73,69],["J. Kulset","NOR",2004,57,78,48,63,67,77,69],["T. Træen","NOR",1995,60,76,45,62,70,76,65],["Å. Holter","NOR",2000,63,73,45,67,63,76,64],["E. Blikra","NOR",1996,71,45,80,60,62,68,64],["M. Urianstad","NOR",1999,73,48,67,63,63,69,64],["A. Skaarseth","NOR",1995,72,48,66,61,61,67,62],["W. Blume Levy","DEN",2001,71,45,64,61,60,69,62],["S.E. Bystrøm","NOR",1992,70,45,63,61,63,68,62],["H. Pedersen","DEN",2004,68,45,74,54,59,67,65],["S. Dalby","DEN",2003,57,68,40,62,61,69,63],["E.N. Resell","NOR",1996,70,42,59,58,56,63,58],["J.H. Hvideberg","NOR",1999,66,43,59,58,57,63,58],["T. Svarre","DEN",2004,54,56,49,51,64,60,60],["S. Ingebrigtsen","NOR",2005,63,37,71,50,50,59,61],["S. Edvardsen-Fredheim","NOR",2003,62,36,68,51,53,58,58]],
+// XDS Astana Team
+[["Cr. Rodríguez","ESP",1995,75,84,56,82,75,86,76],["C. Scaroni","ITA",1997,72,75,70,69,87,79,75],["G.T. Silva","URU",2001,71,72,66,69,81,75,72],["N. Vinokurov","KAZ",2002,69,80,54,75,69,79,73],["D. Ulissi","ITA",1989,82,55,73,68,70,77,71],["H. Mulubrhan","ERI",1999,69,80,51,74,69,79,70],["A. Bettiol","ITA",1993,80,56,73,67,69,76,70],["Y. Fedorov","KAZ",2000,75,64,55,79,68,77,70],["H. Tejada","COL",1997,61,82,51,67,71,82,69],["M. Teunissen","NED",1992,79,54,71,66,67,75,69],["M. Kanter","GER",1997,76,50,85,63,65,72,68],["L. Fortunato","ITA",1996,60,82,49,69,72,79,68],["D. Ballerini","ITA",1994,76,52,71,69,68,73,68],["S. Velasco","ITA",1995,65,68,60,62,78,71,67],["M. Malucelli","ITA",1993,78,47,82,61,61,70,66],["C. Champoussin","FRA",1998,59,82,47,65,69,77,66],["S. Higuita","COL",1997,60,77,46,63,71,78,66],["A. Gate","NZL",1990,69,57,54,77,60,74,65],["H.M. López","ECU",2000,63,73,46,69,63,71,64],["N. Conci","ITA",1997,61,72,47,68,62,73,64],["D. Toneatti","ITA",2001,72,47,64,63,63,70,63],["A. Romele","ITA",2003,59,64,57,58,73,67,66],["H. Su","CHN",2000,73,46,64,63,61,70,63],["V. Langellotti","MON",1995,59,72,43,66,59,70,62],["D. van Bekkum","NED",2002,56,75,44,59,62,73,64],["A. Livyns","BEL",1994,70,45,61,61,61,68,61],["M. Schrettl","AUT",2003,71,45,62,60,59,66,63],["A. Kuzmin","KAZ",1996,55,63,38,62,54,65,56],["G. Syritsa","RUS",2000,65,37,70,50,53,60,56],["L. Gonov","RUS",2000,61,34,68,48,46,55,52]],
+// Tudor Pro Cycling
+[["J. Alaphilippe","FRA",1992,77,70,65,64,78,72,71],["M. Hirschi","SUI",1998,68,70,65,66,78,77,71],["M. Storer","AUS",1997,56,78,48,66,69,75,65],["M. Trentin","ITA",1989,74,48,65,62,60,68,63],["A. de Kleijn","NED",1994,72,44,76,55,59,65,62],["A. Dainese","ITA",1998,72,44,74,54,58,64,61],["M. Mayrhofer","GER",2000,71,48,64,64,64,69,63],["M. Zijlaard","NED",2000,69,43,73,53,55,65,60],["Y. Voisard","SUI",1998,55,74,42,62,64,73,62],["F. Weiss","SUI",2004,54,71,41,58,60,69,63],["A. Balmer","SUI",2000,52,70,41,60,60,72,59],["R. Thalmann","SUI",1993,51,72,41,55,60,68,58],["J. Suter","SUI",1998,67,56,50,71,58,71,62],["C. Stüssi","SUI",1993,51,69,39,54,61,69,57],["N. Baumann II","SUI",2002,51,58,47,50,67,60,58],["L. Frei II","SUI",2005,48,67,32,52,56,66,60],["M. Steiner II","SUI",2003,39,61,30,48,52,57,51],["J. Kaufmann II","SUI",2004,55,42,36,62,45,60,54],["S. Meier II","SUI",2003,45,61,33,55,47,61,53],["T. Widmer II","SUI",2002,56,42,34,59,48,57,51]],
+// Pinarello-Q36.5
+[["T. Pidcock","GBR",1999,79,81,69,68,82,79,76],["M. Moschetti","ITA",1996,70,44,75,57,56,67,62],["F. Christen","SUI",2002,64,64,59,59,75,71,67],["M. Donovan","GBR",1999,54,74,42,60,62,71,60],["W. Calzoni","ITA",2001,65,53,49,70,58,67,60],["N. Zukowsky","CAN",1998,73,47,62,60,62,67,62],["F. Colombo","SUI",1997,72,48,64,61,63,66,62],["X. M. Azparren","ESP",1999,71,46,61,61,62,68,62],["G. Brambilla","ITA",1987,51,69,37,56,60,69,57],["M. Badilatti","SUI",1992,49,69,38,57,63,68,57],["D. de la Cruz","ESP",1989,50,73,39,59,61,69,58],["A. Fedeli","ITA",1996,69,44,64,58,61,66,60],["S. Sajnok","POL",1997,73,44,61,59,58,69,61],["N. Baumann II","SUI",2004,50,42,32,58,46,55,51],["L. Frei II","SUI",2005,67,40,54,54,54,63,61],["M. Steiner II","SUI",2003,51,41,36,60,46,54,51],["J. Kaufmann II","SUI",2002,58,30,62,44,43,55,51],["S. Meier II","SUI",2004,53,45,39,62,45,60,55],["T. Widmer II","SUI",2004,48,66,32,51,58,64,57],["R. Huber II","SUI",2003,55,30,62,41,44,53,51]],
+// Cofidis
+[["A. Aranburu","ESP",1995,76,70,62,64,79,73,71],["B. Coquard","FRA",1992,69,45,75,54,74,65,64],["E. Buchmann","GER",1992,56,77,41,59,67,73,62],["M. Fretin","BEL",2001,69,46,75,58,56,66,62],["I. Izagirre","ESP",1989,51,71,41,58,64,72,60],["D. Teuns","BEL",1992,64,63,58,58,74,71,65],["S. Oldani","ITA",1998,74,45,63,61,61,69,62],["A. Renard","FRA",1999,72,47,62,61,60,70,62],["P. Allegaert","BEL",1995,71,44,63,61,59,68,61],["R. Fernández","ESP",1991,50,73,38,59,64,70,59],["J. Herrada","ESP",1990,61,63,55,56,71,69,62],["A. Perez","FRA",1991,61,64,58,59,73,66,64],["F. Bidard","FRA",1992,50,72,36,54,59,70,57],["D. Touzé","FRA",1996,71,47,64,63,60,69,62],["A. Roux II","FRA",2004,54,45,35,62,45,56,54],["T. Blanchard II","FRA",2004,60,30,64,43,46,53,53],["L. Perrot II","FRA",2003,53,65,38,63,57,66,60],["M. Chevalier II","FRA",2002,60,46,43,65,50,64,57],["E. Garnier II","FRA",2005,61,35,55,50,49,56,57],["B. Lemoine II","FRA",2003,55,67,35,62,57,63,59]],
+// TotalEnergies
+[["A. Turgis","FRA",1994,76,50,69,64,64,70,66],["E. Jeannière","FRA",1999,75,43,76,57,60,67,63],["P. Latour","FRA",1993,56,73,41,59,66,74,62],["M. Burgaudeau","FRA",1998,62,65,59,58,73,69,64],["S. Cras","BEL",1996,51,73,43,57,62,69,59],["V. Ferron","FRA",1998,58,63,56,55,73,68,62],["T. Gachignard","FRA",2000,58,63,56,59,73,67,63],["J. Tesson","FRA",1998,67,41,74,54,55,65,59],["M. Vercher","FRA",1999,63,63,57,57,73,70,64],["S. Dujardin","FRA",1997,71,47,64,59,61,68,62],["F. Grellier","FRA",1994,72,46,60,59,62,69,61],["D. Van Gestel","BEL",1994,71,44,65,62,59,69,62],["A. Roux II","FRA",2002,56,32,60,43,42,50,49],["T. Blanchard II","FRA",2003,55,30,59,38,41,48,48],["L. Perrot II","FRA",2002,59,47,42,68,53,63,57],["M. Chevalier II","FRA",2002,47,48,44,43,57,55,51],["E. Garnier II","FRA",2004,47,50,46,44,58,53,54],["B. Lemoine II","FRA",2003,62,50,40,68,54,61,59]],
+// Unibet Rose Rockets
+[["D. Groenewegen","NED",1993,75,45,80,58,61,68,64],["L. Kubiš","SVK",2000,77,53,72,68,68,75,69],["C. Venturini","FRA",1994,77,54,77,65,65,72,68],["R. Townsend","IRL",1995,72,46,63,64,62,70,63],["M. Kopecký","CZE",2003,75,46,64,64,63,70,67],["L. Loockx","BEL",1997,73,49,65,61,62,72,64],["V. Lafay","FRA",1996,63,75,44,66,64,71,64],["W. Poels","NED",1988,55,71,42,60,63,71,60],["J. Johannink","NED",1997,74,46,64,61,62,69,63],["T. Müller","GER",2004,69,38,72,50,55,63,62],["N. Larsen","DEN",1997,65,55,48,73,58,70,62],["J. Bloem","NED",2000,67,38,72,51,56,62,58],["T. Kopecký","CZE",2000,61,70,43,66,60,71,62],["C. B. Christophersen","NOR",2002,58,73,45,66,62,73,65],["O. C. Eiking","NOR",1995,60,70,42,66,59,68,61],["E. Reinders","NED",1992,70,46,61,60,58,68,60],["J. Peter","GER",2001,58,71,40,66,60,70,61],["H. de Vries","NED",1996,65,35,69,47,51,57,54],["R. Augé","FRA",2004,64,35,69,50,51,60,59],["K. L. Feldmann","DEN",2003,58,57,51,52,69,61,61],["A. Maire","FRA",2001,45,66,34,52,55,67,53],["S. Meris","ITA",2001,55,58,49,51,65,62,57],["W. Mouris","NED",2003,59,49,43,67,51,65,59],["E. B. Fougner","NOR",2003,44,64,33,53,56,65,55],["K. Verschuren","NED",2003,54,68,36,62,54,67,60],["O. Geleijn","NED",2001,49,54,44,46,61,59,52]],
+// Team Polti VisitMalta
+[["G. Lonardi","ITA",1996,65,39,70,51,52,63,57],["A. Pietrobon","ITA",1999,65,55,46,70,57,70,60],["A. Verre","ITA",2001,54,73,40,59,61,70,60],["D. Bais","ITA",1998,52,72,42,58,61,71,59],["K. Vacek","CZE",2002,54,71,38,57,60,69,60],["M. Maestri","ITA",1991,72,46,62,58,59,64,60],["M. Bais","ITA",1996,72,42,59,57,59,64,59],["M. Stewart","GBR",1995,62,52,45,70,55,66,58],["S. Greco","ITA",2003,56,30,57,40,42,48,49],["M. Rizzo","ITA",2004,57,35,50,49,50,55,53],["D. Ferraro","ITA",2002,61,33,54,48,51,56,52],["A. Colombo","ITA",2004,47,59,30,56,49,59,54],["L. De Santis","ITA",2004,62,37,54,53,54,60,57],["G. Marino","ITA",2002,59,48,42,67,51,64,57],["P. Villa","ITA",2003,53,58,52,53,68,61,61],["F. Serra","ITA",2005,55,43,39,60,47,57,56]],
+// Bardiani CSF Faizanè
+[["A. Martinelli","ITA",2003,52,75,40,57,61,72,63],["M. Tarozzi","ITA",2001,61,64,57,58,72,66,63],["L. Covili","ITA",1997,54,72,41,58,63,69,60],["A. Tonelli","ITA",1992,70,45,63,59,58,69,61],["E. Zanoncello","ITA",1997,65,40,69,51,53,62,57],["S. Raccani","ITA",2001,48,68,39,55,58,67,56],["F. Magli","ITA",1997,50,67,37,56,61,66,56],["S. Greco II","ITA",2002,37,59,30,46,51,59,49],["M. Rizzo II","ITA",2005,48,51,45,48,62,55,58],["D. Ferraro II","ITA",2003,56,31,64,40,46,52,51],["A. Colombo II","ITA",2005,58,46,43,64,53,62,60],["L. De Santis II","ITA",2004,55,55,50,51,68,63,61],["G. Marino II","ITA",2005,62,38,52,50,52,59,58],["P. Villa II","ITA",2003,58,33,63,45,48,52,53],["F. Serra II","ITA",2003,49,64,33,58,53,63,56],["S. Greco II","ITA",2004,64,40,57,56,57,64,60]],
+// Caja Rural-Seguros RGA
+[["I. Leitão","POR",1998,76,50,75,62,63,71,66],["A. Balderstone","ESP",2003,53,72,41,59,64,73,63],["J. Etxeberria","ESP",2002,51,74,41,58,64,69,62],["F. Barceló","ESP",1996,54,73,38,57,64,69,59],["J. Nicolau","ESP",1999,72,44,63,62,58,68,61],["X. Berasategi","ESP",1998,70,44,61,60,58,67,60],["M. Camprubí","ESP",1999,69,45,60,59,57,67,60],["I. Herrero II","ESP",2005,54,30,59,41,40,50,52],["P. Vidal II","ESP",2005,55,68,39,59,58,64,63],["A. Salas II","ESP",2003,59,36,52,50,48,57,53],["J. Otero II","ESP",2004,40,61,30,48,52,60,52],["M. Redondo II","ESP",2004,59,37,51,50,48,57,54],["D. Lorente II","ESP",2003,60,50,42,68,50,63,59],["U. Zabala II","ESP",2004,57,30,63,41,43,50,51],["X. Prieto II","ESP",2003,53,43,34,60,46,57,52],["I. Herrero II","ESP",2004,53,58,49,52,64,61,60],["P. Vidal II","ESP",2005,52,65,36,56,55,61,60],["A. Salas II","ESP",2005,43,66,33,51,53,63,58]],
+// Burgos Burpellet BH
+[["M. Aparicio","ESP",2000,51,72,42,57,64,71,60],["E. Fagúndez","URU",2000,61,63,57,55,72,66,62],["Á. Madrazo","ESP",1988,57,61,55,53,68,65,60],["A. Okamika","ESP",1993,72,43,60,60,59,67,60],["A. Angulo","ESP",1997,71,44,59,60,56,65,59],["I. Herrero II","ESP",2004,50,64,34,59,51,63,58],["P. Vidal II","ESP",2004,47,68,35,50,58,62,57],["A. Salas II","ESP",2005,52,67,38,61,54,66,62],["J. Otero II","ESP",2003,60,35,53,51,51,58,54],["M. Redondo II","ESP",2004,41,65,30,49,51,61,54],["D. Lorente II","ESP",2003,41,63,30,49,49,59,51],["U. Zabala II","ESP",2004,57,30,63,41,43,50,51],["X. Prieto II","ESP",2005,64,40,54,54,54,61,60],["I. Herrero II","ESP",2004,37,59,30,45,46,56,50],["P. Vidal II","ESP",2003,48,61,32,52,51,57,53],["A. Salas II","ESP",2004,44,50,42,43,56,53,52],["J. Otero II","ESP",2003,63,38,56,54,54,61,57],["M. Redondo II","ESP",2004,58,50,41,66,50,63,59]],
+// Equipo Kern Pharma
+[["P. Miquel","ESP",2003,66,69,62,59,77,72,71],["C. García Pierna","ESP",2001,67,57,50,75,58,70,63],["U. Berrade","ESP",1997,59,61,58,58,73,65,62],["I. Herrero II","ESP",2004,44,66,32,52,53,63,56],["P. Vidal II","ESP",2003,53,42,35,56,46,53,51],["A. Salas II","ESP",2002,55,31,62,42,42,52,49],["J. Otero II","ESP",2003,58,33,51,49,49,56,52],["M. Redondo II","ESP",2003,47,63,32,56,49,61,54],["D. Lorente II","ESP",2002,57,47,39,65,47,60,54],["U. Zabala II","ESP",2003,38,58,30,43,47,54,48],["X. Prieto II","ESP",2004,58,34,48,48,48,55,52],["I. Herrero II","ESP",2003,58,48,40,66,49,62,57],["P. Vidal II","ESP",2003,67,42,58,53,57,60,59],["A. Salas II","ESP",2004,48,54,46,47,60,57,56],["J. Otero II","ESP",2004,56,45,40,64,50,61,57],["M. Redondo II","ESP",2004,60,38,52,51,49,58,55],["D. Lorente II","ESP",2004,46,68,34,54,54,64,57],["U. Zabala II","ESP",2005,53,30,59,37,39,46,50]],
+// Euskaltel-Euskadi
+[["T. Juaristi","ESP",2000,53,69,38,58,59,70,58],["J. Bou","ESP",1997,58,63,54,56,70,64,61],["G. Martín","ESP",2000,70,44,63,58,59,66,60],["X. Isasa","ESP",2000,70,42,63,59,60,68,60],["I. Herrero II","ESP",2005,48,53,44,47,59,56,57],["P. Vidal II","ESP",2005,58,32,63,40,46,50,54],["A. Salas II","ESP",2004,55,46,39,63,47,60,56],["J. Otero II","ESP",2004,59,33,66,46,48,56,55],["M. Redondo II","ESP",2002,57,35,49,48,46,55,50],["D. Lorente II","ESP",2004,66,42,57,57,53,62,60],["U. Zabala II","ESP",2002,59,47,42,64,50,60,56],["X. Prieto II","ESP",2004,62,38,52,52,52,59,56],["I. Herrero II","ESP",2004,47,52,43,46,58,55,54],["P. Vidal II","ESP",2002,55,44,37,58,48,55,52],["A. Salas II","ESP",2004,57,48,41,65,49,62,58],["J. Otero II","ESP",2005,45,58,31,54,49,59,55],["M. Redondo II","ESP",2003,42,66,31,50,52,62,53],["D. Lorente II","ESP",2003,58,33,63,45,43,53,52]],
+// Team Flanders-Baloise
+[["A. Colman","BEL",1998,70,46,64,62,59,68,62],["W. Vanhoof","BEL",1997,71,44,63,59,59,64,60],["S. Claes II","BEL",2003,52,43,35,58,47,55,51],["W. Peeters II","BEL",2004,50,64,38,60,56,62,59],["T. Mertens II","BEL",2003,58,50,42,67,52,61,58],["J. Goossens II","BEL",2004,54,56,50,51,64,61,60],["L. Wouters II","BEL",2005,62,47,41,68,52,64,62],["B. Segers II","BEL",2003,59,34,66,46,46,56,54],["N. Maes II","BEL",2003,49,59,31,57,49,60,54],["D. Cools II","BEL",2003,55,67,36,61,58,66,60],["S. Claes II","BEL",2002,44,59,30,51,49,56,50],["W. Peeters II","BEL",2004,46,51,46,46,62,53,55],["T. Mertens II","BEL",2003,51,58,49,51,65,58,58],["J. Goossens II","BEL",2004,59,31,64,44,44,54,53],["L. Wouters II","BEL",2003,55,30,57,40,40,49,48],["B. Segers II","BEL",2003,46,60,32,55,48,60,53],["N. Maes II","BEL",2005,55,65,37,63,55,66,63]],
+// Team Novo Nordisk
+[["S. Brand","GBR",1991,67,39,58,54,52,62,55],["L. Phippen","USA",1998,61,38,52,52,51,60,52],["C. Walker II","USA",2005,51,38,34,58,42,51,52],["B. Hayes II","USA",2004,54,30,59,38,44,48,50],["T. Sullivan II","USA",2004,52,39,32,54,43,55,50],["J. Brooks II","USA",2005,50,58,32,56,50,62,57],["M. Carter II","USA",2005,54,30,59,36,38,49,50],["D. Reyes II","USA",2003,50,62,34,57,51,61,55],["K. Olsen II","USA",2002,57,31,47,45,43,54,48],["S. Porter II","USA",2002,40,60,30,45,48,58,49],["C. Walker II","USA",2004,50,52,47,48,61,54,56],["B. Hayes II","USA",2002,54,30,59,38,44,48,48],["T. Sullivan II","USA",2003,41,60,30,43,50,59,50],["J. Brooks II","USA",2005,58,30,61,42,43,53,54],["M. Carter II","USA",2003,53,30,58,35,37,48,47],["D. Reyes II","USA",2005,55,30,60,40,41,49,52],["K. Olsen II","USA",2003,56,44,37,61,45,60,53],["S. Porter II","USA",2005,49,61,30,55,49,61,57]],
+// MBH Bank CSB Telecom Fort
+[["M. Dina","HUN",1996,52,69,41,55,59,71,58],["B. Peák","HUN",1998,72,43,62,59,58,69,60],["E. Fetter","HUN",2000,70,42,61,57,58,67,59],["B. Szabó","HUN",2005,50,50,44,45,58,53,56],["G. Kovács","HUN",2004,51,66,36,57,53,66,59],["D. Molnár","HUN",2005,42,59,30,48,52,60,54],["Á. Farkas","HUN",2003,39,60,30,44,48,59,50],["Z. Kiss","HUN",2004,54,64,36,60,57,66,60],["L. Balogh","HUN",2003,38,61,30,46,50,58,50],["T. Varga","HUN",2003,53,62,34,58,51,65,57],["P. Simon","HUN",2003,56,34,48,48,48,53,51],["B. Szabó II","HUN",2003,55,65,38,59,57,66,60],["G. Kovács II","HUN",2004,52,54,45,46,61,59,57],["D. Molnár II","HUN",2005,44,62,32,50,52,60,56],["Á. Farkas II","HUN",2005,48,51,44,49,62,56,58],["Z. Kiss II","HUN",2005,53,30,57,38,42,47,50],["L. Balogh II","HUN",2003,52,44,37,61,45,56,52],["T. Varga II","HUN",2004,63,36,54,53,54,59,57]],
+// Modern Adventure Pro Cycling
+[["T. Stites","USA",1997,69,44,60,61,61,65,60],["S. McGill","USA",1999,63,40,70,52,51,58,56],["C. Walker II","USA",2002,55,66,40,63,56,64,59],["B. Hayes II","USA",2004,53,57,49,49,68,59,60],["T. Sullivan II","USA",2002,66,39,55,51,54,62,56],["J. Brooks II","USA",2004,61,45,41,66,51,64,59],["M. Carter II","USA",2002,50,52,46,44,59,57,53],["D. Reyes II","USA",2002,48,68,36,54,57,65,57],["K. Olsen II","USA",2002,46,66,33,51,53,65,54],["S. Porter II","USA",2005,55,43,33,60,45,58,55],["C. Walker II","USA",2005,55,66,40,63,56,64,63],["B. Hayes II","USA",2005,57,46,39,62,52,59,58],["T. Sullivan II","USA",2002,59,31,62,40,45,54,50],["J. Brooks II","USA",2003,41,57,30,46,49,59,50],["M. Carter II","USA",2005,41,60,30,44,48,59,53],["D. Reyes II","USA",2004,40,60,30,46,49,57,51],["K. Olsen II","USA",2002,60,48,41,65,49,64,56],["S. Porter II","USA",2002,52,64,32,58,52,64,56]],
+// Solution Tech NIPPO Rali
+[["S. Greco II","ITA",2003,50,55,48,50,66,61,58],["M. Rizzo II","ITA",2003,51,54,48,51,65,58,57],["D. Ferraro II","ITA",2003,59,35,53,47,51,56,53],["A. Colombo II","ITA",2004,57,31,51,46,49,54,52],["L. De Santis II","ITA",2005,62,32,66,46,50,58,58],["G. Marino II","ITA",2003,60,36,50,48,50,57,53],["P. Villa II","ITA",2002,57,47,39,65,52,59,55],["F. Serra II","ITA",2005,64,41,55,55,55,62,61],["S. Greco II","ITA",2002,58,34,51,50,51,58,52],["M. Rizzo II","ITA",2005,45,57,30,55,49,57,55],["D. Ferraro II","ITA",2005,55,30,63,39,45,51,53],["A. Colombo II","ITA",2003,55,43,40,61,50,59,54],["L. De Santis II","ITA",2004,67,38,57,55,57,64,60],["G. Marino II","ITA",2002,54,59,49,50,67,62,59],["P. Villa II","ITA",2003,52,42,34,60,47,54,51],["F. Serra II","ITA",2004,60,36,65,47,49,57,56],["S. Greco II","ITA",2002,52,42,36,61,48,59,52],["M. Rizzo II","ITA",2005,58,32,50,50,49,54,55]]
+];
+
+const RACES=[
+["Tour Down Under",3,"ce","v",2,6],
+["UAE Tour",7,"ce","p",2,7],
+["Omloop Het Nieuwsblad",9,"cl","c",2,1],
+["Strade Bianche",10,"cl","v",3,1],
+["Paris-Nice",11,"ce","v",3,8],
+["Tirreno-Adriatico",11,"ce","v",3,7],
+["Milan-San Remo",12,"cl","p",4,1],
+["Tour de Catalogne",13,"ce","m",3,7],
+["E3 Saxo Classic",13,"cl","c",3,1],
+["Gand-Wevelgem",13,"cl","p",2,1],
+["Tour des Flandres",14,"cl","c",4,1],
+["Tour du Pays basque",15,"ce","m",3,6],
+["Paris-Roubaix",15,"cl","c",4,1],
+["Amstel Gold Race",16,"cl","v",3,1],
+["Flèche Wallonne",17,"cl","v",3,1],
+["Liège-Bastogne-Liège",17,"cl","v",4,1],
+["Tour de Romandie",18,"ce","m",2,6],
+["Giro d'Italia",19,"gt","m",5,21],
+["Critérium du Dauphiné",23,"ce","m",3,8],
+["Tour de Suisse",24,"ce","m",3,8],
+["Tour de France",27,"gt","m",5,21],
+["Clásica San Sebastián",31,"cl","v",3,1],
+["Tour de Pologne",31,"ce","v",2,7],
+["Renewi Tour",33,"ce","c",2,5],
+["Vuelta a España",34,"gt","m",5,21],
+["GP de Québec",37,"cl","v",2,1],
+["GP de Montréal",37,"cl","v",3,1],
+["Il Lombardia",41,"cl","m",4,1]
+];
+
+/* Déduplication globale des homonymes (suffixe romain, idempotent) */
+(()=>{const seen=new Map(),ROM=["II","III","IV","V","VI","VII","VIII","IX","X"];
+ROSTERS.forEach(ros=>ros.forEach(b=>{
+  const base=b[0].replace(/ (II|III|IV|V|VI|VII|VIII|IX|X)$/,"");
+  const k=(seen.get(base)||0)+1;seen.set(base,k);
+  if(k>1)b[0]=base+" "+ROM[Math.min(k-2,ROM.length-1)];
+  else b[0]=base+(/ (II|III|IV|V|VI|VII|VIII|IX|X)$/.test(b[0])&&k===1?"":"");
+}));})();
+
+/* ================= UTILITAIRES ================= */
+const U={
+  r:Math.random,
+  g(){let s=0;for(let i=0;i<4;i++)s+=U.r();return (s-2)/1.16}, // ~N(0,1) borné
+  cl(v,a,b){return v<a?a:v>b?b:v},
+  pick(a){return a[Math.floor(U.r()*a.length)]},
+  eur(n){return (n>=1e6?(n/1e6).toFixed(1)+" M€":Math.round(n/1000)+" k€")},
+  esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))},
+  tm(sec){ // format écart chrono
+    if(sec<1)return "m.t.";
+    let m=Math.floor(sec/60),s=Math.round(sec%60);
+    if(s===60){s=0;m++;}
+    return "+"+(m?m+"'":"")+String(s).padStart(m?2:1,"0")+'"';
+  }
+};
+
+/* Poids d'attributs par profil d'étape/course */
+const WGT={
+  p:{pla:.28,spr:.58,pun:.08,chr:.06,mon:0},
+  c:{pla:.50,pun:.25,spr:.15,chr:.10,mon:0},
+  v:{pun:.45,mon:.28,pla:.15,spr:.12,chr:0},
+  m:{mon:.62,chr:.12,pun:.14,pla:.12,spr:0},
+  t:{chr:.72,pla:.22,pun:.06,mon:0,spr:0}
+};
+/* Écarts de temps par point de score selon profil d'étape */
+const GAPK={p:1.6,c:6.0,v:3.1,m:8.6,t:4.2}; // s par (écart de score)^0.72
+
+/* Barèmes points UCI (top 15) par tier ; GT: barème GC + bonus étape */
+const PTS={
+  2:[300,220,165,125,95,75,60,50,40,35,30,25,20,15,10],
+  3:[500,375,300,240,190,155,125,105,85,70,60,50,40,30,20],
+  4:[800,640,520,420,340,270,225,185,150,125,105,85,70,60,50],
+  5:[1300,1000,850,700,575,460,380,320,260,220,185,155,130,110,95]
+};
+const STAGE_PTS=[120,50,25];
+/* Primes (€) au vainqueur par tier, dégressives */
+const PRIZE={2:22000,3:45000,4:90000,5:550000,stage:12000};
+
+/* Périodes de la saison (pics de forme) */
+const PERIODS=[["Ouverture",1,8],["Printemps",9,15],["Ardennaises",16,18],["Giro",19,22],["Tour",23,30],["Vuelta / Été",31,36],["Automne",37,42]];
+const PSHORT=["Ouv","Print","Ard","Giro","Tour","Vuelta","Aut"];
+const PCHIP=["O","P","A","G","T","V","Au"];
+const PC=PERIODS.map(p=>(p[1]+p[2])/2);
+PC[4]=28; // pic centré sur le Tour (S27-30), montée de forme dès le Dauphiné
+const inPeriod=(p,w)=>w>=PERIODS[p][1]&&w<=PERIODS[p][2];
+const nextPeak=(r,w)=>{const c=[r.p1,r.p2].sort((a,b)=>PC[a]-PC[b]);for(const p of c)if(PERIODS[p][2]>=w)return p;return c[0];};
+
+/* ================= ÉTAT ================= */
+let G=null;
+
+function newRider(base,ti){
+  const [n,nat,an,pla,mon,spr,chr,pun,end,pot]=base;
+  const r={n,nat,an,pla,mon,spr,chr,pun,end,t:ti,
+    moy:Math.round((pla+mon+spr+chr+pun+end)/6),
+    fat:0,pts:0,wins:0,races:0,days:0,out:0,weekLock:false,p1:1,p2:5,gen:false,sal:0,ctr:1+Math.floor(U.r()*3),hist:[]};
+  const a=[["mon",mon],["spr",spr],["pun",pun],["chr",chr],["pla",pla]].sort((x,y)=>y[1]-x[1]);
+  r.prof=a[0][0];
+  // Flandrien : dominante plaine avec punch ou pointe de vitesse (spécialiste des pavés)
+  if(r.prof==="pla"&&(pun>=62||spr>=68))r.prof="fla";
+  r.pot=pot!=null?pot:Math.min(93,r.moy+Math.round(Math.max(0,25-(((G&&G.year)||2026)-an))*1.5));
+  return r;
+}
+/* Paires de pics par profil pour la répartition auto (chaque profil couvre les 7 périodes) */
+const PAIRS={
+mon:[[3,5],[4,5],[3,4],[5,6],[1,4],[0,3],[2,5]],
+spr:[[0,4],[1,4],[3,5],[0,3],[4,6],[1,5],[1,2],[2,5]],
+pun:[[2,6],[1,2],[2,5],[0,2],[4,6],[1,5],[3,6]],
+pla:[[1,6],[0,1],[1,4],[0,5],[2,6],[3,5],[4,6]],
+fla:[[0,1],[1,6],[1,4],[0,5],[2,6],[3,5],[4,6]],
+chr:[[0,4],[1,4],[3,5],[1,6],[5,6],[2,6],[0,3]]
+};
+const GTP=[3,4,5]; // périodes contenant un grand tour
+/* Cibles de couverture par période, dérivées du calendrier réel (courses simultanées où le joueur est invité) */
+function periodTargets(){
+  const simul=Array(PERIODS.length).fill(0);
+  for(let w=1;w<=42;w++){
+    const rs=RACES.filter(r=>r[1]===w&&invitedTeams(r).includes(G.me));
+    if(!rs.length)continue;
+    const n=rs.reduce((s,r)=>s+(r[2]==="gt"?8:7),0);
+    const p=PERIODS.findIndex(pp=>w>=pp[1]&&w<=pp[2]);
+    if(n>simul[p])simul[p]=n;
+  }
+  let tg=simul.map((s,p)=>s===0?0:U.cl(Math.ceil(s*0.5),3,10));
+  GTP.forEach(p=>{if(tg[p]>0)tg[p]=Math.max(tg[p],6);});
+  // adaptation à la taille d'effectif (2 pics par coureur)
+  const N=teamRiders(G.me).length,cap=2*N*0.9,sum=tg.reduce((a,b)=>a+b,0);
+  if(sum>cap)tg=tg.map(t=>t?Math.max(3,Math.round(t*cap/sum)):0);
+  return tg;
+}
+/* Répartition auto : glouton sur les déficits + réparation des périodes vides */
+function autoProgram(){
+  const rs=teamRiders(G.me),tg=periodTargets();
+  const cov=Array(PERIODS.length).fill(0);
+  rs.slice().sort((a,b)=>b.moy-a.moy).forEach(r=>{
+    const pairs=PAIRS[r.prof];
+    let best=0,bs=-1e9;
+    pairs.forEach((pg,i)=>{
+      const d=Math.max(0,tg[pg[0]]-cov[pg[0]])+Math.max(0,tg[pg[1]]-cov[pg[1]]);
+      const s=d*10-i*1.5+U.r();
+      if(s>bs){bs=s;best=i;}
+    });
+    const pg=pairs[best];
+    r.p1=pg[0];r.p2=pg[1];cov[pg[0]]++;cov[pg[1]]++;
+  });
+  // réparation : aucune période ciblée ne doit rester sous 2
+  for(let p=0;p<PERIODS.length;p++){
+    while(tg[p]>0&&cov[p]<2){
+      const cand=rs.filter(r=>r.p1!==p&&r.p2!==p&&PAIRS[r.prof].some(pg=>pg[0]===p||pg[1]===p))
+        .sort((a,b)=>(cov[a.p1]+cov[a.p2])-(cov[b.p1]+cov[b.p2])).pop();
+      if(!cand)break;
+      const pg=PAIRS[cand.prof].find(pg=>pg[0]===p||pg[1]===p);
+      cov[cand.p1]--;cov[cand.p2]--;
+      cand.p1=pg[0];cand.p2=pg[1];cov[pg[0]]++;cov[pg[1]]++;
+    }
+  }
+}
+/* Pics par défaut (périodes) selon profil */
+function autoPeaks(r){
+  if(r.prof==="mon")[r.p1,r.p2]=U.pick([[3,4],[4,5],[3,5]]);
+  else if(r.prof==="spr")[r.p1,r.p2]=U.pick([[0,4],[1,4],[1,5]]);
+  else if(r.prof==="pun")[r.p1,r.p2]=U.pick([[2,6],[2,5],[1,6]]);
+  else if(r.prof==="fla")[r.p1,r.p2]=U.pick([[0,1],[1,6],[1,4]]);
+  else [r.p1,r.p2]=U.pick([[1,4],[1,5],[0,4]]);
+}
+/* Couverture des périodes au niveau équipe + objectifs réalistes des leaders IA */
+function teamPeaks(ti){
+  const rs=teamRiders(ti);
+  rs.forEach(autoPeaks);
+  // leaders IA calés sur leurs vrais objectifs : les stars arrivent au pic sur leurs cibles
+  rs.forEach(r=>{r.lockPk=false;});
+  const by=p=>rs.filter(r=>r.prof===p).sort((a,b)=>b.moy-a.moy);
+  const setPk=(r,a,b)=>{r.p1=Math.min(a,b);r.p2=Math.max(a,b);r.lockPk=true;};
+  const gts=TEAMS[ti][3]||0;
+  const mons=by("mon");
+  if(gts>0){
+    const plan=[[2,4],[1,3],[4,5]]; // GC Tour, GC Giro, GC Vuelta (pic + préparation)
+    const nGC=Math.min(3,mons.length,Math.max(1,Math.round(gts/2.5)));
+    for(let i=0;i<nGC;i++)setPk(mons[i],plan[i][0],plan[i][1]);
+  }
+  const s=by("spr")[0];if(s)setPk(s,1,4);   // vert / MSR + Tour
+  const f=by("fla")[0];if(f)setPk(f,0,1);   // campagne pavés
+  const p=by("pun")[0];if(p)setPk(p,2,6);   // Ardennes + Lombardie
+  const c0=by("chr")[0];if(c0)setPk(c0,1,4); // chronos + relais Tour
+  // couverture minimale de chaque période
+  const c=Array(PERIODS.length).fill(0);
+  rs.forEach(r=>{c[r.p1]++;c[r.p2]++});
+  for(let p2=0;p2<PERIODS.length;p2++){
+    if(c[p2]===0&&rs.length){
+      const donor=(rs.filter(x=>x.p1!==p2&&!x.lockPk).sort((a,b)=>c[b.p2]-c[a.p2])[0])||rs.find(x=>!x.lockPk)||rs[0];
+      c[donor.p2]--;donor.p2=p2;c[p2]++;
+    }
+  }
+}
+
+const TIER0=TEAMS.map(t=>[t[2],t[3]]);
+function init(teamIdx){
+  TEAMS.forEach((t,i)=>{t[2]=TIER0[i][0];t[3]=TIER0[i][1];});
+  G={me:teamIdx,year:2026,week:1,phase:"peaks",tab:"home",
+    riders:[],teams:TEAMS.map((t,i)=>({i,pts:0,cash:t[4]*1e6*0.25,budget:t[4]*1e6,wins:0})),
+    log:[],season:1,history:[],pending:[],selBuf:null,lastRes:[],progInit:false};
+  ROSTERS.forEach((ros,ti)=>ros.forEach(b=>{
+    const r=newRider(b,ti);G.riders.push(r);
+  }));
+  G.riders.forEach((r,i)=>{r.id=i;r.sal=salary(r);});
+  TEAMS.forEach((t,i)=>teamPeaks(i));
+}
+const teamRiders=ti=>G.riders.filter(r=>r.t===ti&&!r.retired);
+const salary=r=>Math.max(100000,Math.round((25000*Math.max(0,r.moy-50)+(r.moy>72?Math.pow(r.moy-72,2.7)*1280:0))/1000)*1000);
+const masse=ti=>teamRiders(ti).reduce((s,r)=>s+(r.sal||salary(r)),0);
+const maxSquad=ti=>TEAMS[ti][2]===0?30:26;
+const askSalary=r=>{
+  const age=G.year-r.an;
+  let f=1+Math.min(0.5,r.pts/2500)+(r.moy>=85?0.18:0)-(age>=33?0.18:0)-(age>=36?0.15:0);
+  return Math.max(100000,Math.round((r.sal||salary(r))*Math.max(0.6,f)/1000)*1000);
+};
+
+/* ================= FORME / FATIGUE ================= */
+function formOf(r,w){
+  const b=Math.max(Math.exp(-((w-PC[r.p1])**2)/22),Math.exp(-((w-PC[r.p2])**2)/22));
+  return 0.94+0.14*b; // 0.94 → 1.08
+}
+const fatMult=f=>1-Math.max(0,f-30)*0.004;
+function recoverWeek(){
+  G.riders.forEach(r=>{
+    if(!r.racedThisWeek)r.fat=U.cl(r.fat-(r.end/10+4),0,100);
+    r.racedThisWeek=false;r.weekLock=false;
+    if(r.out>0)r.out--;
+  });
+}
+const raceFatCost=(race)=>race[5]*2.6;
+
+/* ================= SIMULATION ================= */
+function baseScore(r,prof){
+  const w=WGT[prof];
+  return r.pla*w.pla+r.mon*w.mon+r.spr*w.spr+r.chr*w.chr+r.pun*w.pun;
+}
+/* Sélection IA d'une équipe pour une course */
+function aiSelect(ti,race,n){
+  const prof=race[3],multi=race[5]>1;
+  const ok=r=>r.out===0&&!r.weekLock&&r.days+race[5]<=(r.moy>=88?85:100)&&(!multi||!r.racedThisWeek)
+    &&!(r.moy>=84&&race[4]<=2&&!inPeriod(r.p1,race[1])&&!inPeriod(r.p2,race[1])); // les stars snobent les petites courses hors pic
+  let pool=teamRiders(ti).filter(r=>ok(r)&&r.fat<78);
+  if(pool.length<n)pool=teamRiders(ti).filter(r=>ok(r)&&r.fat<90); // repêchage
+  const scored=pool.map(r=>({r,s:baseScore(r,prof)*Math.pow(formOf(r,race[1]),3)*fatMult(r.fat)*(r.racedThisWeek?0.93:1)*(1-Math.max(0,r.days-(r.moy>=88?42:55))*(r.moy>=88?0.007:0.004))}))
+    .sort((a,b)=>b.s-a.s);
+  return scored.slice(0,n).map(x=>x.r);
+}
+/* Draft alterné : répartition d'un effectif sur plusieurs courses à étapes simultanées */
+function aiPlanWeek(ti,races){
+  const rs2=races.slice().sort((a,b)=>b[4]-a[4]||b[5]-a[5]);
+  const okB=r=>r.out===0&&!r.weekLock&&!r.racedThisWeek;
+  let pool=teamRiders(ti).filter(r=>okB(r)&&r.fat<78);
+  if(pool.length<rs2.length*5)pool=teamRiders(ti).filter(r=>okB(r)&&r.fat<90);
+  const sc=(r,race)=>baseScore(r,race[3])*Math.pow(formOf(r,race[1]),3)*fatMult(r.fat)*(1-Math.max(0,r.days-(r.moy>=88?42:55))*(r.moy>=88?0.007:0.004));
+  const eligR=(r,race)=>r.days+race[5]<=(r.moy>=88?85:100)&&!(r.moy>=84&&race[4]<=2&&!inPeriod(r.p1,race[1])&&!inPeriod(r.p2,race[1]));
+  const quota=rs2.map(r=>r[2]==="gt"?8:7),sel=rs2.map(()=>[]),taken=new Set();
+  let act=true;
+  while(act){act=false;
+    rs2.forEach((race,i)=>{
+      if(sel[i].length>=quota[i])return;
+      let best=null,bs=-1;
+      pool.forEach(r=>{if(taken.has(r.id)||!eligR(r,race))return;const s=sc(r,race);if(s>bs){bs=s;best=r;}});
+      if(best){sel[i].push(best);taken.add(best.id);act=true;}
+    });
+  }
+  const m=new Map();rs2.forEach((race,i)=>m.set(race,sel[i]));
+  return m;
+}
+/* Tactique IA simple */
+function aiTactic(sel,race){
+  const prof=race[3];
+  const lead=sel.slice().sort((a,b)=>baseScore(b,prof)-baseScore(a,prof))[0];
+  return {leader:lead,mode:prof==="p"?"sprint":(race[2]!=="cl"?"gc":"leader")};
+}
+/* Score en course d'un coureur */
+const NOISE={p:0.09,c:0.12,v:0.13,m:0.11,t:0.06};
+function riderScore(r,prof,week,ctx){
+  let base=78*Math.pow(baseScore(r,prof)/78,0.88); // compression des écarts de niveau
+  if(prof==="c"&&r.prof==="fla")base*=1.04; // les Flandriens excellent sur les pavés
+  let s=base*formOf(r,week)*fatMult(r.fat+(ctx.extraFat||0));
+  const lead=ctx.leaders.get(r.t);
+  if(prof!=="t"){
+  if(lead===r){
+    const help=ctx.helpers.get(r.t)||0;
+    s*=1+0.085*help;
+    if(ctx.tactics.get(r.t)==="sprint"&&prof==="p")s*=1.03;
+    if(ctx.tactics.get(r.t)==="echappee")s*=0.97;
+  } else {
+    s*=0.955; // équipier au service
+    if(ctx.tactics.get(r.t)==="echappee")s*=1+(U.r()<0.12?0.09:0);
+  }
+  }
+  const d=U.r();
+  if(d<0.06)s*=0.90;else if(d<0.09)s*=1.06; // jour sans / jour avec
+  return s*(1+U.g()*NOISE[prof]);
+}
+function buildCtx(entries,race){
+  const leaders=new Map(),tactics=new Map(),helpers=new Map();
+  entries.forEach(e=>{
+    leaders.set(e.ti,e.leader);
+    tactics.set(e.ti,e.mode);
+    const hs=e.sel.filter(r=>r!==e.leader);
+    const prof=race[3];
+    const h=hs.length?hs.reduce((s,r)=>s+baseScore(r,prof),0)/hs.length/100:0;
+    helpers.set(e.ti,h);
+  });
+  return {leaders,tactics,helpers};
+}
+/* Course d'un jour */
+function simOneDay(race,entries){
+  const ctx=buildCtx(entries,race);
+  const all=[];
+  entries.forEach(e=>e.sel.forEach(r=>all.push(r)));
+  const prof=race[3];
+  let rk=all.map(r=>({r,s:riderScore(r,prof,race[1],{...ctx,extraFat:0})}))
+    .sort((a,b)=>b.s-a.s);
+  // coup d'éclat d'un outsider (rare sur les Monuments)
+  const pB=race[4]>=4?0.08:({p:0.10,c:0.16,v:0.18}[prof]||0.10);
+  if(U.r()<pB&&rk.length>30){
+    const size=1+Math.floor(Math.pow(U.r(),2)*3); // 1 à 3 coureurs
+    const cands=rk.slice(8,50);
+    const picks=cands.map(x=>({x,w:x.s*(0.5+U.r())})).sort((a,b)=>b.w-a.w).slice(0,size).map(o=>o.x);
+    picks.sort((a,b)=>b.s-a.s);
+    rk=rk.filter(x=>!picks.includes(x));
+    picks.forEach(p=>p.brk=true);
+    rk=picks.concat(rk);
+  }
+  // écarts de temps réalistes selon le profil
+  const K={p:1.4,c:6.0,v:3.1,m:7.6}[prof]||3.1;
+  const pel1=rk.find(x=>!x.brk);
+  const s0=pel1?pel1.s:rk[0].s;
+  const brkGap=rk[0].brk?15+U.r()*30:0; // marge du coup d'éclat
+  const gaps=new Map();let prev=0,pi=0;
+  rk.forEach((x,i)=>{
+    let g=0;
+    if(i>0){
+      if(x.brk)g=Math.min(brkGap*0.8,Math.pow(Math.max(0,rk[0].s-x.s),0.72)*K*0.4+i*1.5);
+      else{
+        g=Math.pow(Math.max(0,s0-x.s),0.72)*K;
+        if(prof==="p"&&pi<Math.min(30,rk.length*0.5))g=0; // arrivée groupée
+        g+=brkGap;
+      }
+      g=Math.max(g,prev);prev=g;
+    }
+    if(!x.brk)pi++;
+    gaps.set(x.r,g);
+  });
+  return {rank:rk.map(x=>x.r),stages:null,events:[],brk:!!rk[0].brk,gaps};
+}
+/* Profils d'étapes d'une course à étapes */
+function stageProfiles(race){
+  const d=race[5],prof=race[3],out=[];
+  if(race[2]==="gt"){
+    // gabarit réaliste : grand départ roulant, chronos placés, montagne dense en 3e semaine, parade finale
+    const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(U.r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+    const o=Array(21).fill(null);
+    o[20]="p"; // parade finale
+    const tt1=3+Math.floor(U.r()*4);   // chrono 1 : ét. 4-7
+    const tt2=15+Math.floor(U.r()*4);  // chrono 2 : ét. 16-19
+    o[tt1]="t";o[tt2]="t";
+    let dec=18+Math.floor(U.r()*2);if(dec===tt2)dec=dec===18?19:18; // étape décisive m ét. 19-20
+    if(o[dec]==null)o[dec]="m";
+    let mW1=6+Math.floor(U.r()*3);if(o[mW1]!=null)mW1=[6,7,8].find(i=>o[i]==null); // 1 montagne max fin sem. 1
+    if(mW1!=null)o[mW1]="m";
+    const f1=shuf(["p","p","p","p","p","v","v"]);   // sem. 1 : dominante plat
+    for(let i=0;i<9;i++)if(o[i]==null)o[i]=f1.pop()||"p";
+    const f2=shuf(["m","m","v","v","v","p"]);       // sem. 2 : alternance
+    for(let i=9;i<15;i++)if(o[i]==null)o[i]=f2.pop()||"v";
+    const f3=shuf(["m","m","v"]);                    // sem. 3 : montagne dense
+    for(let i=15;i<20;i++)if(o[i]==null)o[i]=f3.pop()||"m";
+    return o;
+  }
+  const base=prof==="m"?["p","v","m","t","m","m","v","m"]:prof==="v"?["p","v","v","t","p","v","m","v"]:prof==="c"?["p","c","p","c","c"]:["p","p","v","t","p","p","v"];
+  for(let i=0;i<d;i++)out.push(base[i%base.length]);
+  return out;
+}
+/* Course à étapes / grand tour : état itérable étape par étape */
+const PTS_STAGE={
+  p:[50,30,20,18,16,14,12,10,8,7,6,5,4,3,2],
+  c:[30,25,22,19,17,15,13,11,9,7,6,5,4,3,2],
+  v:[30,25,22,19,17,15,13,11,9,7,6,5,4,3,2],
+  m:[20,17,15,13,11,10,9,8,7,6,5,4,3,2,1],
+  t:[20,17,15,13,11,10,9,8,7,6,5,4,3,2,1]};
+const BONIF=[10,6,4];
+const BRK={p:0.12,c:0.22,v:0.38,m:0.30,t:0};
+function initStageRace(race,entries){
+  const profs=stageProfiles(race);
+  const st=new Map();const all=[];
+  entries.forEach(e=>e.sel.forEach(r=>{all.push(r);st.set(r,{time:0,f:0,ab:false,pts:0,kom:0});}));
+  return {race,entries,profs,st,all,si:0,stageWins:[],events:[],done:false,lastStage:null,mgTarget:null,mgMult:null};
+}
+/* Protégé du jour par équipe selon le profil de l'étape */
+function stageLeaders(rs,sp){
+  const leaders=new Map(),helpers=new Map(),tactics=new Map();
+  rs.entries.forEach(e=>{
+    const live=e.sel.filter(r=>!rs.st.get(r).ab);
+    if(!live.length)return;
+    let ld=live.slice().sort((a,b)=>baseScore(b,sp)-baseScore(a,sp))[0];
+    if(e.ti===G.me&&rs.playerProt!=null){
+      const pp=live.find(r=>r.id===rs.playerProt);
+      if(pp)ld=pp;
+    }
+    leaders.set(e.ti,ld);tactics.set(e.ti,e.mode);
+    const hs=live.filter(r=>r!==ld);
+    helpers.set(e.ti,hs.length?hs.reduce((s,r)=>s+baseScore(r,sp),0)/hs.length/100:0);
+  });
+  return {leaders,helpers,tactics};
+}
+function simStage(rs,playerMod){
+  const sp=rs.profs[rs.si];
+  const ctx=stageLeaders(rs,sp);
+  const live=rs.all.filter(r=>!rs.st.get(r).ab);
+  const gcTop=new Set();
+  if(rs.si>0&&(sp==="m"||sp==="v"))live.slice().sort((a,b)=>rs.st.get(a).time-rs.st.get(b).time).slice(0,8).forEach(r=>gcTop.add(r));
+  let rows=live.map(r=>{
+    let s=riderScore(r,sp,rs.race[1],{...ctx,extraFat:rs.st.get(r).f});
+    if(gcTop.has(r))s*=1.03; // les favoris du général se marquent et restent devant
+    if(playerMod&&playerMod.rider===r)s*=playerMod.mult;
+    return {r,s};
+  }).sort((a,b)=>b.s-a.s);
+  // contrôle du peloton par les équipes du top 3 du général
+  const gcT=live.slice().sort((a,b)=>rs.st.get(a).time-rs.st.get(b).time).slice(0,3);
+  let control=0;
+  gcT.forEach(g=>{const h=ctx.helpers.get(g.t)||0;if(h>control)control=h});
+  const pBrk=BRK[sp]*(U.r()<0.40+0.55*control?0.7:1.6);
+  // échappée victorieuse : groupe de taille variable, raids du général possibles (rarissimes)
+  let raidBig=false;
+  if(U.r()<pBrk&&rs.si<rs.profs.length-1){
+    const gcSorted=live.slice().sort((a,b)=>rs.st.get(a).time-rs.st.get(b).time);
+    const gcTop=new Set(gcSorted.slice(0,8));
+    const cands=rows.filter(x=>!gcTop.has(x.r)).slice(0,40);
+    const wk3=rs.profs.length>=15&&rs.si>=14;
+    let size=wk3?6+Math.floor(U.r()*11):1+Math.floor(Math.pow(U.r(),1.6)*6);
+    let raid=null;
+    if(rs.race[2]==="gt"&&rs.si>=Math.floor(rs.profs.length/2)&&gcSorted.length>3){
+      const t0g=rs.st.get(gcSorted[0]).time;
+      const c1=gcSorted.slice(3,8).filter(r=>rs.st.get(r).time-t0g>240);
+      const c2=(wk3&&(sp==="m"||sp==="v"))?gcSorted.slice(1,3).filter(r=>rs.st.get(r).time-t0g>120):[];
+      if(c2.length&&U.r()<0.01)raid={r:U.pick(c2),big:true};
+      else if(c1.length&&U.r()<0.06)raid={r:U.pick(c1),big:false};
+    }
+    if(cands.length>4){
+      size=Math.min(size,cands.length-2);
+      const picks=cands.map(x=>({x,w:Math.pow(x.s,0.6)*(0.4+U.r())})).sort((a,b)=>b.w-a.w).slice(0,Math.max(1,size)).map(o=>o.x);
+      if(raid){const rr=rows.find(x=>x.r===raid.r);if(rr&&!picks.includes(rr))picks.push(rr);raidBig=raid.big;
+        rs.events.push("Ét. "+(rs.si+1)+" : "+(raid.big?"<b>Raid de "+U.esc(raid.r.n)+" !</b> Le général vacille.":U.esc(raid.r.n)+" part de loin pour bousculer le général."));}
+      picks.sort((a,b)=>b.s-a.s);
+      rows=rows.filter(x=>!picks.includes(x));
+      picks.forEach(p=>p.brk=true);
+      rows=picks.concat(rows);
+    }
+  }
+  const top=rows[0].s;
+  const pelFirst=rows.find(x=>!x.brk);
+  const pelTop=pelFirst?pelFirst.s:top;
+  const brkGap=rows[0].brk?(raidBig?90+U.r()*210:28+U.r()*50):0; // le peloton concède un écart commun
+  let pi=0;
+  rows.forEach((x,i)=>{
+    const s0=rs.st.get(x.r);
+    let gap;
+    if(x.brk){
+      gap=i===0?0:Math.min(brkGap*0.8,Math.pow(Math.max(0,top-x.s),0.72)*GAPK[sp]*0.4+i*1.5);
+    }else{
+      gap=Math.pow(Math.max(0,pelTop-x.s),0.72)*GAPK[sp];
+      if(sp==="p"&&pi<Math.min(40,rows.length*0.6))gap=0; // arrivée groupée
+      pi++;
+      gap+=brkGap;
+    }
+    x.gap=gap;
+    s0.time+=gap;
+    s0.f+=2.6*(115-x.r.end)/45;
+    const risk=0.0015+Math.max(0,(x.r.fat+s0.f-75))*0.0035;
+    if(U.r()<risk&&rs.si<rs.profs.length-1){s0.ab=true;s0.abSt=rs.si+1;
+      rs.events.push("Ét. "+(rs.si+1)+" : abandon de <b>"+U.esc(x.r.n)+"</b> ("+TEAMS[x.r.t][0]+")");}
+  });
+  // bonifications, points, montagne (survivants uniquement)
+  let surv=rows.filter(x=>!rs.st.get(x.r).ab);
+  if(!surv.length)surv=rows;
+  surv.slice(0,3).forEach((x,i)=>rs.st.get(x.r).time-=BONIF[i]);
+  PTS_STAGE[sp].forEach((p,i)=>{if(surv[i])rs.st.get(surv[i].r).pts+=p});
+  const nc=sp==="m"?3:sp==="v"?1:0;
+  for(let c=0;c<nc;c++){
+    const climb=live.filter(r=>!rs.st.get(r).ab).map(r=>({r,w:r.mon*formOf(r,rs.race[1])*(0.5+U.r())})).sort((a,b)=>b.w-a.w);
+    [10,8,6,4,2].forEach((p,i)=>{if(climb[i])rs.st.get(climb[i].r).kom+=p});
+  }
+  rs.stageWins.push({st:rs.si+1,prof:sp,r:surv[0].r,brk:!!surv[0].brk});
+  rs.lastStage={rows:surv,sp};
+  rs.si++;
+  if(rs.si>=rs.profs.length)rs.done=true;
+  return rows;
+}
+function gcOf(rs){return rs.all.filter(r=>!rs.st.get(r).ab).sort((a,b)=>rs.st.get(a).time-rs.st.get(b).time)}
+function jerseysOf(rs){
+  const gc=gcOf(rs);
+  const by=k=>gc.slice().sort((a,b)=>rs.st.get(b)[k]-rs.st.get(a)[k])[0];
+  const pts=by("pts"),kom=by("kom");
+  return {gc:gc[0]||null,
+    pts:pts&&rs.st.get(pts).pts>0?pts:null,
+    kom:kom&&rs.st.get(kom).kom>0?kom:null,
+    young:gc.find(r=>G.year-r.an<=25)||null};
+}
+function finishStageRace(rs){
+  const fin=gcOf(rs);
+  return {rank:fin,stages:rs.stageWins,events:rs.events,times:rs.st,rs};
+}
+function simStageRace(race,entries){
+  const rs=initStageRace(race,entries);
+  while(!rs.done)simStage(rs,null);
+  return finishStageRace(rs);
+}
+/* Invitations à une course */
+function invitedTeams(race){
+  const out=[];
+  if(race[2]==="gt"){
+    const mask=race[0].includes("Giro")?1:race[0].includes("France")?2:4;
+    TEAMS.forEach((t,i)=>{if(t[3]&mask)out.push(i)});
+    if(G&&G.me!=null&&TEAMS[G.me][2]===1&&!out.includes(G.me))out.push(G.me); // wildcard organisateur pour le joueur ProTeam
+    return out;
+  }
+  TEAMS.forEach((t,i)=>{if(t[2]===0)out.push(i)});
+  [18,19,20].forEach(i=>out.push(i)); // Tudor, Q36.5, Cofidis
+  // 3 wildcards tournantes, stables par course, sur toutes les ProTeams
+  const seed=race[0].length*3+race[1]*5;
+  const pts=[21,22,23,24,25,26,27,28,29,30,31,32,33];
+  for(let k=0;k<3;k++)out.push(pts[(seed+k*5)%pts.length]);
+  if(G&&G.me!=null&&TEAMS[G.me][2]===1)out.push(G.me); // l'équipe du joueur ProTeam est toujours invitée
+  return [...new Set(out)];
+}
+/* Application des résultats : points, primes, fatigue, stats */
+function applyResults(race,res){
+  const tier=race[4],scale=PTS[tier];
+  const gains=new Map();
+  res.rank.slice(0,15).forEach((r,i)=>{
+    r.pts+=scale[i];
+    if(i===0){r.wins++;G.teams[r.t].wins++;}
+    r.hist.push([race[0],i+1,race[4]]);
+    const p=PRIZE[tier]*Math.pow(0.62,i);
+    gains.set(r.t,(gains.get(r.t)||0)+p);
+  });
+  if(res.stages)res.stages.forEach(sw=>{
+    sw.r.pts+=STAGE_PTS[0]/(race[4]===5?1:2.4);
+    sw.r.wins++;G.teams[sw.r.t].wins++;
+    gains.set(sw.r.t,(gains.get(sw.r.t)||0)+PRIZE.stage);
+  });
+  gains.forEach((v,ti)=>G.teams[ti].cash+=v);
+  // fatigue + stats participants
+  res.entries.forEach(e=>e.sel.forEach(r=>{
+    const ab=res.times&&res.times.get(r)&&res.times.get(r).ab;
+    r.fat=U.cl(r.fat+raceFatCost(race)*(ab?0.55:1)*(115-r.end)/58,0,100);
+    r.races++;r.days+=ab?Math.ceil(race[5]/2):race[5];r.racedThisWeek=true;
+    if(ab){r.out=1;}
+  }));
+  G.teams.forEach(t=>t.pts=teamRiders(t.i).reduce((s,r)=>s+r.pts,0));
+}
+
+/* ================= SAUVEGARDE ================= */
+const SAVE_KEY="cm_save_v1";
+function saveGame(){
+  if(!G||G.me==null||G.live)return;
+  try{
+    const s={v:1,me:G.me,year:G.year,week:G.week,season:G.season,phase:G.phase,
+      tiers:TEAMS.map(t=>t[2]),gts:TEAMS.map(t=>t[3]),
+      teams:G.teams,riders:G.riders,history:G.history,promo:G.promo||null,
+      renew:G.renew||[],poolIds:(G.pool||[]).map(r=>r.id),agreed:G.agreed||{},nego:G.nego||{},
+      mktResolved:!!G.mktResolved,mktRes:G.mktRes||null,progInit:!!G.progInit,progLog:G.progLog||[]};
+    localStorage.setItem(SAVE_KEY,JSON.stringify(s));
+  }catch(e){}
+}
+function loadGame(str){
+  try{
+    const s=JSON.parse(str||localStorage.getItem(SAVE_KEY)||"null");
+    if(!s||s.v!==1||!Array.isArray(s.riders)||s.riders.length<100||s.me==null||!Array.isArray(s.teams)||s.teams.length!==TEAMS.length)return false;
+    s.tiers.forEach((t,i)=>{if(TEAMS[i]){TEAMS[i][2]=t;TEAMS[i][3]=s.gts[i];}});
+    G={me:s.me,year:s.year,week:s.week,season:s.season,phase:s.phase,tab:"home",
+      riders:s.riders,teams:s.teams,history:s.history||[],promo:s.promo,
+      renew:s.renew||[],pool:(s.poolIds||[]).map(i=>s.riders[i]).filter(Boolean),
+      agreed:s.agreed||{},nego:s.nego||{},offers:{},
+      mktResolved:s.mktResolved,mktRes:s.mktRes,progInit:s.progInit,progLog:s.progLog||[],
+      log:[],pending:[],selBuf:null,lastRes:[],liveQueue:[],live:null,msub:"market"};
+    return true;
+  }catch(e){return false;}
+}
+function hasSave(){try{return !!localStorage.getItem(SAVE_KEY)}catch(e){return false}}
+function wipeSave(){try{localStorage.removeItem(SAVE_KEY)}catch(e){}}
+function saveInfo(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY));return s?{team:TEAMS[s.me][0],year:s.year,week:Math.min(s.week,42)}:null}catch(e){return null}}
+/* ================= BOUCLE SAISON ================= */
+function showVeil(txt){document.getElementById("veiltxt").textContent=txt||"Simulation…";document.getElementById("veil").classList.add("on");}
+function hideVeil(){document.getElementById("veil").classList.remove("on");}
+function racesStarting(w){return RACES.filter(r=>r[1]===w);}
+
+async function advance(){
+  if(G.pending.length)return; // sélection en cours
+  showVeil();
+  await new Promise(rs=>setTimeout(rs,30));
+  const todo=racesStarting(G.week);
+  const mine=todo.filter(r=>invitedTeams(r).includes(G.me));
+  if(mine.length){
+    mine.sort((a,b)=>b[5]-a[5]);
+    G.pending=mine.map(r=>({race:r,decided:false}));
+    const mm=mine.filter(r=>r[5]>1);
+    if(mm.length>1){const plan=aiPlanWeek(G.me,mm);G.pending.forEach(x=>{if(plan.has(x.race))x.sug=plan.get(x.race);});}
+    G.otherRaces=todo.filter(r=>!mine.includes(r));
+    hideVeil();
+    G.tab="select";render();
+    return;
+  }
+  runWeek(todo.map(r=>({race:r,player:null})));
+  hideVeil();
+}
+/* Exécute toutes les courses de la semaine (player = {sel,leader,mode,live} ou null) */
+function runWeek(list){
+  G.lastRes=[];
+  list.sort((a,b)=>b.race[5]-a.race[5]); // étapes d'abord : verrouillage hebdo
+  G.liveQueue=[];
+  // draft alterné pour les équipes engagées sur plusieurs courses à étapes simultanées
+  const multiR=list.filter(x=>x.race[5]>1).map(x=>x.race);
+  const plans=new Map();
+  if(multiR.length>1){
+    const cnt=new Map();
+    multiR.forEach(r=>invitedTeams(r).forEach(ti=>cnt.set(ti,(cnt.get(ti)||0)+1)));
+    cnt.forEach((c,ti)=>{if(c>1&&ti!==G.me)plans.set(ti,aiPlanWeek(ti,multiR.filter(r=>invitedTeams(r).includes(ti))));});
+  }
+  list.forEach(({race,player})=>{
+    const inv=invitedTeams(race);
+    const n=race[2]==="gt"?8:7;
+    const entries=[];
+    inv.forEach(ti=>{
+      if(ti===G.me){
+        if(!player)return; // impasse
+        entries.push({ti,sel:player.sel,leader:player.leader,mode:player.mode});
+      } else {
+        const sel=(plans.get(ti)&&plans.get(ti).get(race))||aiSelect(ti,race,n);
+        if(sel.length<Math.min(5,n))return;
+        const t=aiTactic(sel,race);
+        entries.push({ti,sel,leader:t.leader,mode:t.mode});
+      }
+    });
+    if(race[5]>1)entries.forEach(e=>e.sel.forEach(r=>r.weekLock=true));
+    if(player&&player.live&&race[5]>1){
+      G.liveQueue.push(initStageRace(race,entries));
+      return;
+    }
+    const res=race[5]>1?simStageRace(race,entries):simOneDay(race,entries);
+    res.entries=entries;res.race=race;
+    applyResults(race,res);
+    G.lastRes.push(res);
+    G.log.unshift({w:G.week,race,res});
+  });
+  if(G.liveQueue.length){G.live=G.liveQueue.shift();G.tab="live";render();return;}
+  endOfWeek();
+}
+function endOfWeek(){
+  recoverWeek();
+  if(G.week%4===0){
+    G.teams.forEach(t=>{t.cash+=t.budget/13;t.cash-=masse(t.i)/13+t.budget*0.026;});
+  }
+  G.week++;
+  if(G.week>42){endSeason();return;}
+  G.tab=G.lastRes.length?"results":"home";
+  render();saveGame();
+}
+function finishLive(){
+  const rs=G.live;
+  const res=finishStageRace(rs);
+  res.entries=rs.entries;res.race=rs.race;
+  applyResults(rs.race,res);
+  G.lastRes.push(res);
+  G.log.unshift({w:G.week,race:rs.race,res});
+  G.live=null;
+  if(G.liveQueue.length){G.live=G.liveQueue.shift();G.tab="live";render();return;}
+  endOfWeek();
+}
+
+/* ================= FIN DE SAISON / MERCATO ================= */
+function endSeason(){
+  const rankT=G.teams.slice().sort((a,b)=>b.pts-a.pts);
+  const meRank=rankT.findIndex(t=>t.i===G.me)+1;
+  const meBest=teamRiders(G.me).sort((a,b)=>b.pts-a.pts)[0];
+  G.history.push({year:G.year,rank:meRank,pts:G.teams[G.me].pts,wins:G.teams[G.me].wins,best:meBest?meBest.n:"—"});
+  // écrêtage trésorerie : surplus réinvesti par le sponsor, déficit partiellement épongé
+  G.teams.forEach(t=>{t.cash=U.cl(t.cash,-8e6,t.budget*0.6);});
+  // budget suivant selon classement
+  G.teams.forEach(t=>{
+    const rk=rankT.findIndex(x=>x.i===t.i);
+    const f=1.14-rk*0.011;
+    t.budget=U.cl(t.budget*f,4e6,72e6);
+  });
+  // promotion / relégation : dernier WorldTeam ↔ meilleure ProTeam
+  const wt=rankT.filter(t=>TEAMS[t.i][2]===0),pt=rankT.filter(t=>TEAMS[t.i][2]===1);
+  G.promo=null;
+  if(wt.length&&pt.length){
+    const down=wt[wt.length-1].i,up=pt[0].i;
+    TEAMS[down][2]=1;TEAMS[up][2]=0;
+    const nat=TEAMS[down][1];
+    TEAMS[down][3]=nat==="ITA"?1:nat==="FRA"?2:4; // le relégué garde son grand tour national
+    TEAMS[up][3]=7;
+    G.teams[down].budget=U.cl(G.teams[down].budget*0.85,4e6,72e6);
+    G.teams[up].budget=U.cl(G.teams[up].budget*1.12,4e6,72e6);
+    G.promo={down,up};
+  }
+  // progression / vieillissement
+  G.progLog=[];
+  G.riders.forEach(r=>{
+    const m0=r.moy;
+    const age=G.year-r.an;
+    const ks=["pla","mon","spr","chr","pun","end"];
+    const pot=r.pot||r.moy;
+    const marge=Math.max(0,pot-r.moy);
+    if(age<27&&marge>0){
+      // jeunes : progression rapide, proportionnelle au potentiel restant, ralentie vers la maturité
+      const perf=U.cl(r.pts/500,0,1);
+      const speed=age<=21?1:age<=23?0.85:age<=25?0.55:0.3;
+      const p=U.cl((0.35+perf*0.2+marge*0.05)*speed,0.05,0.95);
+      const capA=Math.min(99,pot+3);
+      const jump=marge>=8&&age<=23; // grand espoir : bonds possibles
+      ks.forEach(k=>{if(U.r()<p)r[k]=U.cl(r[k]+1+(U.r()<(jump?0.65:0.2+perf*0.25)?1:0)+(jump&&U.r()<0.45?1:0),30,capA)});
+    }else{
+      // déclin : plus tardif et plus lent quand le potentiel initial était élevé
+      const declAge=pot>=88?33:pot>=82?32:pot>=75?31:30;
+      if(age>=declAge){
+        const p=U.cl((pot>=88?0.25:pot>=82?0.32:0.42)+(age-declAge)*0.09,0,0.85);
+        ks.forEach(k=>{if(U.r()<p)r[k]=U.cl(r[k]-(1+(U.r()<0.3?1:0)),30,99)});
+      }
+    }
+    r.moy=Math.round((r.pla+r.mon+r.spr+r.chr+r.pun+r.end)/6);
+    if(age>=38||(age>=36&&U.r()<0.35))r.retired=true;
+    if(r.t===G.me&&!r.retired&&r.moy!==m0)G.progLog.push({id:r.id,d:r.moy-m0});
+  });
+  // contrats : décompte, renouvellements IA, constitution du marché
+  G.riders.forEach(r=>{if(!r.retired)r.ctr--;});
+  G.pool=[];G.renew=[];G.offers={};
+  G.riders.forEach(r=>{
+    if(r.retired||r.ctr>0||r.t<0)return;
+    if(r.t===G.me){G.renew.push(r.id);return;}
+    const age=G.year-r.an;
+    const pKeep=U.cl(0.92-(age-29)*0.06+(r.moy-70)*0.012,0.05,0.97);
+    if(U.r()<pKeep){r.ctr=1+Math.floor(U.r()*3);r.sal=askSalary(r);}
+    else{r.t=-1;G.pool.push(r);}
+  });
+  for(let i=0;i<20;i++)G.pool.push(genNeo());
+  G.phase="endseason";G.mktResolved=false;G.mktRes=null;G.agreed={};G.nego={};
+  G.tab="home";render();saveGame();
+}
+const NEO={
+  FRA:[["Léo","Mathis","Nolan","Tom","Enzo","Baptiste","Maël","Louis"],["Bernard","Roux","Fontaine","Garnier","Lemoine","Perrot","Chevalier","Marchand"]],
+  BEL:[["Arne","Wout","Senne","Milan","Jarne","Lars"],["Vermeulen","Claes","Peeters","Maes","Willems","Segers"]],
+  ITA:[["Matteo","Luca","Davide","Simone","Tommaso","Pietro"],["Rinaldi","Ferretti","Marini","Colombo","Villa","Gatti"]],
+  ESP:[["Iker","Pau","Hugo","Marc","Unai","Adrián"],["Navarro","Molina","Ortega","Vidal","Serrano","Campos"]],
+  NED:[["Daan","Sven","Thijs","Luuk","Niels"],["Bakker","Visser","Smit","Mulder","Kok"]],
+  GBR:[["Oliver","Harry","Callum","Finn","Jack"],["Walker","Hughes","Bell","Shaw","Dean"]],
+  DEN:[["Emil","Oscar","Magnus","Anton"],["Nielsen","Holm","Dahl","Skov"]],
+  COL:[["Santiago","Juan","Camilo","Andrés"],["Rojas","Cárdenas","Mora","Quintero"]]
+};
+function genNeo(){
+  const nat=U.pick(Object.keys(NEO));
+  const [f,l]=NEO[nat];
+  const n=U.pick(f)[0]+". "+U.pick(l);
+  const prof=U.pick(["mon","spr","pun","pla","chr","fla"]);
+  const b=k=>U.cl(Math.round(56+U.g()*7+(k===prof?14:0)+(prof==="fla"?(k==="pla"?12:k==="pun"?8:0):0)),40,84);
+  const base=[n,nat,G.year-19-Math.floor(U.r()*3),b("pla"),b("mon"),b("spr"),b("chr"),b("pun"),U.cl(Math.round(66+U.g()*6),50,84)];
+  const r=newRider(base,-1);r.gen=true;r.ctr=0;r.sal=120000;autoPeaks(r);r.id=G.riders.length;G.riders.push(r);
+  return r;
+}
+function resolveMarket(){
+  G.mktRes={signed:[],lost:[]};G.mktResolved=true;
+  const capMe=G.teams[G.me].budget*0.50;
+  Object.entries(G.agreed||{}).forEach(([id,a])=>{
+    const r=G.riders[+id];if(!r||r.t!==-1)return;
+    if(teamRiders(G.me).length>=maxSquad(G.me)||masse(G.me)+a.sal>capMe){
+      G.mktRes.lost.push({n:r.n,by:null,amt:0,mine:a.sal});return;}
+    r.t=G.me;r.sal=a.sal;r.ctr=a.dur;
+    if(a.role==="L"||a.role==="LT")r.role=a.role;
+    const ix=G.pool.indexOf(r);if(ix>=0)G.pool.splice(ix,1);
+    G.mktRes.signed.push({n:r.n,amt:a.sal});
+  });
+  G.agreed={};G.negoOpen=null;
+  // contrats non renouvelés par le joueur : départ au marché (plancher de 8 coureurs garanti)
+  const exp=(G.renew||[]).map(id=>G.riders[id]).filter(r=>r&&r.ctr<=0&&r.t===G.me)
+    .sort((a,b)=>b.moy-a.moy);
+  const keepN=Math.max(0,8-(teamRiders(G.me).length-exp.length));
+  exp.forEach((r,i)=>{
+    if(i<keepN){r.ctr=1;r.sal=askSalary(r);G.mktRes.forced=(G.mktRes.forced||[]).concat(r.n);}
+    else{r.t=-1;G.pool.push(r);}
+  });
+  G.renew=[];
+  const cap=t=>t.budget*0.50;
+  const room=t=>cap(t)-masse(t.i);
+  const pool=G.pool.filter(r=>r.t===-1&&!r.gen).sort((a,b)=>b.moy-a.moy);
+  pool.forEach(r=>{
+    const ask=askSalary(r);
+    const bids=[];
+    const my=(G.offers||{})[r.id];
+    let myOk=false;
+    if(my&&teamRiders(G.me).length<maxSquad(G.me)&&masse(G.me)+my<=cap(G.teams[G.me])){
+      bids.push({ti:G.me,amt:my});myOk=true;}
+    G.teams.forEach(t=>{
+      if(t.i===G.me)return;
+      const target=TEAMS[t.i][2]===0?26:22;
+      if(teamRiders(t.i).length>=target+2)return;
+      if(room(t)<ask)return;
+      const want=U.cl((r.moy-62)/30,0.08,0.85);
+      if(U.r()<want)bids.push({ti:t.i,amt:Math.round(ask*(0.95+U.r()*0.3))});
+    });
+    if(!bids.length){
+      if(my)G.mktRes.lost.push({n:r.n,by:null,amt:0,mine:my});
+      return;}
+    const standing=ti=>U.cl(G.teams[ti].budget/6e7,0.1,1);
+    const win=bids.map(b=>({b,sc:b.amt*(0.8+0.4*standing(b.ti))*(0.9+0.2*U.r())*(b.ti===G.me?1.08:1)}))
+      .sort((a,b)=>b.sc-a.sc)[0].b;
+    r.t=win.ti;r.sal=win.amt;r.ctr=2+Math.floor(U.r()*2);
+    G.pool.splice(G.pool.indexOf(r),1);
+    if(win.ti===G.me){G.mktRes.signed.push({n:r.n,amt:win.amt});}
+    else if(my)G.mktRes.lost.push({n:r.n,by:TEAMS[win.ti][0],amt:win.amt,mine:my,ok:myOk});
+  });
+  G.offers={};
+}
+function aiFill(){
+  const pool=G.pool.filter(r=>r.t===-1);
+  G.teams.forEach(t=>{
+    if(t.i===G.me)return;
+    const target=TEAMS[t.i][2]===0?26:22;
+    let need=target-teamRiders(t.i).length;
+    while(need>0){
+      const cand=pool.length?pool.sort((a,b)=>b.moy-a.moy)[0]:genNeo();
+      if(pool.includes(cand))pool.splice(pool.indexOf(cand),1);
+      cand.t=t.i;cand.sal=askSalary(cand);cand.ctr=1+Math.floor(U.r()*3);
+      need--;
+    }
+  });
+  G.pool=[];
+}
+function newSeason(){
+  if(!G.mktResolved)resolveMarket();
+  aiFill();G.mktResolved=false;
+  while(teamRiders(G.me).length<8){const r=genNeo();r.t=G.me;r.sal=askSalary(r);r.ctr=2;} // complément néo-pros
+  G.year++;G.week=1;G.season++;
+  G.riders=G.riders.filter(r=>!r.retired&&r.t>=0);
+  G.riders.forEach((r,i)=>{r.id=i;r.pts=0;r.wins=0;r.races=0;r.days=0;r.fat=0;r.out=0;r.weekLock=false;r.hist=[];});
+  TEAMS.forEach((t,i)=>teamPeaks(i));
+  G.teams.forEach(t=>{t.pts=0;t.wins=0;t.cash=Math.max(t.cash,t.budget*0.12);});
+  G.log=[];G.phase="peaks";G.tab="home";G.progInit=false;
+  render();saveGame();
+}
+
+/* ================= UI ================= */
+const $=s=>document.querySelector(s);
+let NOTICE_T=0;
+function notice(msg){const n=document.getElementById("notice");n.textContent=msg;n.style.display="block";clearTimeout(NOTICE_T);NOTICE_T=setTimeout(()=>n.style.display="none",2600);}
+const app=()=>$("#app");
+const col=v=>v>=90?"n90":v>=80?"n80":v>=70?"n70":"nlo";
+const jer=ti=>{const t=TEAMS[ti];return `<span class="jersey" style="background:${t[5]};box-shadow:inset 0 -5px 0 ${t[6]}"></span>`};
+const fatBar=f=>{const c=f<40?"var(--ok)":f<70?"var(--acc)":"var(--warn)";return `<span class="bar"><i style="width:${f}%;background:${c}"></i></span>`};
+const formPct=(r,w)=>{const f=formOf(r,w);const c=f>1.04?"var(--ok)":f>0.99?"var(--acc)":"var(--dim)";return `<span style="color:${c}">${Math.round((f-0.94)/0.14*100)}%</span>`};
+const PROFN={mon:"Grimpeur",spr:"Sprinteur",pun:"Puncheur",chr:"Chrono",pla:"Rouleur",fla:"Flandrien"};
+const PROFTAG={mon:"mon",spr:"spr",pun:"gc",chr:"chrt",pla:"rou",fla:"fla"};
+const TABR=["UAD","TVL","RBH","LTK","INE","SOQ","APT","DCC","EFE","GFC","LTI","MOV","NSN","JAY","TPP","TBV","UNO","XAT","TUD","Q36","COF","TEN","URR","PTV","BCF","CJR","BBH","EKP","EUS","FLB","TNN","MBH","MAP","STN"];
+const pavOf=r=>U.cl(Math.round((0.50*r.pla+0.25*r.pun+0.15*r.spr+0.10*r.chr)*(r.prof==="fla"?1.08:1)),30,99);
+const POTCAT=p=>p>=88?["Champion","pchamp"]:p>=82?["Leader","plead"]:p>=75?["Lieutenant","plt"]:["Équipier","peq"];
+const potTag=r=>{const c=POTCAT(r.pot||r.moy);return `<span class="tag ${c[1]}">${c[0]}</span>`};
+
+const PROFA={mon:"GRI",spr:"SPR",pun:"PUN",chr:"CHR",pla:"ROU",fla:"FLA"};
+function buildRoles(ti){
+  const rs=teamRiders(ti).slice().sort((a,b)=>b.moy-a.moy||b.pts-a.pts);
+  const m=new Map();
+  rs.forEach(r=>{if(r.role==="L")m.set(r.id,"L");else if(r.role==="LT")m.set(r.id,"LT");});
+  let nL=[...m.values()].filter(v=>v==="L").length,nS=m.size;
+  rs.forEach(r=>{
+    if(m.has(r.id)||r.role==="EQ")return;
+    if(nL<3){m.set(r.id,"L");nL++;nS++;}
+    else if(nS<10){m.set(r.id,"LT");nS++;}
+  });
+  return m;
+}
+const roleCls=(m,id)=>({L:"ldr",LT:"lt"}[m.get(id)]||"");
+const tierTag=ti=>TEAMS[ti][2]===0?'<span class="tag spr">WT</span>':'<span class="tag mon">PRO</span>';
+function showRider(id){
+  const r=G&&G.riders[id];if(!r)return;
+  const t=r.t>=0?TEAMS[r.t]:null;
+  const best=r.hist.slice().sort((a,b)=>(a[1]-b[1])||(b[2]-a[2])).slice(0,5);
+  $("#pbox").innerHTML=`<h3 style="color:var(--acc)">${U.esc(r.n)} <span class="stat">${r.nat} · ${G.year-r.an} ans</span></h3>
+  <p style="margin:4px 0">${t?`<span class="lnk" data-tp="${r.t}">${jer(r.t)}${t[0]}</span>`:'<span class="stat">Sans équipe</span>'}
+  · <span class="tag ${PROFTAG[r.prof]}">${PROFN[r.prof]}</span></p>
+  <div class="attr">
+  <div><b class="${col(r.pla)}">${r.pla}</b>PLA</div><div><b class="${col(r.mon)}">${r.mon}</b>MON</div>
+  <div><b class="${col(r.spr)}">${r.spr}</b>SPR</div><div><b class="${col(r.chr)}">${r.chr}</b>CHR</div>
+  <div><b class="${col(r.pun)}">${r.pun}</b>PUN</div><div><b class="${col(r.end)}">${r.end}</b>END</div><div><b class="${col(pavOf(r))}">${pavOf(r)}</b>PAV</div></div>
+  <p class="stat">MOY <b class="${col(r.moy)}">${r.moy}</b> · ${potTag(r)} · Forme ${formPct(r,Math.min(G.week,42))} · Fatigue ${fatBar(r.fat)} · ${r.days} j de course</p>
+  <p class="stat">Pics : <b>${PSHORT[r.p1]}</b> et <b>${PSHORT[r.p2]}</b> · Contrat ${Math.max(0,r.ctr)} an(s) · ${U.eur(r.sal||salary(r))}/an</p>
+  <p class="stat">Saison : <b class="n80">${Math.round(r.pts)} pts UCI</b> · ${r.wins} victoire(s) · ${r.races} course(s)</p>
+  ${best.length?`<h3 style="color:var(--acc);margin-top:10px;font-size:.95rem">Meilleurs résultats</h3>${best.map(h=>`<div class="evt">${h[1]}ᵉ · ${U.esc(h[0])}</div>`).join("")}`:""}
+  <button class="btn sec" style="margin-top:12px" id="pclose">Fermer</button>`;
+  $("#panel").classList.add("on");
+  $("#pclose").onclick=closePanel;
+}
+function showTeam(ti){
+  if(!G)return;
+  const t=TEAMS[ti],gt=G.teams[ti];
+  const rs=teamRiders(ti).slice().sort((a,b)=>b.pts-a.pts||b.moy-a.moy);
+  const rk=G.teams.slice().sort((a,b)=>b.pts-a.pts).findIndex(x=>x.i===ti)+1;
+  $("#pbox").innerHTML=`<h3 style="color:var(--acc)">${jer(ti)}${t[0]}</h3>
+  <p class="stat">${tierTag(ti)} ${t[1]} · Budget ${U.eur(gt.budget)} · ${rk}ᵉ UCI (${Math.round(gt.pts)} pts) · ${gt.wins} victoire(s)</p>
+  <h3 style="color:var(--acc);margin-top:10px;font-size:.95rem">Effectif (${rs.length})</h3>
+  ${rs.map(r=>`<div class="selrow one"><span class="nm lnk" data-rp="${r.id}">${U.esc(r.n)}</span>
+  <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
+  <b class="${col(r.moy)}">${r.moy}</b>
+  <span class="stat n80">${Math.round(r.pts)} pts</span></div>`).join("")}
+  <button class="btn sec" style="margin-top:12px" id="pclose">Fermer</button>`;
+  $("#panel").classList.add("on");
+  $("#pclose").onclick=closePanel;
+}
+function closePanel(){$("#panel").classList.remove("on");}
+document.addEventListener("click",e=>{
+  const rp=e.target.closest("[data-rp]");
+  if(rp){showRider(+rp.dataset.rp);return;}
+  const tp=e.target.closest("[data-tp]");
+  if(tp){showTeam(+tp.dataset.tp);return;}
+  if(e.target.id==="panel")closePanel();
+});
+function topBar(){
+  const t=$("#top");
+  if(!G||G.me==null){t.style.display="none";return;}
+  t.style.display="flex";
+  const team=TEAMS[G.me],me=G.teams[G.me];
+  const rk=G.teams.slice().sort((a,b)=>b.pts-a.pts).findIndex(x=>x.i===G.me)+1;
+  t.innerHTML=`${jer(G.me)}<b class="tn">${team[0]}</b>
+  <span class="it">${G.year}·S<b>${Math.min(G.week,42)}</b></span>
+  <span class="it"><b>${Math.round(me.pts)}</b> pts (${rk}ᵉ)</span>
+  <span class="it">V <b>${me.wins}</b></span>
+  <span class="it"><b class="${me.cash<0?"ko":""}">${U.eur(me.cash)}</b></span>
+  <button id="gset" style="margin-left:auto;background:none;border:none;color:var(--dim);font-size:1.05rem;cursor:pointer;padding:2px 6px">⚙</button>`;
+  const gs=document.getElementById("gset");if(gs)gs.onclick=openSettings;
+}
+let SET_RESET=false;
+function openSettings(){
+  const d=document.createElement("div");
+  d.id="setov";
+  d.style.cssText="position:fixed;inset:0;background:#000a;z-index:80;display:flex;align-items:center;justify-content:center;padding:20px";
+  d.innerHTML=`<div class="card" style="max-width:340px;width:100%">
+  <h3>Partie</h3>
+  <p class="stat">Sauvegarde automatique à chaque semaine et à chaque étape d'intersaison.</p>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+  <button class="btn sec" id="svnow">Sauvegarder maintenant</button>
+  <button class="btn sec" id="svexp">Exporter (.json)</button>
+  <label class="btn sec" style="text-align:center;cursor:pointer">Importer (.json)<input type="file" id="svimp" accept=".json" style="display:none"></label>
+  <button class="btn sec" id="svrst" style="color:var(--warn)">Recommencer une partie</button>
+  <button class="btn" id="svcl">Fermer</button>
+  </div></div>`;
+  document.body.appendChild(d);
+  SET_RESET=false;
+  d.querySelector("#svcl").onclick=()=>d.remove();
+  d.onclick=e=>{if(e.target===d)d.remove();};
+  d.querySelector("#svnow").onclick=()=>{saveGame();notice("Partie sauvegardée.");};
+  d.querySelector("#svexp").onclick=()=>{
+    saveGame();
+    try{
+      const blob=new Blob([localStorage.getItem(SAVE_KEY)||"{}"],{type:"application/json"});
+      const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+      a.download="cycling-manager-save.json";a.click();URL.revokeObjectURL(a.href);
+    }catch(e){notice("Export impossible.");}
+  };
+  d.querySelector("#svimp").onchange=e=>{
+    const f=e.target.files[0];if(!f)return;
+    const rd=new FileReader();
+    rd.onload=()=>{
+      if(loadGame(rd.result)){saveGame();d.remove();render();notice("Sauvegarde importée.");}
+      else notice("Fichier de sauvegarde invalide.");
+    };
+    rd.readAsText(f);
+  };
+  d.querySelector("#svrst").onclick=ev=>{
+    if(!SET_RESET){SET_RESET=true;ev.target.textContent="Confirmer : tout effacer ?";return;}
+    wipeSave();G=null;d.remove();render();
+  };
+}
+
+function tabsHtml(){
+  const ts=[["home","Accueil"],["squad","Effectif"],["cal","Calendrier"],["rank","Classements"],["fin","Finances"]];
+  return `<div class="tabs">${ts.map(t=>`<button data-t="${t[0]}" class="${G.tab===t[0]?"on":""}">${t[1]}</button>`).join("")}</div>`;
+}
+function bindTabs(){
+  document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{G.tab=b.dataset.t;render();});
+}
+
+function render(){
+  topBar();
+  if(!G||G.me==null)return renderPick();
+  if(G.phase==="peaks")return G.pkMode==="grid"?renderPeaks():renderDraft();
+  if(G.phase==="endseason"&&G.tab==="home")return renderEndSeason();
+  if(G.phase==="contracts")return renderContracts();
+  if(G.phase==="jeunes")return renderJeunes();
+  if(G.phase==="mercato")return renderMercato();
+  if(G.tab==="select")return renderSelect();
+  if(G.tab==="live")return renderLive();
+  if(G.tab==="results")return renderResults();
+  let h=tabsHtml();
+  if(G.tab==="home")h+=vHome();
+  if(G.tab==="squad")h+=vSquad();
+  if(G.tab==="cal")h+=vCal();
+  if(G.tab==="rank")h+=vRank();
+  if(G.tab==="fin")h+=vFin();
+  app().innerHTML=h;bindTabs();
+  const adv=$("#adv");if(adv)adv.onclick=advance;
+  bindSquad();
+}
+
+/* --- Choix d'équipe --- */
+function renderPick(){
+  const sv=saveInfo();
+  app().innerHTML=`<div class="home"><h1>Cycling Manager 2026</h1>
+  ${sv?`<div class="card" style="text-align:left"><h3>Partie en cours</h3>
+  <div class="evt">${U.esc(sv.team)} · saison ${sv.year} · S${sv.week}</div>
+  <button class="btn" id="resume" style="margin-top:8px">Reprendre ▸</button></div>
+  <p class="stat">Ou démarrez une nouvelle partie (écrase la sauvegarde) :</p>`
+  :`<p>Choisissez votre équipe : gérez sélections, pics de forme, tactiques et budget sur toute la saison World Tour.</p>`}
+  <div class="tlist">${TEAMS.map((t,i)=>{
+    const rs=ROSTERS[i];const top=Math.round(rs.map(x=>(x[3]+x[4]+x[5]+x[6]+x[7]+x[8])/6).sort((a,b)=>b-a).slice(0,8).reduce((s,v)=>s+v,0)/8);
+    return `<div class="tpick" data-i="${i}">${jer(i)}<b>${t[0]}</b>
+    <span class="stat">${t[2]?'<span class="tag mon">PRO</span>':'<span class="tag spr">WT</span>'} Budget ${t[4]} M€ · Niveau <span class="${col(top)}">${top}</span></span></div>`}).join("")}</div></div>`;
+  const rz=$("#resume");if(rz)rz.onclick=()=>{if(loadGame())render();else notice("Sauvegarde illisible.");};
+  document.querySelectorAll(".tpick").forEach(d=>d.onclick=()=>{
+    if(hasSave()&&!G_CONFIRM_NEW){G_CONFIRM_NEW=true;notice("Une sauvegarde existe : touchez à nouveau l'équipe pour la remplacer.");return;}
+    G_CONFIRM_NEW=false;wipeSave();init(+d.dataset.i);render();saveGame();});
+}
+let G_CONFIRM_NEW=false;
+
+/* --- Draft de saison : cartes d'objectifs, tableau de bord, complétion par affinité --- */
+const OBJDEF={
+mon:[["Général Tour",[2,4],["gt4gc"]],["Général Giro",[1,3],["gt3gc"]],["Général Vuelta",[4,5],["gt5gc"]],["Pois d'un GT",[3,5],["gt4mon"]],["Paris-Nice (GC court)",[1,4],["pn"]]],
+spr:[["Vert Tour",[1,4],["gt4spr"]],["Vert Giro",[0,3],["gt3spr"]],["Vert Vuelta",[4,5],["gt5spr"]],["Milan-San Remo",[0,1],["msr"]],["Sprints Ouv. / Automne",[0,6],[]]],
+pun:[["Ardennaises · LBL",[1,2],["lbl"]],["Lombardie",[2,6],["lom"]],["Pois / étapes de GT",[3,5],["gt3mon"]],["Paris-Nice (GC court)",[1,4],["pn"]]],
+fla:[["Flandres · Roubaix",[0,1],["rvv","prx"]],["Milan-San Remo",[0,1],["msr"]],["Campagne Ouv. / Automne",[0,6],[]]],
+chr:[["Chronos + relais Tour",[1,4],[]],["Chronos + relais Giro",[0,3],[]],["Campagne Automne",[1,6],[]]],
+pla:[["Relais Tour",[2,4],[]],["Relais Giro",[1,3],[]],["Relais Vuelta",[4,5],[]],["Campagne pavés",[0,1],["gt5mon"]]]
+};
+OBJDEF.pla[3][2]=[]; // pas de slot pour la campagne pavés des rouleurs
+const SLOTGT={3:"Giro",4:"Tour",5:"Vuelta"};
+const MONS=[["msr","MSR"],["rvv","RVV"],["prx","PRX"],["lbl","LBL"],["lom","LOM"]];
+function draftState(){
+  if(G.draft&&G.draft.year===G.year)return G.draft;
+  const rs=teamRiders(G.me).slice().sort((a,b)=>b.moy-a.moy);
+  const cards=rs.filter((r,i)=>r.moy>=75||i<8).slice(0,12).map(r=>r.id);
+  teamRiders(G.me).forEach(r=>{r.drafted=false;});
+  G.draft={year:G.year,ix:0,q:cards,slots:{}};
+  G.progInit=true; // la grille ne doit plus écraser le draft
+  return G.draft;
+}
+function draftCov(){
+  const cov=Array(PERIODS.length).fill(0);
+  teamRiders(G.me).forEach(r=>{if(r.p1>=0)cov[r.p1]++;if(r.p2>=0)cov[r.p2]++;});
+  return cov;
+}
+function draftDash(d){
+  const tg=periodTargets(),cov=draftCov();
+  const nm=id=>{const r=id!=null?G.riders[id]:null;return r?U.esc(r.n.split(" ").slice(-1)[0]):null;};
+  const dot=k=>{const v=nm(d.slots[k]);return `<span class="ddot ${v?"don":"dko"}">${v||"—"}</span>`};
+  return `<div class="covgrid">${PERIODS.map((p,i)=>{
+    const c=cov[i],t=tg[i],cl=t===0||c>=t?"cok":c>=Math.ceil(t/2)?"cmid":"cko";
+    return `<div class="cov ${cl}"><b>${PSHORT[i]}${GTP.includes(i)?" ▲":""}</b><span>${c}${t?"/"+t:""}</span></div>`}).join("")}</div>
+  <div class="dgt">${[3,4,5].map(p=>`<div class="dgtrow"><b>${SLOTGT[p]}</b>${dot("gt"+p+"gc")}${dot("gt"+p+"spr")}${dot("gt"+p+"mon")}</div>`).join("")}
+  <div class="dgtrow" style="flex-wrap:wrap"><b>Monum.</b>${MONS.map(m=>dot(m[0])).join("")}${dot("pn")}</div></div>`;
+}
+/* Complétion automatique : équipiers affectés par affinité de profil aux périodes déficitaires */
+function draftComplete(){
+  const rs=teamRiders(G.me);
+  const tg=periodTargets();
+  // les équipiers libres repartent de zéro : la couverture initiale ne compte que les draftés
+  const cov=Array(PERIODS.length).fill(0);
+  rs.filter(r=>r.drafted).forEach(r=>{if(r.p1>=0)cov[r.p1]++;if(r.p2>=0)cov[r.p2]++;});
+  const dem=PERIODS.map(()=>({p:0,c:0,v:0,m:0}));
+  RACES.forEach(rc=>{
+    if(!invitedTeams(rc).includes(G.me))return;
+    const p=PERIODS.findIndex(pp=>rc[1]>=pp[1]&&rc[1]<=pp[2]);
+    if(p>=0)dem[p][rc[3]]+=rc[5];
+  });
+  const aff=(r,p)=>Object.entries(dem[p]).reduce((s,[k,w])=>s+w*baseScore(r,k),0);
+  const free=rs.filter(r=>!r.drafted);
+  free.forEach(r=>{r.dset=false;});
+  let guard=0;
+  while(guard++<200){
+    let worst=-1,wd=0;
+    for(let p=0;p<PERIODS.length;p++){const df=tg[p]-cov[p];if(tg[p]>0&&df>wd){wd=df;worst=p;}}
+    if(worst<0)break;
+    const cand=free.filter(r=>!r.dset&&PAIRS[r.prof].some(pg=>pg.includes(worst)))
+      .sort((a,b)=>aff(b,worst)-aff(a,worst))[0];
+    if(!cand)break;
+    const pg=PAIRS[cand.prof].filter(pg=>pg.includes(worst))
+      .sort((a,b)=>(cov[a[0]]+cov[a[1]])-(cov[b[0]]+cov[b[1]]))[0];
+    cand.p1=pg[0];cand.p2=pg[1];cand.dset=true;cov[pg[0]]++;cov[pg[1]]++;
+  }
+  free.filter(r=>!r.dset).forEach(r=>{
+    const pg=PAIRS[r.prof].slice().sort((a,b)=>(cov[a[0]]+cov[a[1]])-(cov[b[0]]+cov[b[1]]))[0];
+    r.p1=pg[0];r.p2=pg[1];r.dset=true;cov[pg[0]]++;cov[pg[1]]++;
+  });
+  // réparation : déplacer des équipiers libres depuis les périodes excédentaires
+  let g2=0;
+  while(g2++<120){
+    let p=-1;
+    for(let i=0;i<PERIODS.length;i++)if(tg[i]>0&&cov[i]<tg[i]){p=i;break;}
+    if(p<0)break;
+    const mover=free.filter(r=>r.p1!==p&&r.p2!==p&&PAIRS[r.prof].some(pg=>pg.includes(p))
+      &&(cov[r.p1]>tg[r.p1]||cov[r.p2]>tg[r.p2]))
+      .sort((a,b)=>aff(b,p)-aff(a,p))[0];
+    if(!mover)break;
+    const pg=PAIRS[mover.prof].filter(pg=>pg.includes(p))
+      .sort((a,b)=>(cov[a[0]]+cov[a[1]])-(cov[b[0]]+cov[b[1]]))[0];
+    cov[mover.p1]--;cov[mover.p2]--;
+    mover.p1=pg[0];mover.p2=pg[1];cov[pg[0]]++;cov[pg[1]]++;
+  }
+  free.forEach(r=>{delete r.dset;});
+}
+function draftMissing(){
+  const tg=periodTargets(),cov=draftCov();
+  const miss=[];
+  for(let p=0;p<PERIODS.length;p++)if(tg[p]>0&&cov[p]<tg[p])miss.push(PSHORT[p]+" ("+cov[p]+"/"+tg[p]+")");
+  return miss;
+}
+function renderDraft(){
+  const d=draftState();
+  const RMD=buildRoles(G.me);
+  const done=d.ix>=d.q.length;
+  let body;
+  if(!done){
+    const r=G.riders[d.q[d.ix]];
+    const objs=(OBJDEF[r.prof]||OBJDEF.pla).filter(o=>!o[2].length||o[2].some(k=>d.slots[k]==null));
+    body=`<div class="card"><h3>Carte ${d.ix+1}/${d.q.length}</h3>
+    <div style="display:flex;gap:8px;align-items:center;margin:6px 0">
+    <span class="nm lnk ${roleCls(RMD,r.id)}" data-rp="${r.id}" style="font-size:1.05rem;font-weight:800;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
+    <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
+    <b class="${col(r.moy)}">${r.moy}</b></div>
+    <p class="stat">Choisissez son objectif principal : ses deux pics de forme seront calés dessus.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+    ${objs.map((o,i)=>`<button class="btn sec obtn" data-ob="${i}" style="min-height:44px;text-align:left">${o[0]} <span class="stat">· pics ${PSHORT[o[1][0]]} + ${PSHORT[o[1][1]]}</span></button>`).join("")}
+    <button class="btn sec obtn2" style="min-height:44px;opacity:.75">Équipier · passer</button>
+    </div></div>`;
+  }else{
+    const miss=draftMissing();
+    body=`<div class="card"><h3>Complétion de l'effectif</h3>
+    <p class="stat">Les équipiers restants sont répartis par affinité (jamais un grimpeur sur les pavés). Les jauges doivent atteindre leur cible pour valider.</p>
+    ${miss.length?`<p class="stat" style="color:var(--warn)">Périodes sous la cible : ${miss.join(" · ")}</p>`:'<p class="ok" style="font-size:.85rem">Toutes les périodes sont couvertes.</p>'}
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+    <button class="btn" id="dcomp" style="min-height:44px">Compléter l'effectif</button>
+    <button class="btn" id="dgo" style="min-height:44px">Valider et lancer la saison ▸</button>
+    <button class="btn sec sm" id="dgrid">Réglage fin (grille)</button>
+    <button class="btn sec sm" id="dreset">Recommencer le draft</button>
+    </div></div>`;
+  }
+  app().innerHTML=`<div class="card" style="position:sticky;top:46px;z-index:5;padding-bottom:8px">
+  <h3>Programme de saison ${G.year}</h3>${draftDash(d)}</div>`+body;
+  if(!done){
+    const r=G.riders[d.q[d.ix]];
+    const objs=(OBJDEF[r.prof]||OBJDEF.pla).filter(o=>!o[2].length||o[2].some(k=>d.slots[k]==null));
+    document.querySelectorAll(".obtn").forEach(b=>b.onclick=()=>{
+      const o=objs[+b.dataset.ob];
+      r.p1=o[1][0];r.p2=o[1][1];r.drafted=true;r.obj=o[0];
+      o[2].forEach(k=>{if(d.slots[k]==null)d.slots[k]=r.id;});
+      d.ix++;renderDraft();saveGame();
+    });
+    document.querySelector(".obtn2").onclick=()=>{d.ix++;renderDraft();saveGame();};
+  }else{
+    $("#dcomp").onclick=()=>{draftComplete();notice("Équipiers répartis par affinité.");renderDraft();saveGame();};
+    $("#dgo").onclick=()=>{
+      const ko=teamRiders(G.me).filter(r=>r.p1<0||r.p2<0).length;
+      if(ko){notice(ko+" coureur(s) sans 2 pics : utilisez Compléter l'effectif.");return;}
+      const miss=draftMissing();
+      if(miss.length){notice("Couverture insuffisante : "+miss.join(", ")+". Complétez l'effectif.");return;}
+      G.phase="run";G.tab="home";render();saveGame();};
+    $("#dgrid").onclick=()=>{G.pkMode="grid";render();};
+    $("#dreset").onclick=()=>{G.draft=null;teamRiders(G.me).forEach(r=>{r.drafted=false;r.obj=null;});draftState();renderDraft();saveGame();};
+  }
+}
+/* --- Planification des pics : deux coches libres par coureur --- */
+function pkSlots(r){return [r.p1,r.p2].filter(p=>p>=0);}
+function renderPeaks(){
+  if(!G.progInit){autoProgram();G.progInit=true;}
+  const rs=teamRiders(G.me).slice().sort((a,b)=>b.moy-a.moy);
+  const tg=periodTargets();
+  const cov=Array(PERIODS.length).fill(0);
+  rs.forEach(r=>pkSlots(r).forEach(p=>cov[p]++));
+  const bad=rs.filter(r=>pkSlots(r).length<2).length;
+  const RMPK=buildRoles(G.me);
+  app().innerHTML=`<div class="card" style="position:sticky;top:46px;z-index:5;padding-bottom:10px">
+  <h3>Programme de saison ${G.year}</h3>
+  <p class="stat">Cochez exactement deux pics de forme par coureur. Jauge : coureurs au pic / cible calculée depuis le calendrier (▲ = grand tour).</p>
+  <div class="covgrid">${PERIODS.map((p,i)=>{
+    const c=cov[i],t=tg[i],cl=t===0||c>=t?"cok":c>=Math.ceil(t/2)?"cmid":"cko";
+    return `<div class="cov ${cl}"><b>${PSHORT[i]}${GTP.includes(i)?" ▲":""}</b><span>${c}${t?"/"+t:""}</span></div>`}).join("")}</div>
+  <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+  <button class="btn sec sm" id="pkback">◂ Draft</button>
+  <button class="btn sec sm" id="pkauto">Répartition auto</button>
+  <button class="btn sm" id="pkok">Valider et lancer la saison</button>
+  ${bad?`<span class="stat" style="color:var(--warn)">${bad} coureur(s) sans 2 pics</span>`:""}</div></div>
+  <div class="card">${rs.map(r=>{
+    const inc=pkSlots(r).length<2;
+    return `<div style="padding:7px 0;border-bottom:1px solid var(--panel2)${inc?";border-left:3px solid var(--warn);padding-left:7px":""}">
+  <div style="display:flex;gap:8px;align-items:center;min-width:0">
+  <span class="nm lnk ${roleCls(RMPK,r.id)}" data-rp="${r.id}" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
+  <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
+  <b class="${col(r.moy)}">${r.moy}</b></div>
+  <div class="pkchips">${PERIODS.map((p,i)=>`<span class="pkc ${r.p1===i||r.p2===i?"on":""}" data-r="${r.id}" data-p="${i}">${PCHIP[i]}</span>`).join("")}</div>
+  </div>`}).join("")}</div>`;
+  document.querySelectorAll(".pkc").forEach(c=>c.onclick=()=>{
+    const r=G.riders[+c.dataset.r],p=+c.dataset.p;
+    if(r.p1===p)r.p1=-1;
+    else if(r.p2===p)r.p2=-1;
+    else if(r.p1<0)r.p1=p;
+    else if(r.p2<0)r.p2=p;
+    else{notice("2 pics maximum : décochez d'abord un pic.");return;}
+    if(r.p1>=0&&r.p2>=0&&PC[r.p1]>PC[r.p2])[r.p1,r.p2]=[r.p2,r.p1];
+    renderPeaks();
+  });
+  $("#pkback").onclick=()=>{G.pkMode=null;render();};
+  $("#pkauto").onclick=()=>{autoProgram();renderPeaks();};
+  $("#pkok").onclick=()=>{
+    const ko=teamRiders(G.me).filter(r=>r.p1<0||r.p2<0).length;
+    if(ko){notice(ko+" coureur(s) n'ont pas leurs 2 pics de forme.");return;}
+    G.phase="run";G.tab="home";render();saveGame();};
+}
+
+/* --- Accueil --- */
+function vHome(){
+  const next=[];
+  for(let w=G.week;w<=42&&next.length<5;w++)racesStarting(w).forEach(r=>next.push(r));
+  const wk=racesStarting(G.week);
+  const rs=teamRiders(G.me).slice().sort((a,b)=>b.pts-a.pts).slice(0,5);
+  return `<div class="grid2">
+  <div class="card"><h3>Semaine ${G.week}</h3>
+  ${wk.length?wk.map(r=>{
+    const inv=invitedTeams(r).includes(G.me);
+    return `<div class="evt">🏁 <b>${r[0]}</b> · ${r[5]} j · ${inv?'<span class="ok">équipe invitée</span>':'<span class="stat">non invité</span>'}</div>`}).join(""):`<div class="evt stat">Pas de course cette semaine : récupération.</div>`}
+  <div style="margin-top:12px"><button class="btn" id="adv">Avancer ▸</button></div></div>
+  <div class="card"><h3>Prochaines courses</h3>
+  ${next.map(r=>`<div class="evt"><span class="stat">S${r[1]}</span> · ${r[4]>=4?"<b>"+r[0]+"</b>":r[0]}</div>`).join("")}</div>
+  </div>
+  <div class="card"><h3>Meilleurs coureurs</h3><div class="scroll"><table><thead><tr><th>Coureur</th><th>Pts UCI</th><th>Vict.</th><th>Forme</th><th>Fatigue</th></tr></thead><tbody>
+  ${rs.map(r=>`<tr><td class="lnk" data-rp="${r.id}">${U.esc(r.n)}</td><td class="n80">${Math.round(r.pts)}</td><td>${r.wins}</td><td>${formPct(r,G.week)}</td><td>${fatBar(r.fat)}</td></tr>`).join("")}
+  </tbody></table></div></div>`;
+}
+
+/* --- Effectif --- */
+function vSquad(){
+  const rs=teamRiders(G.me).slice().sort((a,b)=>b.moy-a.moy);
+  const canP2=G.week<=23;
+  return `<div class="card"><h3>Effectif (${rs.length}) · masse salariale ${U.eur(masse(G.me))}/an</h3>
+  <p class="stat"><span class="ldr">Doré</span> = leader (top 3) · <span class="lt">argenté</span> = lieutenant</p>
+  <div class="scroll"><table class="stick"><thead><tr><th>Coureur</th><th>Nat</th><th>Âge</th><th>Profil</th><th>PLA</th><th>MON</th><th>SPR</th><th>CHR</th><th>PUN</th><th>END</th><th>MOY</th><th>POT</th><th>Forme</th><th>Fatigue</th><th>J</th><th>Pts</th><th>Pic 2</th></tr></thead><tbody>
+  ${(()=>{const RM=buildRoles(G.me);return rs.map(r=>`<tr><td><b class="lnk ${roleCls(RM,r.id)}" data-rp="${r.id}">${U.esc(r.n)}</b>${r.out?' <span class="tag warn">indispo</span>':''}</td><td>${r.nat}</td><td>${G.year-r.an}</td>
+  <td><span class="tag ${PROFTAG[r.prof]}">${PROFN[r.prof]}</span></td>
+  <td class="${col(r.pla)}">${r.pla}</td><td class="${col(r.mon)}">${r.mon}</td><td class="${col(r.spr)}">${r.spr}</td>
+  <td class="${col(r.chr)}">${r.chr}</td><td class="${col(r.pun)}">${r.pun}</td><td class="${col(r.end)}">${r.end}</td>
+  <td class="${col(r.moy)}"><b>${r.moy}</b></td><td>${potTag(r)}</td><td>${formPct(r,G.week)}</td><td>${fatBar(r.fat)}</td><td class="stat">${r.days}</td><td class="n80">${Math.round(r.pts)}</td>
+  <td>${canP2?`<select data-r="${r.id}" data-k="p2">${PERIODS.map((o,i)=>`<option value="${i}" ${r.p2===i?"selected":""}>${PSHORT[i]}</option>`).join("")}</select>`:`<span class="stat">${PSHORT[r.p2]}</span>`}</td></tr>`).join("")})()}
+  </tbody></table></div></div>`;
+}
+function bindSquad(){
+  document.querySelectorAll("select[data-r]").forEach(s=>s.onchange=()=>{
+    const r=G.riders[+s.dataset.r],k=s.dataset.k,o=k==="p1"?"p2":"p1",v=+s.value;
+    if(r[o]===v){r[o]=r[k];notice("Pics échangés : "+PSHORT[r[k]]+" ↔ "+PSHORT[v]);}
+    r[k]=v;});
+}
+
+/* --- Calendrier --- */
+function vCal(){
+  const TY={cl:"Classique",ce:"Étapes",gt:"Grand Tour"},PR={p:"Plat",c:"Pavés",v:"Vallonné",m:"Montagne"};
+  return `<div class="card"><div class="scroll"><table><thead><tr><th>Sem.</th><th>Course</th><th>Type</th><th>Profil</th><th>Jours</th><th>Vainqueur</th></tr></thead><tbody>
+  ${RACES.map(r=>{
+    const done=G.log.find(l=>l.race===r);
+    const w=done?done.res.rank[0]:null;
+    const cur=r[1]===G.week;
+    return `<tr ${cur?'class="me"':''}><td class="stat">S${r[1]}</td><td>${r[4]>=4?"<b>"+r[0]+"</b>":r[0]}</td>
+    <td>${TY[r[2]]}</td><td>${PR[r[3]]}</td><td>${r[5]}</td>
+    <td>${w?`<span class="lnk" data-rp="${w.id}">${jer(w.t)}${U.esc(w.n)}</span>`:'<span class="stat">—</span>'}</td></tr>`}).join("")}
+  </tbody></table></div></div>`;
+}
+
+/* --- Classements --- */
+function vRank(){
+  const ri=G.riders.filter(r=>r.t>=0&&r.pts>0).sort((a,b)=>b.pts-a.pts).slice(0,50);
+  const ts=G.teams.slice().sort((a,b)=>b.pts-a.pts);
+  return `<div class="grid2">
+  <div class="card"><h3>UCI individuel</h3><div class="scroll"><table><thead><tr><th>#</th><th>Coureur</th><th>Équipe</th><th>Pts</th></tr></thead><tbody>
+  ${ri.map((r,i)=>`<tr ${r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td class="lnk" data-rp="${r.id}">${U.esc(r.n)}</td><td class="lnk" data-tp="${r.t}">${jer(r.t)}<span class="stat">${TEAMS[r.t][0]}</span></td><td class="n80">${Math.round(r.pts)}</td></tr>`).join("")}
+  </tbody></table></div></div>
+  <div class="card"><h3>UCI équipes</h3><div class="scroll"><table><thead><tr><th>#</th><th>Équipe</th><th>Pts</th><th>Vict.</th></tr></thead><tbody>
+  ${ts.map((t,i)=>`<tr ${t.i===G.me?'class="me"':''}><td class="stat">${i+1}</td><td class="lnk" data-tp="${t.i}">${jer(t.i)}${TEAMS[t.i][0]} ${tierTag(t.i)}</td><td class="n80">${Math.round(t.pts)}</td><td>${t.wins}</td></tr>`).join("")}
+  </tbody></table></div></div></div>`;
+}
+
+/* --- Finances --- */
+function vFin(){
+  const me=G.teams[G.me];
+  return `<div class="card"><h3>Finances</h3>
+  <div class="evt">Budget sponsor annuel : <b>${U.eur(me.budget)}</b></div>
+  <div class="evt">Masse salariale annuelle : <b>${U.eur(masse(G.me))}</b></div>
+  <div class="evt">Frais de structure : <b>${U.eur(me.budget*0.026*10)}</b>/an env.</div>
+  <div class="evt">Trésorerie : <b class="${me.cash<0?"ko":"ok"}">${U.eur(me.cash)}</b></div>
+  <p class="stat" style="margin-top:8px">Le budget de la saison suivante dépendra du classement UCI par équipes. Les primes de courses créditent la trésorerie immédiatement.</p></div>
+  ${G.history.length?`<div class="card"><h3>Historique</h3>${G.history.map(h=>`<div class="evt">${h.year} : <b>${h.rank}ᵉ</b> UCI · ${Math.round(h.pts)} pts · ${h.wins} victoires · leader ${U.esc(h.best)}</div>`).join("")}</div>`:""}`;
+}
+
+/* --- Sélection pré-course --- */
+function renderSelect(){
+  const p=G.pending.find(x=>!x.decided);
+  if(!p){
+    const list=[];
+    G.pending.forEach(x=>list.push({race:x.race,player:x.entry||null}));
+    (G.otherRaces||[]).forEach(r=>list.push({race:r,player:null}));
+    G.pending=[];G.otherRaces=[];
+    showVeil();
+    setTimeout(()=>{runWeek(list);hideVeil();},30);
+    return;
+  }
+  const race=p.race,multi=race[5]>1;
+  // indisponibles : alignés sur une course à étapes de la semaine ;
+  // si la course actuelle est à étapes, alignés sur n'importe quelle autre course
+  const already=new Set();
+  G.pending.filter(x=>x.decided&&x.entry).forEach(x=>{
+    if(multi||x.race[5]>1)x.entry.sel.forEach(r=>already.add(r.id));
+  });
+  const elig=r=>r.out===0&&!already.has(r.id)&&(!multi||!r.racedThisWeek);
+  const pool=teamRiders(G.me);
+  const eligN=pool.filter(elig).length;
+  const n=Math.min(race[2]==="gt"?8:7,Math.max(4,eligN));
+  const mand=race[2]==="gt"&&eligN>=4;
+  const autoPick=wF=>{
+    const sc=r=>baseScore(r,race[3])*Math.pow(formOf(r,race[1]),wF)*fatMult(r.fat);
+    const hot=r=>inPeriod(r.p1,race[1])||inPeriod(r.p2,race[1]);
+    const el=pool.filter(elig);
+    const a=el.filter(hot).sort((x,y)=>sc(y)-sc(x));
+    const b=el.filter(r=>!hot(r)).sort((x,y)=>sc(y)-sc(x));
+    return a.concat(b).slice(0,n);
+  };
+  if(!G.selBuf||G.selBuf.race!==race){
+    const sug=(p.sug||[]).filter(elig);
+    const auto=sug.length>=Math.min(4,n)?sug.slice(0,n):autoPick(1);
+    G.selBuf={race,ids:new Set(auto.map(r=>r.id)),
+      leader:auto.length?aiTactic(auto,race).leader.id:null,
+      mode:race[3]==="p"?"sprint":"leader",sort:"adeq",sdir:1};
+  }
+  const buf=G.selBuf;
+  [...buf.ids].forEach(id=>{if(!elig(G.riders[id]))buf.ids.delete(id)});
+  if(buf.leader!=null&&!buf.ids.has(buf.leader))buf.leader=null;
+  const adq=r=>baseScore(r,race[3])*formOf(r,race[1])*fatMult(r.fat);
+  const pkOf=r=>PC[inPeriod(r.p1,race[1])?r.p1:inPeriod(r.p2,race[1])?r.p2:nextPeak(r,race[1])];
+  const sorters={
+    nom:(a,b)=>a.n.localeCompare(b.n),
+    adeq:(a,b)=>adq(b)-adq(a),
+    forme:(a,b)=>formOf(b,race[1])-formOf(a,race[1]),
+    spec:(a,b)=>a.prof.localeCompare(b.prof)||b.moy-a.moy,
+    fatigue:(a,b)=>b.fat-a.fat,
+    jours:(a,b)=>b.days-a.days,
+    pic:(a,b)=>pkOf(a)-pkOf(b)};
+  if(buf.sdir==null)buf.sdir=1;
+  const rs=pool.slice().sort((a,b)=>buf.sdir*sorters[buf.sort](a,b));
+  app().innerHTML=`<div class="card"><h3>Sélection : ${race[0]}</h3>
+  <p class="stat">${race[5]} jour(s) · profil ${{p:"plat",c:"pavés",v:"vallonné",m:"montagne"}[race[3]]} · ${n} coureurs.${mand?' <b>Participation obligatoire (Grand Tour).</b>':''}</p>
+  <div style="margin:8px 0;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+  <select id="mode">
+    <option value="leader" ${buf.mode==="leader"?"selected":""}>Tout pour le leader</option>
+    <option value="sprint" ${buf.mode==="sprint"?"selected":""}>Train de sprint</option>
+    <option value="echappee" ${buf.mode==="echappee"?"selected":""}>Jouer les échappées</option>
+  </select>
+  <button class="btn sec sm" id="autoA">Auto adéquation</button>
+  <button class="btn sec sm" id="autoF">Auto forme</button>
+  <button class="btn sec sm" id="clr">Vider</button>
+  <span class="pill">Sélection : <b>${buf.ids.size}</b>/${n}</span></div>
+  <div class="scroll"><table class="seltab"><thead><tr><th>✓</th><th>Ldr</th>${(()=>{const ar=k=>buf.sort===k?(buf.sdir>0?" ▼":" ▲"):"";const th=(k,l)=>`<th class="srt ${buf.sort===k?"on":""}" data-st="${k}">${l}${ar(k)}</th>`;return th("nom","Coureur")+th("spec","Spé")+th("adeq","ADQ")+th("forme","Forme")+th("fatigue","Fat")+th("jours","J")+th("pic","Pic");})()}</tr></thead><tbody>
+  ${(()=>{const RM=buildRoles(G.me);return rs.map(r=>{
+    const dis=!elig(r);
+    const on=buf.ids.has(r.id);
+    const ad=Math.round(adq(r));
+    const nx=inPeriod(r.p1,race[1])?r.p1:inPeriod(r.p2,race[1])?r.p2:nextPeak(r,race[1]);
+    const hot=inPeriod(r.p1,race[1])||inPeriod(r.p2,race[1]);
+    return `<tr class="${on?"son":""} ${dis?"sdis":""}">
+    <td><input type="checkbox" data-c="${r.id}" ${on?"checked":""} ${dis?"disabled":""}></td>
+    <td><input type="radio" name="ld" data-l="${r.id}" ${buf.leader===r.id?"checked":""} ${dis?"disabled":""} title="Leader"></td>
+    <td class="selnm"><span class="lnk ${roleCls(RM,r.id)}" data-rp="${r.id}">${U.esc(r.n)}</span></td>
+    <td><span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span></td>
+    <td><b class="${col(ad)}">${ad}</b></td>
+    <td>${formPct(r,race[1])}</td>
+    <td>${fatBar(r.fat)}</td>
+    <td class="stat">${r.days}</td>
+    <td><span class="pk ${hot?"hot":""}">${PSHORT[nx]}</span></td>
+    </tr>`}).join("")})()}
+  </tbody></table></div>
+  <p class="stat" style="margin-top:4px"><span class="ldr">Doré</span> = leader · <span class="lt">argenté</span> = lieutenant</p>
+  <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+  <button class="btn" id="go">${multi?"Simulation en bloc":"Valider la sélection"}</button>
+  ${multi?'<button class="btn" id="golive" style="background:var(--info);color:#fff">Jouer étape par étape</button>':""}
+  ${mand?"":'<button class="btn sec" id="skip">Faire l\'impasse</button>'}
+  </div></div>`;
+  $("#mode").onchange=e=>buf.mode=e.target.value;
+  document.querySelectorAll(".seltab th.srt").forEach(t=>t.onclick=()=>{
+    const k=t.dataset.st;
+    if(buf.sort===k)buf.sdir=-buf.sdir;
+    else{buf.sort=k;buf.sdir=1;}
+    renderSelect();
+  });
+  const setAuto=a=>{buf.ids=new Set(a.map(r=>r.id));buf.leader=a.length?aiTactic(a,race).leader.id:null;renderSelect();};
+  $("#autoA").onclick=()=>setAuto(autoPick(1));
+  $("#autoF").onclick=()=>setAuto(autoPick(3));
+  $("#clr").onclick=()=>{buf.ids.clear();buf.leader=null;renderSelect();};
+  document.querySelectorAll("input[data-c]").forEach(c=>c.onchange=()=>{
+    const id=+c.dataset.c;
+    if(c.checked){if(buf.ids.size>=n){c.checked=false;return;}buf.ids.add(id);}
+    else{buf.ids.delete(id);if(buf.leader===id)buf.leader=null;}
+    renderSelect();
+  });
+  document.querySelectorAll("input[data-l]").forEach(c=>c.onchange=()=>{
+    buf.leader=+c.dataset.l;
+    if(!buf.ids.has(buf.leader)&&buf.ids.size<n)buf.ids.add(buf.leader);
+    renderSelect();
+  });
+  const val=live=>{
+    if(buf.ids.size!==n||buf.leader==null||!buf.ids.has(buf.leader)){
+      notice(buf.ids.size!==n?`Sélection incomplète : ${buf.ids.size}/${n}.`:"Désignez un leader parmi les sélectionnés.");
+      return;
+    }
+    p.decided=true;
+    p.entry={sel:[...buf.ids].map(i=>G.riders[i]),leader:G.riders[buf.leader],mode:buf.mode,live};
+    G.selBuf=null;renderSelect();
+  };
+  $("#go").onclick=()=>val(false);
+  const gl=$("#golive");if(gl)gl.onclick=()=>val(true);
+  const sk=$("#skip");if(sk)sk.onclick=()=>{p.decided=true;p.entry=null;G.selBuf=null;renderSelect();};
+}
+
+/* --- Mode étape par étape + mini-jeu L'Effort --- */
+const SPNAME={p:"Plat",c:"Pavés",v:"Vallonné",m:"Montagne",t:"Chrono ind."};
+const SPICON={p:"▬",c:"▤",v:"◠",m:"▲",t:"⏱"};
+const RAF=cb=>window.requestAnimationFrame?window.requestAnimationFrame(cb):setTimeout(()=>cb((window.performance&&performance.now)?performance.now():Date.now()),16);
+const CAF=id=>window.cancelAnimationFrame?window.cancelAnimationFrame(id):clearTimeout(id);
+let MG=null;
+function stopMG(){if(MG){CAF(MG.raf);MG=null;}}
+function friseHtml(rs){
+  return `<div class="frise">${rs.profs.map((p,i)=>`<span class="fs ${i<rs.si?"done":i===rs.si?"cur":""}">${SPICON[p]}</span>`).join("")}</div>`;
+}
+/* Protégé auto : leader GC si un général est à défendre en montagne/chrono, sinon meilleur du profil */
+function smartProtege(rs,myE,sp){
+  const live=myE.sel.filter(r=>!rs.st.get(r).ab);
+  if(!live.length)return null;
+  if((sp==="m"||sp==="t")&&rs.si>0){
+    const gc=gcOf(rs);
+    const mine=gc.filter(r=>r.t===G.me);
+    if(mine.length&&gc.indexOf(mine[0])<12)return mine[0];
+  }
+  return live.slice().sort((a,b)=>baseScore(b,sp)-baseScore(a,sp))[0];
+}
+function simRest(){
+  stopMG();
+  const rs=G.live;
+  rs.playerProt=null;rs.exp=null;
+  showVeil();
+  setTimeout(()=>{
+    while(!rs.done)simStage(rs,null);
+    hideVeil();
+    finishLive();
+  },30);
+}
+function renderLive(){
+  stopMG();
+  const rs=G.live;
+  rs.mgMult=null;
+  const sp=rs.profs[rs.si];
+  const myE=rs.entries.find(e=>e.ti===G.me);
+  const auto=smartProtege(rs,myE,sp);
+  const myLive=myE.sel.filter(r=>!rs.st.get(r).ab);
+  if(rs.playerProt==null||!myLive.some(r=>r.id===rs.playerProt))rs.playerProt=auto?auto.id:null;
+  const gc=gcOf(rs),t0=gc.length?rs.st.get(gc[0]).time:0;
+  const RML=buildRoles(G.me);
+  const mine=gc.map((r,i)=>({r,i})).filter(o=>o.r.t===G.me&&o.i>=3).slice(0,3);
+  app().innerHTML=`<div class="card"><h3>${rs.race[0]} · ét. ${rs.si+1}/${rs.profs.length} <span class="stat">${SPICON[sp]} ${SPNAME[sp]}${rs.si>=14?" · 3ᵉ sem.":""}</span></h3>
+  ${friseHtml(rs)}
+  ${rs.si>0&&gc.length?`<div style="margin-top:6px">
+  ${gc.slice(0,3).map((r,i)=>`<div style="display:flex;gap:8px;align-items:center;font-size:.8rem;padding:2px 0"><span class="stat" style="width:14px">${i+1}</span><span class="lnk ${r.t===G.me?roleCls(RML,r.id):""}" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat">${i===0?"—":U.tm(rs.st.get(r).time-t0)}</span></div>`).join("")}
+  ${mine.length?`<div style="padding-top:4px;border-top:1px solid var(--panel2)">
+  ${mine.map(o=>`<div style="display:flex;gap:8px;align-items:center;padding:1px 0;font-size:.8rem"><span class="stat" style="width:30px">${o.i+1}ᵉ</span><span class="lnk ${roleCls(RML,o.r.id)}" data-rp="${o.r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(o.r.n)}</span><span class="stat">${U.tm(rs.st.get(o.r).time-t0)}</span></div>`).join("")}</div>`:""}
+  </div>`:""}
+  <div style="margin:8px 0;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+  <select id="mode">
+    <option value="leader" ${myE.mode==="leader"?"selected":""}>Tout pour le protégé</option>
+    <option value="sprint" ${myE.mode==="sprint"?"selected":""}>Train de sprint</option>
+    <option value="echappee" ${myE.mode==="echappee"?"selected":""}>Jouer les échappées</option>
+  </select>
+  <select id="prot">${myLive.map(r=>`<option value="${r.id}" ${rs.playerProt===r.id?"selected":""}>Protégé : ${U.esc(r.n)}</option>`).join("")}</select>
+  </div></div>
+  <div class="card"><h3>L'Effort</h3>
+  <p class="stat">Figez l'aiguille au centre : bonus/malus pour le protégé sur l'étape. Zone réduite par la fatigue, la montagne et la 3ᵉ semaine.</p>
+  <canvas id="mgc" width="320" height="64" style="width:100%;max-width:360px;background:var(--panel2);border-radius:10px;touch-action:manipulation;margin-top:6px"></canvas>
+  <div style="margin-top:8px;display:flex;gap:8px">
+  <button class="btn" id="mgstop">Stop !</button>
+  <button class="btn sec" id="mgpass">Passer</button>
+  </div>
+  <p id="mgres" class="stat" style="margin-top:6px"></p></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+  <button class="btn" id="run" disabled>Lancer l'étape ▸</button>
+  <button class="btn sec" id="rest">Simuler le reste ▸</button>
+  </div>`;
+  $("#mode").onchange=e=>myE.mode=e.target.value;
+  $("#prot").onchange=e=>{rs.playerProt=+e.target.value;if(MG)startEffort(rs);else renderLive();};
+  const done=()=>{$("#mgstop").disabled=true;$("#mgpass").disabled=true;$("#run").disabled=false;};
+  const okCv=startEffort(rs);
+  if(!okCv){rs.mgMult=1;$("#mgres").textContent="Mini-jeu indisponible ici.";done();}
+  const stopFn=()=>{
+    if(!MG)return;
+    const j=judgeEffort();
+    rs.mgMult=j.mult;stopMG();
+    $("#mgres").innerHTML="Résultat : <b class='"+j.cls+"'>"+j.label+"</b>";
+    done();
+  };
+  $("#mgstop").onclick=stopFn;
+  const cv=$("#mgc");if(cv)cv.onclick=stopFn;
+  $("#mgpass").onclick=()=>{rs.mgMult=1;stopMG();$("#mgres").textContent="Effort passé : aucun bonus.";done();};
+  $("#run").onclick=()=>{
+    stopMG();
+    const tgt=G.riders[rs.playerProt];
+    simStage(rs,rs.mgMult&&rs.mgMult!==1?{rider:tgt,mult:rs.mgMult}:null);
+    rs.mgMult=null;
+    renderStageResult();
+  };
+  $("#rest").onclick=simRest;
+}
+function startEffort(rs){
+  const cv=$("#mgc");
+  const ctx=cv&&cv.getContext?cv.getContext("2d"):null;
+  if(!ctx)return false;
+  stopMG();
+  const sp=rs.profs[rs.si];
+  const tgt=G.riders[rs.playerProt];
+  const st=tgt?rs.st.get(tgt):null;
+  const fat=U.cl((tgt?tgt.fat:0)+(st?st.f:0),0,100);
+  let ease=1-fat/260-(sp==="m"?0.13:0)-(rs.si>=14?0.08:0);
+  ease=U.cl(ease,0.45,1);
+  const speed=3.0+(rs.si>=14?1.0:0);
+  MG={raf:0,t:U.r()*6,speed,ease,x:0.5,last:null};
+  const wp=0.045*ease,wg=0.16*ease;
+  const W=cv.width,H=cv.height;
+  const draw=ts=>{
+    const dt=MG.last==null?0.016:Math.min(0.05,Math.max(0.001,(ts-MG.last)/1000));
+    MG.last=ts;
+    MG.t+=dt*MG.speed;
+    MG.x=0.5+0.47*Math.sin(MG.t);
+    ctx.clearRect(0,0,W,H);
+    const z=(c,a,b)=>{ctx.fillStyle=c;ctx.fillRect(W*a,14,W*(b-a),36);};
+    z("#5a2320",0.03,0.97);z("#7a5a1e",0.20,0.80);
+    z("#2e6b3f",0.5-wg,0.5+wg);z("#ffcc33",0.5-wp,0.5+wp);
+    ctx.fillStyle="#fff";ctx.fillRect(W*MG.x-2,8,4,48);
+    MG.raf=RAF(draw);
+  };
+  MG.raf=RAF(draw);
+  return true;
+}
+function judgeEffort(){
+  const d=Math.abs(MG.x-0.5);
+  const wp=0.045*MG.ease,wg=0.16*MG.ease;
+  if(d<=wp)return{mult:1.04,label:"Parfait ! +4 %",cls:"n90"};
+  if(d<=wg)return{mult:1.02,label:"Bon effort : +2 %",cls:"ok"};
+  if(d<=0.30)return{mult:1.0,label:"Dans le rythme : neutre",cls:"stat"};
+  return{mult:0.97,label:"À contretemps : −3 %",cls:"ko"};
+}
+/* Classements annexes génériques */
+function standingsRows(rs,kind){
+  const gc=gcOf(rs),t0=gc.length?rs.st.get(gc[0]).time:0;
+  if(kind==="gc")return gc.map((r,i)=>({r,txt:i===0?"—":U.tm(rs.st.get(r).time-t0)}));
+  if(kind==="young"){
+    const y=gc.filter(r=>G.year-r.an<=25);
+    return y.map((r,i)=>({r,txt:i===0?"—":U.tm(rs.st.get(r).time-rs.st.get(y[0]).time)}));
+  }
+  return gc.slice().sort((a,b)=>rs.st.get(b)[kind]-rs.st.get(a)[kind])
+    .filter(r=>rs.st.get(r)[kind]>0).map(r=>({r,txt:rs.st.get(r)[kind]+" pts"}));
+}
+function standingsTable(rs,kind,limit){
+  const rows=standingsRows(rs,kind).slice(0,limit||1000);
+  return `<div class="scroll"><table><tbody>${rows.map((o,i)=>`<tr ${o.r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><span class="lnk" data-rp="${o.r.id}">${U.esc(o.r.n)}</span> <span class="stat">${TEAMS[o.r.t][0]}</span></td><td class="stat">${o.txt}</td></tr>`).join("")}</tbody></table></div>`;
+}
+function renderStageResult(){
+  const rs=G.live;
+  const {rows,sp}=rs.lastStage;
+  const exp=rs.exp||{};
+  const view=exp.view||"gc";
+  const J=jerseysOf(rs);
+  const evts=rs.events.filter(e=>e.startsWith("Ét. "+rs.si+" "));
+  const stRows=exp.stage?rows:rows.slice(0,10);
+  app().innerHTML=`<div class="card"><h3>${rs.race[0]} · résultat ét. ${rs.si}/${rs.profs.length} <span class="stat">(${SPNAME[sp]})</span></h3>
+  ${rows[0].brk?"<p class=\"stat\">L'échappée va au bout !"+((n=>n>1?" ("+n+" coureurs)":"")(rows.filter(x=>x.brk).length))+"</p>":""}
+  ${exp.stage?'<button class="btn sec sm exps" style="margin-bottom:6px">Réduire</button>':""}
+  <div class="scroll"><table><tbody>
+  ${stRows.map((x,i)=>`<tr ${x.r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><b class="lnk" data-rp="${x.r.id}">${U.esc(x.r.n)}</b></td><td class="lnk" data-tp="${x.r.t}">${jer(x.r.t)}<span class="stat">${TEAMS[x.r.t][0]}</span></td><td class="stat">${i===0?"—":(x.gap<1?"m.t.":U.tm(x.gap))}</td></tr>`).join("")}
+  </tbody></table></div>
+  <button class="btn sec sm exps">${exp.stage?"Réduire":"Tout afficher"}</button>
+  ${evts.length?`<div style="margin-top:6px">${evts.map(e=>`<div class="evt">${e}</div>`).join("")}</div>`:""}
+  </div>
+  <div class="card"><h3>Classements</h3>
+  <div class="jrow">
+  <span class="pill jbtn ${view==="gc"?"jon":""}" data-v="gc" style="background:#e6c619;color:#111">${J.gc?U.esc(J.gc.n):"—"}</span>
+  <span class="pill jbtn ${view==="pts"?"jon":""}" data-v="pts" style="background:#2e6b3f;color:#fff">${J.pts?U.esc(J.pts.n):"—"}</span>
+  <span class="pill jbtn ${view==="kom"?"jon":""}" data-v="kom" style="background:#7a2530;color:#fff">${J.kom?U.esc(J.kom.n):"—"}</span>
+  <span class="pill jbtn ${view==="young"?"jon":""}" data-v="young" style="background:#d9dee8;color:#111">${J.young?U.esc(J.young.n):"—"}</span></div>
+  ${exp.full?'<button class="btn sec sm expg" style="margin-bottom:6px">Réduire</button>':""}
+  ${standingsTable(rs,view,exp.full?1000:5)}
+  <button class="btn sec sm expg">${exp.full?"Réduire":"Classement complet"}</button>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+  <button class="btn" id="nx">${rs.done?"Terminer la course ▸":"Étape suivante ▸"}</button>
+  ${rs.done?"":'<button class="btn sec" id="rest">Simuler le reste ▸</button>'}
+  </div>`;
+  document.querySelectorAll(".jbtn").forEach(b=>b.onclick=()=>{rs.exp={...exp,view:b.dataset.v};renderStageResult();});
+  document.querySelectorAll(".exps").forEach(b=>b.onclick=()=>{rs.exp={...exp,stage:!exp.stage};renderStageResult();});
+  document.querySelectorAll(".expg").forEach(b=>b.onclick=()=>{rs.exp={...exp,full:!exp.full};renderStageResult();});
+  $("#nx").onclick=()=>{rs.exp=null;if(rs.done)finishLive();else renderLive();};
+  const rst=$("#rest");if(rst)rst.onclick=simRest;
+}
+
+/* --- Résultats --- */
+function renderResults(){
+  const RMres=buildRoles(G.me);
+  let h=tabsHtml();
+  h+=G.lastRes.map((res,ri)=>{
+    const race=res.race;
+    const meIn=res.entries.some(e=>e.ti===G.me);
+    const exp=(G.resExp&&G.resExp.i===ri)?G.resExp:null;
+    let x=`<div class="card"><h3>${race[0]} <span class="stat">· S${race[1]} · ${race[5]} j</span></h3>`;
+    if(res.brk)x+=`<p class="stat">Coup d'éclat : la victoire échappe aux favoris !</p>`;
+    const lim=exp&&exp.full?1000:10;
+    const t0=res.times?res.times.get(res.rank[0]).time:0;
+    if(exp&&exp.full)x+=`<button class="btn sec sm" data-exf="${ri}" style="margin-bottom:6px">Réduire</button>`;
+    const hasGap=race[5]>1||!!res.gaps;
+    x+=`<div class="scroll"><table><thead><tr><th>#</th><th>Coureur</th><th>Équipe</th>${hasGap?"<th>Écart</th>":""}<th>Pts</th></tr></thead><tbody>`;
+    res.rank.slice(0,lim).forEach((r,i)=>{
+      x+=`<tr ${r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><b class="lnk" data-rp="${r.id}">${U.esc(r.n)}</b></td>
+      <td class="lnk" data-tp="${r.t}">${jer(r.t)}<span class="stat">${TEAMS[r.t][0]}</span></td>
+      ${hasGap?`<td class="stat">${i===0?"—":race[5]>1?U.tm(res.times.get(r).time-t0):(res.gaps.get(r)<1?"m.t.":U.tm(res.gaps.get(r)))}</td>`:""}
+      <td class="n80">${PTS[race[4]][i]||""}</td></tr>`;
+    });
+    x+=`</tbody></table></div>
+    <button class="btn sec sm" data-exf="${ri}">${exp&&exp.full?"Réduire":"Classement complet"}</button>`;
+    if(meIn){
+      const mine=res.rank.map((r,i)=>({r,i})).filter(o=>o.r.t===G.me);
+      const gtxt=o=>{
+        if(o.i===0)return "—";
+        if(race[5]>1)return U.tm(res.times.get(o.r).time-t0);
+        if(res.gaps){const g=res.gaps.get(o.r);return g<1?"m.t.":U.tm(g);}
+        return "";};
+      if(mine.length)x+=`<div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--panel2)"><span class="stat" style="color:var(--acc);font-weight:700">Vos coureurs</span>
+      ${mine.map(o=>`<div style="display:flex;gap:8px;align-items:center;padding:2px 0;font-size:.82rem"><span class="stat" style="width:30px">${o.i+1}ᵉ</span><span class="lnk ${o.i<3?"ldr":""}" data-rp="${o.r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(o.r.n)}</span><span class="stat">${gtxt(o)}</span></div>`).join("")}</div>`;
+      const myE=res.entries.find(e=>e.ti===G.me);
+      const ab=res.times?myE.sel.filter(r=>res.times.get(r)&&res.times.get(r).ab):[];
+      if(ab.length){const byS=new Map();ab.forEach(r=>{const st=res.times.get(r).abSt||0;if(!byS.has(st))byS.set(st,[]);byS.get(st).push(r);});x+=`<div style="padding:2px 0">${[...byS.entries()].sort((a,b)=>a[0]-b[0]).map(([st,rs])=>`<div style="display:flex;gap:6px;font-size:.78rem"><span class="stat" style="width:36px;flex:none">${st?"Ét. "+st:"—"}</span><span class="ko">${rs.map(r=>U.esc(r.n)).join(" · ")}</span></div>`).join("")}</div>`;}
+    }
+    if(res.stages){
+      const sw=new Map();
+      res.stages.forEach(s=>sw.set(s.r,(sw.get(s.r)||0)+1));
+      const multi=[...sw.entries()].filter(([r,c])=>c>1).sort((a,b)=>b[1]-a[1]);
+      if(multi.length)x+=`<p class="stat" style="margin-top:6px">Multi-vainqueurs : ${multi.map(([r,c])=>`<span class="lnk ${r.t===G.me?roleCls(RMres,r.id):""}" data-rp="${r.id}"><b>${U.esc(r.n)}</b></span> ×${c}`).join(" · ")}</p>`;
+      x+=`<div style="margin-top:6px">${res.stages.map(s=>`<div style="display:flex;gap:6px;align-items:center;padding:2px 0;font-size:.8rem;border-bottom:1px solid var(--panel2)"><span class="stat" style="width:36px;flex:none">Ét. ${s.st}</span><span class="lnk ${s.r.t===G.me?roleCls(RMres,s.r.id):""}" data-rp="${s.r.id}" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(s.r.n)}</span><span class="stat" style="font-size:.68rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${TABR[s.r.t]} · ${s.r.nat}</span><span class="stat" style="flex:none">${SPNAME[s.prof]}${s.brk?" · éch.":""}</span></div>`).join("")}</div>`;
+      if(res.rs){
+        const J=jerseysOf(res.rs);
+        const view=exp&&exp.view;
+        x+=`<div class="jrow" style="margin-top:6px">
+        <span class="pill jbtn ${view==="pts"?"jon":""}" data-exv="${ri}|pts" style="background:#2e6b3f;color:#fff">${J.pts?U.esc(J.pts.n):"—"}</span>
+        <span class="pill jbtn ${view==="kom"?"jon":""}" data-exv="${ri}|kom" style="background:#7a2530;color:#fff">${J.kom?U.esc(J.kom.n):"—"}</span>
+        <span class="pill jbtn ${view==="young"?"jon":""}" data-exv="${ri}|young" style="background:#d9dee8;color:#111">${J.young?U.esc(J.young.n):"—"}</span></div>`;
+        if(view)x+=`${standingsTable(res.rs,view,20)}`;
+      }
+      const abAll=res.times?res.rank.concat(res.entries.flatMap(e=>e.sel)).filter((r,i,a)=>a.indexOf(r)===i&&res.times.get(r)&&res.times.get(r).ab):[];
+      if(abAll.length){
+        const bySt=new Map();
+        abAll.forEach(r=>{const st=res.times.get(r).abSt||0;if(!bySt.has(st))bySt.set(st,[]);bySt.get(st).push(r);});
+        x+=`<p class="stat" style="margin-top:6px;margin-bottom:2px">Abandons</p>${[...bySt.entries()].sort((a,b)=>a[0]-b[0]).map(([st,rs])=>`<div style="display:flex;gap:6px;align-items:baseline;padding:1px 0;font-size:.78rem"><span class="stat" style="width:36px;flex:none">${st?"Ét. "+st:"—"}</span><span style="min-width:0">${rs.map(r=>`<span class="lnk ${r.t===G.me?"ko":"stat"}" data-rp="${r.id}">${U.esc(r.n)}</span>`).join(" · ")}</span></div>`).join("")}`;
+      }
+    }
+    return x+"</div>";
+  }).join("");
+  h+=`<button class="btn" id="ok">Continuer ▸</button>`;
+  app().innerHTML=h;bindTabs();
+  document.querySelectorAll("[data-exf]").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.exf;const cur=(G.resExp&&G.resExp.i===i)?G.resExp:{i};
+    G.resExp={...cur,i,full:!cur.full};renderResults();});
+  document.querySelectorAll("[data-exv]").forEach(b=>b.onclick=()=>{
+    const [i,v]=b.dataset.exv.split("|");const cur=(G.resExp&&G.resExp.i===+i)?G.resExp:{i:+i};
+    G.resExp={...cur,i:+i,view:cur.view===v?null:v};renderResults();});
+  $("#ok").onclick=()=>{G.resExp=null;G.tab="home";render();};
+}
+
+/* --- Barre de spécialités (intersaison) --- */
+function specBar(){
+  const cnt={};teamRiders(G.me).forEach(r=>cnt[r.prof]=(cnt[r.prof]||0)+1);
+  let plus=0;
+  Object.keys(G.agreed||{}).forEach(id=>{const r=G.riders[+id];if(r&&r.t===-1){cnt[r.prof]=(cnt[r.prof]||0)+1;plus++;}});
+  return `<div class="card" style="position:sticky;top:46px;z-index:5;padding:8px 12px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+  ${["mon","pun","spr","fla","pla","chr"].map(p=>`<span class="tag ${PROFTAG[p]}">${PROFA[p]} ${cnt[p]||0}</span>`).join("")}
+  <span class="pill">Effectif <b>${teamRiders(G.me).length+plus}</b>/${maxSquad(G.me)}</span></div>`;
+}
+/* --- Écran fin de saison --- */
+function renderEndSeason(){
+  stopMG();
+  const me=G.teams[G.me],h=G.history[G.history.length-1];
+  const cap=me.budget*0.50;
+  const RM=buildRoles(G.me);
+  const top5=teamRiders(G.me).slice().sort((a,b)=>b.pts-a.pts).slice(0,5);
+  const gains=(G.progLog||[]).filter(x=>x.d>0).sort((a,b)=>b.d-a.d).slice(0,8);
+  const losses=(G.progLog||[]).filter(x=>x.d<0).sort((a,b)=>a.d-b.d).slice(0,5);
+  const pline=x=>{const r=G.riders[x.id];return `<div style="display:flex;gap:8px;align-items:center;padding:2px 0;font-size:.82rem"><span class="lnk ${roleCls(RM,r.id)}" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat">${G.year-r.an}a</span><b class="${x.d>0?"ok":"ko"}">${x.d>0?"+":""}${x.d} MOY</b></div>`};
+  let h2=tabsHtml();
+  h2+=`<div class="card"><h3>Bilan ${h.year}</h3>
+  <div class="evt">Classement UCI : <b>${h.rank}ᵉ</b> · ${Math.round(h.pts)} pts · <b>${h.wins}</b> victoires</div>
+  <div class="evt">Budget ${h.year+1} : <b>${U.eur(me.budget)}</b> · plafond salarial ${U.eur(cap)} · masse ${U.eur(masse(G.me))}</div></div>`;
+  if(G.promo){
+    const inv=i=>`<span class="lnk" data-tp="${i}">${jer(i)}${TEAMS[i][0]}</span>`;
+    h2+=`<div class="card"><h3>Promotion / relégation</h3>
+    <div class="evt">▲ Promu en WorldTour : ${inv(G.promo.up)} <span class="tag spr">WT</span>${G.promo.up===G.me?" · <b class='ok'>votre équipe !</b>":""}</div>
+    <div class="evt">▼ Relégué en ProTeam : ${inv(G.promo.down)} <span class="tag mon">PRO</span>${G.promo.down===G.me?" · <b class='ko'>votre équipe.</b>":""}</div></div>`;
+  }
+  h2+=`<div class="card"><h3>Vos hommes forts ${h.year}</h3>
+  ${top5.map((r,i)=>`<div style="display:flex;gap:8px;align-items:center;padding:3px 0;font-size:.84rem"><span class="stat" style="width:16px">${i+1}</span><span class="lnk ${roleCls(RM,r.id)}" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat">${r.wins} V</span><b class="n80">${Math.round(r.pts)} pts</b></div>`).join("")}</div>
+  <div class="card"><h3>Progression hivernale</h3>
+  <p class="stat">Notes déjà mises à jour pour ${h.year+1}.</p>
+  ${gains.length?gains.map(pline).join(""):'<p class="stat">Aucune progression cette année.</p>'}
+  ${losses.length?`<p class="stat" style="margin-top:6px">En déclin :</p>${losses.map(pline).join("")}`:""}</div>
+  <button class="btn" id="tocont">Suivant : contrats ▸</button>`;
+  app().innerHTML=h2;bindTabs();
+  $("#tocont").onclick=()=>{G.phase="contracts";render();saveGame();};
+}
+/* --- Écran contrats : prolonger / libérer / rôles --- */
+function renderContracts(){
+  stopMG();
+  const cap=G.teams[G.me].budget*0.50;
+  const exp=(G.renew||[]).map(id=>G.riders[id]).filter(r=>r&&r.ctr<=0&&r.t===G.me).sort((a,b)=>b.moy-a.moy);
+  const squad=teamRiders(G.me).slice().sort((a,b)=>b.moy-a.moy);
+  const proj=squad.length-exp.length;
+  const RM=buildRoles(G.me);
+  const roleBtn=r=>{
+    const eff=RM.get(r.id)||"ÉQ";
+    const forced=!!r.role;
+    return `<button class="btn sec sm" data-role="${r.id}" style="min-width:44px;${forced?"border-color:var(--acc)":"opacity:.7"}">${r.role==="EQ"?"ÉQ":eff}</button>`;
+  };
+  app().innerHTML=specBar()+`<div class="card"><h3>Contrats · sous contrat ${G.year+1} : <b class="${proj<8?"ko":""}">${proj}</b> coureur(s)</h3>
+  <p class="stat">Prolongez ou laissez partir les contrats expirants (départ au marché). Plancher 8, plafond ${maxSquad(G.me)}. Masse ${U.eur(masse(G.me))} / plafond ${U.eur(cap)}.</p>
+  <p class="stat">Rôle : tapez la pastille pour forcer <b>L</b> (leader), <b>LT</b> (lieutenant), <b>ÉQ</b> (équipier) ou revenir en auto (pastille estompée).</p></div>
+  <div class="card"><h3>Contrats expirants (${exp.length})</h3>
+  ${exp.length?exp.map(r=>{
+    const ask=askSalary(r);
+    return `<div class="selrow one"><span class="nm lnk ${roleCls(RM,r.id)}" data-rp="${r.id}">${U.esc(r.n)}</span>
+    <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
+    <b class="${col(r.moy)}">${r.moy}</b><span class="stat">${G.year-r.an}a</span>
+    <span class="stat">${U.eur(ask)}</span>
+    <button class="btn sec sm" data-rn="${r.id}">Renouveler</button>
+    <button class="btn sec sm" data-relx="${r.id}" style="color:var(--warn)">Libérer</button></div>`}).join("")
+  :'<p class="stat">Aucun contrat à renouveler.</p>'}</div>
+  <div class="card"><h3>Effectif</h3>
+  ${squad.map(r=>`<div class="selrow one">
+  <span class="nm lnk ${roleCls(RM,r.id)}" data-rp="${r.id}">${U.esc(r.n)}</span>
+  <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
+  <b class="${col(r.moy)}">${r.moy}</b>
+  <span class="stat">${U.eur(r.sal||salary(r))}</span><span class="stat">${Math.max(0,r.ctr)} an</span>
+  ${roleBtn(r)}
+  <button class="btn sec sm" data-rel="${r.id}">Libérer</button>
+  </div>`).join("")}</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+  <button class="btn sec" id="backes">◂ Bilan</button>
+  <button class="btn" id="tomkt">Suivant : mercato ▸</button></div>`;
+  document.querySelectorAll("[data-rn]").forEach(b=>b.onclick=()=>{
+    const r=G.riders[+b.dataset.rn];const ask=askSalary(r);
+    if(masse(G.me)-(r.sal||0)+ask>cap){notice("Plafond salarial dépassé.");return;}
+    r.ctr=2;r.sal=ask;G.renew=G.renew.filter(id=>id!==r.id);renderContracts();saveGame();});
+  document.querySelectorAll("[data-relx]").forEach(b=>b.onclick=()=>{
+    const r=G.riders[+b.dataset.relx];
+    r.t=-1;r.ctr=0;r.role=undefined;G.pool.push(r);
+    G.renew=(G.renew||[]).filter(id=>id!==r.id);renderContracts();saveGame();});
+  document.querySelectorAll("[data-rel]").forEach(b=>b.onclick=()=>{
+    const r=G.riders[+b.dataset.rel];
+    if(teamRiders(G.me).length<=8){notice("Effectif minimum atteint (8 coureurs).");return;}
+    r.t=-1;r.ctr=0;r.role=undefined;G.pool.push(r);G.renew=(G.renew||[]).filter(id=>id!==r.id);renderContracts();saveGame();});
+  document.querySelectorAll("[data-role]").forEach(b=>b.onclick=()=>{
+    const r=G.riders[+b.dataset.role];
+    r.role=r.role==null?"L":r.role==="L"?"LT":r.role==="LT"?"EQ":undefined;
+    renderContracts();});
+  $("#backes").onclick=()=>{G.phase="endseason";render();};
+  $("#tomkt").onclick=()=>{G.phase="jeunes";render();saveGame();};
+}
+/* --- Négociation type manager --- */
+function uciRankOf(ti){return G.teams.slice().sort((a,b)=>b.pts-a.pts).findIndex(t=>t.i===ti)+1;}
+function negoAnswer(r,off){
+  G.nego=G.nego||{};
+  const st=G.nego[r.id]=G.nego[r.id]||{tries:0,broken:false};
+  if(st.broken)return st;
+  const ask=askSalary(r);
+  const rk=uciRankOf(G.me);
+  // prestige : une star exige une équipe du haut de tableau, sinon prime importante
+  let prem=1+(rk<=5?-0.03:rk<=8?0.02:rk<=14?0.08:0.15);
+  if(r.moy>=85&&rk>8)prem+=0.12;
+  if(r.moy>=82&&rk>14)prem+=0.08;
+  if(st.res==null)st.res=1+U.r()*0.10+(r.moy>=85?0.05:0); // exigence cachée du coureur
+  const want=ask*prem*st.res;
+  // entre deux relances, un gros profil peut s'engager ailleurs
+  if(st.tries>=1&&r.moy>=78&&U.r()<0.10+(r.moy-78)*0.012){
+    st.broken=true;
+    st.msg="« Trop tard : je viens de m'engager avec une autre équipe. »";
+    return st;
+  }
+  const age=G.year-r.an;
+  const durPref=age<=25?3:age>=33?1:2;
+  const better=teamRiders(G.me).filter(x=>x.moy>r.moy).length;
+  const expRole=better<3?"L":better<10?"LT":"EQ";
+  const ord={L:3,LT:2,EQ:1};
+  const roleFit=ord[off.role]>=ord[expRole]?0.05:-(ord[expRole]-ord[off.role])*0.10;
+  const durFit=-Math.abs(off.dur-durPref)*0.035;
+  const score=off.sal/want+roleFit+durFit;
+  st.tries++;
+  // offre insultante : rupture possible immédiate
+  if(st.tries===1&&off.sal<want*0.85&&U.r()<0.5){
+    st.broken=true;
+    st.msg="« C'est une offre insultante. Cette discussion s'arrête là. »";
+    return st;
+  }
+  if(score>=1.0){
+    st.agreed={sal:off.sal,dur:off.dur,role:off.role};
+    st.msg="« Marché conclu, on écrit une belle histoire ensemble. »";
+    G.agreed=G.agreed||{};G.agreed[r.id]=st.agreed;
+  } else if(st.tries>=3&&score<0.92){
+    st.broken=true;
+    st.msg="« On tourne en rond, je vais voir ailleurs. » Négociation rompue.";
+  } else {
+    const cSal=Math.round(want*(1.02+U.r()*0.05)/1000)*1000;
+    const parts=[];
+    if(off.sal<want*0.98)parts.push("mon agent attend "+U.eur(cSal));
+    if(roleFit<0)parts.push("je vise un rôle de "+(expRole==="L"?"leader":"lieutenant"));
+    if(Math.abs(off.dur-durPref)>=1)parts.push(durPref+" an(s) me conviendrait mieux");
+    st.msg="« Pas à ces conditions : "+(parts.join(", ")||"faites un effort")+". »";
+    st.counter={sal:cSal,dur:durPref,role:expRole};
+  }
+  return st;
+}
+/* --- Écran Jeunes : recrutement des néo-pros (niveau et potentiel estimés) --- */
+function renderJeunes(){
+  stopMG();
+  const cap=G.teams[G.me].budget*0.50;
+  const pool=G.pool.filter(r=>r.t===-1&&r.gen).sort((a,b)=>b.moy-a.moy);
+  const fz=r=>(((r.id*2654435761)>>>0)%5)-2;      // bruit d'observation stable
+  const fzp=r=>(((r.id*40503)>>>0)%7)-3;
+  app().innerHTML=specBar()+`<div class="card"><h3>Jeunes (${pool.length}) · masse ${U.eur(masse(G.me))} / plafond ${U.eur(cap)}</h3>
+  <p class="stat">Néo-pros disponibles. Niveau et potentiel sont des estimations de vos recruteurs. Signature directe, contrat 3 ans.</p>
+  ${pool.map(r=>{
+    const lo=U.cl(r.moy+fz(r)-2,40,95),hi=lo+4;
+    const c=POTCAT(U.cl((r.pot||r.moy)+fzp(r),50,95));
+    return `<div class="selrow one"><span class="nm lnk" data-rp="${r.id}">${U.esc(r.n)}</span>
+    <span class="stat">${G.year-r.an}a</span>
+    <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
+    <span class="stat">${lo}-${hi}</span>
+    <span class="tag ${c[1]}">${c[0]}</span>
+    <button class="btn sec sm" data-sj="${r.id}">Signer</button></div>`}).join("")||'<p class="stat">Aucun jeune disponible cette année.</p>'}</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+  <button class="btn sec" id="backct2">◂ Contrats</button>
+  <button class="btn" id="tomkt2">Suivant : mercato ▸</button></div>`;
+  document.querySelectorAll("[data-sj]").forEach(b=>b.onclick=()=>{
+    const r=G.riders[+b.dataset.sj];
+    if(teamRiders(G.me).length+Object.keys(G.agreed||{}).length>=maxSquad(G.me)){notice("Effectif maximum atteint.");return;}
+    if(masse(G.me)+r.sal>cap){notice("Plafond salarial dépassé.");return;}
+    r.t=G.me;r.ctr=3;G.pool.splice(G.pool.indexOf(r),1);renderJeunes();saveGame();});
+  $("#backct2").onclick=()=>{G.phase="contracts";render();};
+  $("#tomkt2").onclick=()=>{G.phase="mercato";G.msub="market";render();saveGame();};
+}
+/* --- Mercato / bilan / renouvellements / marché --- */
+function renderMercato(){
+  stopMG();
+  const me=G.teams[G.me];
+  const cap=me.budget*0.50;
+  const sub=G.mktResolved?"result":"market";
+  let body="";
+  if(sub==="market"){
+    const pool=G.pool.filter(r=>r.t===-1&&!r.gen).sort((a,b)=>b.moy-a.moy);
+    const open=G.negoOpen;
+    body=specBar()+`<div class="card"><h3>Mercato (${pool.length}) · masse ${U.eur(masse(G.me))} / plafond ${U.eur(cap)}</h3>
+    <p class="stat">Négociez salaire, durée et rôle promis. Un accord de principe est définitif. Les hésitants restent exposés aux enchères des autres équipes à la clôture.</p>
+    ${pool.map(r=>{
+      const ask=askSalary(r);
+      const st=(G.nego||{})[r.id];
+      const agreed=(G.agreed||{})[r.id];
+      let row=`<div class="selrow one"><span class="nm lnk" data-rp="${r.id}">${U.esc(r.n)}${r.gen?" <span class='tag'>N</span>":""}</span>
+      <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
+      <b class="${col(r.moy)}">${r.moy}</b><span class="stat">${G.year-r.an}a</span>
+      <span class="stat">${U.eur(ask)}</span>
+      ${agreed?`<span class="tag" style="background:#1f4d2c;color:#9fe8b5">Accord ✔ ${U.eur(agreed.sal)}·${agreed.dur}an</span><button class="btn sec sm" data-nago="${r.id}">✕</button>`
+        :st&&st.broken?`<span class="tag warn">Rompu</span>`
+        :`<button class="btn sec sm" data-ngo="${r.id}">${open===r.id?"Fermer":"Négocier"}</button>`}
+      </div>`;
+      if(open===r.id&&!agreed&&!(st&&st.broken)){
+        const o=G.negoOff||{sal:ask,dur:2,role:"LT"};
+        row+=`<div class="card" style="margin:4px 0 10px;background:var(--panel2)">
+        <p class="stat">Demande estimée : <b>${U.eur(ask)}</b> · essai ${(st?st.tries:0)}/3</p>
+        ${st&&st.msg?`<p style="font-size:.84rem;margin:4px 0">${st.msg}</p>`:""}
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:6px">
+        <span class="pill">Salaire <b id="ngsal">${U.eur(o.sal)}</b></span>
+        <button class="btn sec sm" data-nsal="-">−10%</button><button class="btn sec sm" data-nsal="+">+10%</button>
+        <select id="ngdur">${[1,2,3].map(d=>`<option value="${d}" ${o.dur===d?"selected":""}>${d} an${d>1?"s":""}</option>`).join("")}</select>
+        <select id="ngrole">${[["L","Leader"],["LT","Lieutenant"],["EQ","Équipier"]].map(x=>`<option value="${x[0]}" ${o.role===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select>
+        <button class="btn sm" id="ngprop">Proposer</button>
+        ${st&&st.counter?`<button class="btn sec sm" id="ngacc">Accepter sa demande</button>`:""}
+        </div></div>`;
+      }
+      return row;}).join("")||'<p class="stat">Marché vide.</p>'}</div>`;
+  }
+  if(sub==="result"){
+    const R=G.mktRes||{signed:[],lost:[]};
+    body=`<div class="card"><h3>Résultat du mercato</h3>
+    ${(R.forced||[]).length?`<div class="evt">Renouvellements automatiques (effectif minimum) : ${R.forced.map(x=>U.esc(x)).join(", ")}</div>`:""}
+    ${R.signed.length?R.signed.map(s=>`<div class="evt">✔ <b>${U.esc(s.n)}</b> recruté · ${U.eur(s.amt)}/an</div>`).join(""):'<div class="evt stat">Aucune recrue signée.</div>'}
+    ${R.lost.map(l=>`<div class="evt">✘ ${U.esc(l.n)} · ${l.by?`surenchère de <b>${U.esc(l.by)}</b> (${U.eur(l.amt)}, votre offre ${U.eur(l.mine)})`:"offre non recevable (plafond salarial ou effectif plein)"}</div>`).join("")}
+    <p class="stat" style="margin-top:6px">Les équipes IA complètent leurs effectifs au lancement de la saison.</p></div>`;
+  }
+  const bottom=G.mktResolved
+    ?`<button class="btn" id="ns2">Lancer la saison ${G.year+1} ▸</button>`
+    :`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sec" id="backct">◂ Jeunes</button>
+    <button class="btn" id="ns">Clôturer le mercato ▸</button></div>`;
+  app().innerHTML=body+bottom;
+  document.querySelectorAll("[data-ngo]").forEach(b=>b.onclick=()=>{
+    const id=+b.dataset.ngo;
+    G.negoOpen=G.negoOpen===id?null:id;
+    G.negoOff=null;renderMercato();});
+  document.querySelectorAll("[data-nago]").forEach(b=>b.onclick=()=>{
+    delete G.agreed[+b.dataset.nago];renderMercato();});
+  document.querySelectorAll("[data-nsal]").forEach(b=>b.onclick=()=>{
+    const r=G.riders[G.negoOpen];
+    const o=G.negoOff||{sal:askSalary(r),dur:2,role:"LT"};
+    o.sal=Math.max(100000,Math.round(o.sal*(b.dataset.nsal==="+"?1.1:0.9)/1000)*1000);
+    o.dur=+($("#ngdur")?$("#ngdur").value:o.dur);o.role=$("#ngrole")?$("#ngrole").value:o.role;
+    G.negoOff=o;renderMercato();});
+  const prop=$("#ngprop");if(prop)prop.onclick=()=>{
+    const r=G.riders[G.negoOpen];
+    const o=G.negoOff||{sal:askSalary(r),dur:2,role:"LT"};
+    o.dur=+$("#ngdur").value;o.role=$("#ngrole").value;
+    if(teamRiders(G.me).length+Object.keys(G.agreed||{}).length>=maxSquad(G.me)){notice("Effectif maximum atteint.");return;}
+    if(masse(G.me)+o.sal>cap){notice("Plafond salarial dépassé.");return;}
+    negoAnswer(r,o);G.negoOff=o;renderMercato();saveGame();};
+  const acc=$("#ngacc");if(acc)acc.onclick=()=>{
+    const r=G.riders[G.negoOpen];
+    const c=G.nego[r.id].counter;
+    if(masse(G.me)+c.sal>cap){notice("Plafond salarial dépassé.");return;}
+    G.negoOff={...c};negoAnswer(r,{...c});renderMercato();saveGame();};
+  const bc=$("#backct");if(bc)bc.onclick=()=>{G.phase="jeunes";render();};
+  const ns=$("#ns");if(ns)ns.onclick=()=>{
+    resolveMarket();renderMercato();saveGame();};
+  const ns2=$("#ns2");if(ns2)ns2.onclick=()=>{
+    showVeil("Intersaison…");
+    setTimeout(()=>{
+      newSeason();
+      hideVeil();saveGame();
+    },30);
+  };
+}
+
+/* ================= TESTS (harnais) ================= */
+window.TestAPI={
+  get G(){return G},init,advance:advanceSync,formOf,baseScore,simOneDay,simStageRace,
+  invitedTeams,aiSelect,aiTactic,salary,masse,endSeason,newSeason,racesStarting,stageProfiles,
+  initStageRace,simStage,finishStageRace,gcOf,jerseysOf,
+  askSalary,resolveMarket,aiFill,teamPeaks,smartProtege,standingsRows,
+  aiPlanWeek,buildRoles,negoAnswer,saveGame,loadGame,hasSave,wipeSave,
+  autoSeason(){ // joue la saison entière, sélections auto pour le joueur
+    let guard=0;
+    while(G.week<=42&&guard++<400){
+      const todo=racesStarting(G.week);
+      const list=todo.map(race=>{
+        if(!invitedTeams(race).includes(G.me))return {race,player:null};
+        const n=race[2]==="gt"?8:7;
+        const sel=aiSelect(G.me,race,n);
+        if(sel.length<n)return {race,player:null};
+        const t=aiTactic(sel,race);
+        return {race,player:{sel,leader:t.leader,mode:t.mode}};
+      });
+      runWeekSync(list);
+    }
+  }
+};
+function runWeekSync(list){const t=G.tab;runWeek(list);G.tab=t;}
+function advanceSync(){const todo=racesStarting(G.week);runWeekSync(todo.map(r=>({race:r,player:null})));}
+
+/* ================= DÉMARRAGE ================= */
+render();
+</script>
+</body>
+</html>
