@@ -259,10 +259,10 @@ const RACES=[
 ["Strade Bianche",10,"cl","v",3,1],
 ["Paris-Nice",11,"ce","v",3,8],
 ["Tirreno-Adriatico",11,"ce","v",3,7],
-["Milan-San Remo",12,"cl","p",4,1],
+["Milan-San Remo",12,"cl","s",4,1],
 ["Tour de Catalogne",13,"ce","m",3,7],
 ["E3 Saxo Classic",13,"cl","c",3,1],
-["Gand-Wevelgem",13,"cl","p",2,1],
+["Gand-Wevelgem",13,"cl","s",2,1],
 ["Tour des Flandres",14,"cl","c",4,1],
 ["Tour du Pays basque",15,"ce","m",3,6],
 ["Paris-Roubaix",15,"cl","c",4,1],
@@ -311,6 +311,7 @@ const U={
 /* Poids d'attributs par profil d'étape/course */
 const WGT={
   p:{pla:.28,spr:.58,pun:.08,chr:.06,mon:0},
+  s:{pla:.32,spr:.30,pun:.28,chr:.10,mon:0}, // classique rapide : MSR, Gand-Wevelgem
   c:{pla:.50,pun:.25,spr:.15,chr:.10,mon:0},
   v:{pun:.45,mon:.28,pla:.15,spr:.12,chr:0},
   m:{mon:.62,chr:.12,pun:.14,pla:.12,spr:0},
@@ -322,16 +323,16 @@ const WGT={
    E > 1 : convexe, les grands écarts se creusent au lieu de se comprimer.
    W = largeur d'un groupe en secondes : tout coureur à moins de W du premier
    de son groupe partage son temps (« m.t. »). Élevé en plaine, quasi nul en montagne. */
-const GAPK={p:7.0,c:7.5,v:6.0,m:7.4,t:5.6};
-const GAPD={p:36,c:14,v:20,m:6,t:0.4};
-const GAPE={p:1.20,c:1.26,v:1.28,m:1.32,t:1.05};
-const GAPW={p:190,c:70,v:110,m:26,t:0};
+const GAPK={p:7.0,s:6.6,c:7.5,v:6.0,m:7.4,t:5.6};
+const GAPD={p:36,s:26,c:14,v:20,m:6,t:0.4};
+const GAPE={p:1.20,s:1.22,c:1.26,v:1.28,m:1.32,t:1.05};
+const GAPW={p:190,s:140,c:70,v:110,m:26,t:0};
 /* Décrochage : surcoût d'écart des équipiers ayant travaillé, et de la fatigue accumulée */
-const WORK={p:0.5,c:2.0,v:2.5,m:5.0,t:0};
-const DECR={p:0.03,c:0.08,v:0.10,m:0.16,t:0};
+const WORK={p:0.5,s:1.2,c:2.0,v:2.5,m:5.0,t:0};
+const DECR={p:0.03,s:0.05,c:0.08,v:0.10,m:0.16,t:0};
 /* Hors-délai : durée type d'étape (s) et pourcentage toléré */
-const DUREE={p:16200,c:21600,v:17100,m:18000,t:2700};
-const DELAI={p:0.16,c:0.14,v:0.13,m:0.115,t:0.25};
+const DUREE={p:16200,s:19800,c:21600,v:17100,m:18000,t:2700};
+const DELAI={p:0.16,s:0.15,c:0.14,v:0.13,m:0.115,t:0.25};
 /* Conversion score → temps, puis regroupement en pelotons.
    rows est trié par score décroissant ; extra(x) ajoute un surcoût d'écart. */
 function groupGaps(rows,sp,brkGap,extra){
@@ -399,6 +400,9 @@ function newRider(base,ti){
     fat:0,pts:0,wins:0,races:0,days:0,out:0,weekLock:false,p1:1,p2:5,gen:false,sal:0,ctr:1+Math.floor(U.r()*3),hist:[]};
   const a=[["mon",mon],["spr",spr],["pun",pun],["chr",chr],["pla",pla]].sort((x,y)=>y[1]-x[1]);
   r.prof=a[0][0];
+  // Un rouleur qui grimpe presque aussi bien est un coureur de général, pas un spécialiste
+  // du chrono : sans ça, Evenepoel (chr 94 / mon 90) ne pourrait jamais viser un grand tour.
+  if(r.prof==="chr"&&mon>=80&&chr-mon<8)r.prof="mon";
   // Flandrien : dominante plaine avec punch ou pointe de vitesse (spécialiste des pavés)
   if(r.prof==="pla"&&(pun>=62||spr>=68))r.prof="fla";
   r.pot=pot!=null?pot:Math.min(93,r.moy+Math.round(Math.max(0,25-(((G&&G.year)||2026)-an))*1.5));
@@ -596,9 +600,9 @@ function autoRoles(sel,race){
 }
 const aiTactic=autoRoles;
 /* Score en course d'un coureur */
-const NOISE={p:0.09,c:0.12,v:0.13,m:0.11,t:0.06};
+const NOISE={p:0.055,s:0.07,c:0.075,v:0.08,m:0.07,t:0.04};
 function riderScore(r,prof,week,ctx){
-  let base=78*Math.pow(baseScore(r,prof)/78,0.88); // compression des écarts de niveau
+  let base=78*Math.pow(baseScore(r,prof)/78,0.94); // légère compression des écarts de niveau
   if(prof==="c"&&r.prof==="fla")base*=1.04; // les Flandriens excellent sur les pavés
   let s=base*formOf(r,week)*fatMult(r.fat+(ctx.extraFat||0));
   const role=(ctx.roles&&ctx.roles.get(r.id))||{ro:"EQ",or:"gc"};
@@ -693,19 +697,28 @@ function stageProfiles(race){
     for(let i=15;i<20;i++)if(o[i]==null)o[i]=f3.pop()||"m";
     return o;
   }
-  const base=prof==="m"?["p","v","m","t","m","m","v","m"]:prof==="v"?["p","v","v","t","p","v","m","v"]:prof==="c"?["p","c","p","c","c"]:["p","p","v","t","p","p","v"];
+  // la montagne est placée tôt : une course de 6 jours doit elle aussi avoir ses juges de paix
+  const base=prof==="m"?["p","m","v","t","m","m","v","m"]
+    :prof==="v"?["p","v","m","t","v","m","v","v"]
+    :prof==="c"?["p","c","p","c","c"]
+    :["p","p","v","t","p","m","p"];
   for(let i=0;i<d;i++)out.push(base[i%base.length]);
   return out;
 }
 /* Course à étapes / grand tour : état itérable étape par étape */
+/* Barème du classement par points : très favorable aux arrivées rapides,
+   pauvre en montagne, pour que le maillot vert reste l'affaire des sprinteurs. */
 const PTS_STAGE={
   p:[50,30,20,18,16,14,12,10,8,7,6,5,4,3,2],
+  s:[50,30,20,18,16,14,12,10,8,7,6,5,4,3,2],
   c:[30,25,22,19,17,15,13,11,9,7,6,5,4,3,2],
   v:[30,25,22,19,17,15,13,11,9,7,6,5,4,3,2],
-  m:[20,17,15,13,11,10,9,8,7,6,5,4,3,2,1],
-  t:[20,17,15,13,11,10,9,8,7,6,5,4,3,2,1]};
+  m:[12,10,8,7,6,5,4,3,2,1,1,1,1,1,1],
+  t:[12,10,8,7,6,5,4,3,2,1,1,1,1,1,1]};
+/* Sprint intermédiaire : disputé à la vitesse pure, sur toutes les étapes */
+const PTS_INTER=[20,17,15,13,11,10,9,8];
 const BONIF=[10,6,4];
-const BRK={p:0.12,c:0.22,v:0.38,m:0.30,t:0};
+const BRK={p:0.12,s:0.14,c:0.22,v:0.38,m:0.30,t:0};
 function initStageRace(race,entries){
   const profs=stageProfiles(race);
   const st=new Map();const all=[];
@@ -807,12 +820,13 @@ function simStage(rs,playerMod){
     const climb=live.filter(r=>!rs.st.get(r).ab).map(r=>({r,w:r.mon*formOf(r,rs.race[1])*(0.5+U.r())})).sort((a,b)=>b.w-a.w);
     [10,8,6,4,2].forEach((p,i)=>{if(climb[i])rs.st.get(climb[i].r).kom+=p});
   }
-  // points intermédiaires : l'échappée rafle sprints et cols du jour
+  // sprint intermédiaire : à l'échappée si elle est assez fournie, sinon disputé
+  // au peloton à la vitesse pure — c'est le vrai levier du maillot vert
   const brkRows=rows.filter(x=>x.brk&&!rs.st.get(x.r).ab);
-  if(brkRows.length){
-    if(sp!=="m")[10,6,4,2].forEach((p,i)=>{if(brkRows[i])rs.st.get(brkRows[i].r).pts+=p});
-    if(sp==="m"||sp==="v")[8,5,3,2].forEach((p,i)=>{if(brkRows[i])rs.st.get(brkRows[i].r).kom+=p});
-  }
+  const interPool=brkRows.length>=4?brkRows
+    :brkRows.concat(surv.filter(x=>!x.brk).slice(0,30).sort((a,b)=>baseScore(b.r,"p")-baseScore(a.r,"p")));
+  PTS_INTER.forEach((p,i)=>{if(interPool[i])rs.st.get(interPool[i].r).pts+=p});
+  if(brkRows.length&&(sp==="m"||sp==="v"))[8,5,3,2].forEach((p,i)=>{if(brkRows[i])rs.st.get(brkRows[i].r).kom+=p});
   rs.stageWins.push({st:rs.si+1,prof:sp,r:surv[0].r,brk:!!surv[0].brk});
   rs.lastStage={rows:surv,sp};
   rs.si++;
@@ -1903,7 +1917,7 @@ function renderSelect(){
   if(buf.sdir==null)buf.sdir=1;
   const rs=pool.slice().sort((a,b)=>buf.sdir*sorters[buf.sort](a,b));
   app().innerHTML=`<div class="card"><h3>Sélection : ${race[0]}</h3>
-  <p class="stat">${race[5]} jour(s) · profil ${{p:"plat",c:"pavés",v:"vallonné",m:"montagne"}[race[3]]} · ${n} coureurs.${mand?' <b>Participation obligatoire (Grand Tour).</b>':''}</p>
+  <p class="stat">${race[5]} jour(s) · profil ${(SPNAME[race[3]]||"").toLowerCase()} · ${n} coureurs.${mand?' <b>Participation obligatoire (Grand Tour).</b>':''}</p>
   <div style="margin:8px 0;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
   <button class="btn sec sm" id="autoA">Auto adéquation</button>
   <button class="btn sec sm" id="autoF">Auto forme</button>
@@ -2030,8 +2044,8 @@ function renderOneDay(){
   };
 }
 /* --- Mode étape par étape + mini-jeu L'Effort --- */
-const SPNAME={p:"Plat",c:"Pavés",v:"Vallonné",m:"Montagne",t:"Chrono ind."};
-const SPICON={p:"▬",c:"▤",v:"◠",m:"▲",t:"⏱"};
+const SPNAME={p:"Plat",s:"Classique rapide",c:"Pavés",v:"Vallonné",m:"Montagne",t:"Chrono ind."};
+const SPICON={p:"▬",s:"◈",c:"▤",v:"◠",m:"▲",t:"⏱"};
 const RAF=cb=>window.requestAnimationFrame?window.requestAnimationFrame(cb):setTimeout(()=>cb((window.performance&&performance.now)?performance.now():Date.now()),16);
 const CAF=id=>window.cancelAnimationFrame?window.cancelAnimationFrame(id):clearTimeout(id);
 let MG=null;
