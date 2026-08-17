@@ -476,20 +476,85 @@ function fitRace(r,i,used){
   return s;
 }
 /* Deux courses cibles, espacées d'au moins sept semaines pour que les pics ne se chevauchent pas */
-function autoTargets(r,used){
+function autoTargets(r,used,taken){
   const idx=RACES.map((_,i)=>i);
   const jit=new Map(idx.map(i=>[i,0.96+U.r()*0.08])); // un peu de variété entre équipes
   idx.sort((a,b)=>fitRace(r,b,used)*jit.get(b)-fitRace(r,a,used)*jit.get(a));
-  const c1=idx[0];
+  // l'objectif principal est exclusif : une course n'a qu'un seul leader
+  const c1=idx.find(i=>!taken||!taken.has(i));
+  if(c1==null)return [idx[0],idx[1]];
   const w1=targetWeek(RACES[c1]);
   const c2=idx.find(i=>i!==c1&&Math.abs(targetWeek(RACES[i])-w1)>=7);
   return [c1,c2!=null?c2:idx[1]];
 }
-function assignTargets(list,used){
+/* ===== Programme de saison =====
+   Le joueur désigne des leaders sur les grandes échéances. Le programme de chaque
+   coureur (courses de préparation + objectifs) en découle. */
+const PREPN=["Légère","Chargée"];
+const MAJEURES=()=>RACES.map((rc,i)=>({rc,i}))
+  .filter(x=>x.rc[2]==="gt"||x.rc[2]==="wc"||x.rc[4]>=3)
+  .sort((a,b)=>a.rc[1]-b.rc[1]);
+const goalsOf=r=>[r.c1,r.c2].filter(i=>i!=null&&i>=0&&RACES[i]);
+/* Deux objectifs trop rapprochés ne tiennent pas dans une saison */
+function goalConflict(r,i){
+  const w=targetWeek(RACES[i]);
+  return goalsOf(r).some(j=>j!==i&&Math.abs(targetWeek(RACES[j])-w)<6);
+}
+/* Programme complet : l'objectif, plus des courses de mise en route en amont */
+function buildProgram(r){
+  const goals=goalsOf(r);
+  const prog=goals.slice();
+  const lourd=r.prep?3:1;
+  goals.forEach(g=>{
+    const wG=targetWeek(RACES[g]);
+    const cand=RACES.map((_,i)=>i).filter(i=>{
+      if(prog.includes(i)||RACES[i][2]==="wc")return false;
+      const d=wG-targetWeek(RACES[i]);
+      return d>=3&&d<=11;
+    }).sort((a,b)=>fitRace(r,b,null)-fitRace(r,a,null));
+    let n=0;
+    for(const i of cand){
+      if(n>=lourd)break;
+      if(prog.some(j=>Math.abs(RACES[j][1]-RACES[i][1])<2))continue;
+      prog.push(i);n++;
+    }
+  });
+  return prog.sort((a,b)=>RACES[a][1]-RACES[b][1]);
+}
+function syncProgram(r){r.prog=buildProgram(r);}
+/* Effectif requis par bloc de saison : 8 sur un grand tour, 7 ailleurs,
+   en cumulant les courses qui se disputent la même semaine. */
+function blocNeeds(){
+  const need=Array(PERIODS.length).fill(0);
+  for(let w=1;w<=42;w++){
+    const rs=RACES.filter(r=>r[1]===w&&invitedTeams(r).includes(G.me));
+    if(!rs.length)continue;
+    const n=rs.reduce((s,r)=>s+(r[2]==="gt"?8:7),0);
+    const p=weekPeriod(w);
+    if(n>need[p])need[p]=n;
+  }
+  const N=teamRiders(G.me).length;
+  return need.map(v=>Math.min(v,N));
+}
+/* Coureurs dont le programme touche chaque bloc */
+function blocCover(){
+  const cov=Array(PERIODS.length).fill(0);
+  teamRiders(G.me).forEach(r=>{
+    const bs=new Set((r.prog||[]).map(i=>weekPeriod(RACES[i][1])));
+    bs.forEach(p=>cov[p]++);
+  });
+  return cov;
+}
+function assignTargets(list,used,taken){
   used=used||{};
-  list.slice().sort((a,b)=>b.moy-a.moy).forEach(r=>{
-    const [a,b]=autoTargets(r,used);
+  taken=taken||new Set(teamRiders(G.me).filter(r=>r.c1>=0).map(r=>r.c1));
+  // celui qui a le meilleur potentiel sur une grande course choisit en premier :
+  // sans quoi un sprinteur bien noté rafle le Tour avant le grimpeur maison
+  const pointe=r=>RACES.reduce((m,_,i)=>Math.max(m,fitRace(r,i,null)),0);
+  list.slice().sort((a,b)=>pointe(b)-pointe(a)).forEach(r=>{
+    const [a,b]=autoTargets(r,used,taken);
     setTargets(r,a,b);
+    taken.add(a);
     used[a]=(used[a]||0)+1;used[b]=(used[b]||0)+1;
   });
   return used;
@@ -499,7 +564,7 @@ function autoPeaks(r){const [a,b]=autoTargets(r,null);setTargets(r,a,b);}
 /* Objectifs d'une équipe IA : chaque coureur vise les deux courses qui lui vont
    le mieux, la pénalité d'encombrement répartissant l'effectif sur la saison. */
 function teamPeaks(ti){
-  assignTargets(teamRiders(ti),{});
+  assignTargets(teamRiders(ti),{},new Set()); // chaque équipe a ses propres leaders
 }
 
 const TIER0=TEAMS.map(t=>[t[2],t[3]]);
@@ -563,6 +628,7 @@ function syncPeaks(r){
 function setTargets(r,i1,i2){
   r.c1=i1;r.c2=i2!=null?i2:i1;
   syncPeaks(r);
+  syncProgram(r);
 }
 /* Forme asymétrique : elle se construit sur des semaines, elle retombe en quelques jours. */
 function formOf(r,w){
@@ -1614,7 +1680,7 @@ function draftState(){
   const rs=teamRiders(G.me).slice().sort((a,b)=>b.moy-a.moy);
   const cards=rs.filter((r,i)=>r.moy>=75||i<8).slice(0,12).map(r=>r.id);
   teamRiders(G.me).forEach(r=>{r.drafted=false;});
-  G.draft={year:G.year,ix:0,q:cards,sel:[],used:{},all:false};
+  G.draft={year:G.year,open:null};
   G.progInit=true;
   return G.draft;
 }
@@ -1648,10 +1714,30 @@ function draftDash(d){
 function draftComplete(){
   const rs=teamRiders(G.me);
   const used={};
-  rs.filter(r=>r.drafted).forEach(r=>{
-    [r.c1,r.c2].forEach(i=>{if(i!=null&&i>=0)used[i]=(used[i]||0)+1;});
-  });
-  assignTargets(rs.filter(r=>!r.drafted),used);
+  rs.forEach(r=>goalsOf(r).forEach(i=>{used[i]=(used[i]||0)+1;}));
+  // 1. tout coureur sans objectif en reçoit un
+  assignTargets(rs.filter(r=>!goalsOf(r).length),used);
+  // 2. combler les blocs qui manquent de monde, sans toucher aux leaders désignés
+  let guard=0;
+  while(guard++<80){
+    const need=blocNeeds(),cov=blocCover();
+    let p=-1;
+    for(let i=0;i<PERIODS.length;i++)if(need[i]>0&&cov[i]<need[i]){p=i;break;}
+    if(p<0)break;
+    const courses=RACES.map((_,i)=>i).filter(i=>weekPeriod(RACES[i][1])===p&&RACES[i][2]!=="wc");
+    // on déplace les équipiers, jamais un leader : le plus modeste d'abord,
+    // et son objectif principal reste intact — le bloc à combler devient le second
+    const cand=rs.filter(r=>!r.drafted&&!(r.prog||[]).some(i=>weekPeriod(RACES[i][1])===p))
+      .sort((a,b)=>a.moy-b.moy);
+    if(!courses.length||!cand.length)break;
+    const best=cand[0];
+    let bc=null,bs=-1e9;
+    courses.forEach(i=>{const s=fitRace(best,i,used);if(s>bs){bs=s;bc=i;}});
+    if(bc==null)break;
+    const g=goalsOf(best);
+    setTargets(best,g.length?g[0]:bc,bc);
+    used[bc]=(used[bc]||0)+1;
+  }
 }
 function draftMissing(){
   const tg=periodTargets(),cov=draftCov();
@@ -1661,188 +1747,121 @@ function draftMissing(){
 }
 function renderDraft(){
   const d=draftState();
-  const done=d.ix>=d.q.length;
-  let body;
-  if(!done){
-    const r=rid(d.q[d.ix]);
-    d.sel=d.sel||[];
-    const libres=RACES.map((_,i)=>i).filter(i=>!d.sel.includes(i));
-    const conseil=libres.slice().sort((a,b)=>fitRace(r,b,d.used)-fitRace(r,a,d.used));
-    const liste=d.all?libres.slice().sort((a,b)=>RACES[a][1]-RACES[b][1]):conseil.slice(0,9);
-    body=`<div class="card"><h3>Coureur ${d.ix+1}/${d.q.length}</h3>
-    <div style="display:flex;gap:8px;align-items:center;margin:6px 0">
-    <span class="nm lnk" data-rp="${r.id}" style="font-size:1.05rem;font-weight:800;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
-    <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
-    <b class="${col(r.moy)}">${r.moy}</b></div>
-    <p class="stat">Choisissez les <b>deux courses</b> où vous le voulez performant. Sa forme montera progressivement vers chacune, puis retombera vite après.</p>
-    <div style="display:flex;gap:6px;margin:8px 0;flex-wrap:wrap">
-    ${[0,1].map(k=>{
-      const i=d.sel[k];
-      return `<span class="pill" ${i!=null?`data-unsel="${k}" style="cursor:pointer;border:1px solid var(--acc)"`:""}>Objectif ${k+1} : <b>${i!=null?U.esc(RACES[i][0])+" ✕":"—"}</b></span>`;
-    }).join("")}</div>
-    <div style="display:flex;gap:6px;margin-bottom:6px">
-    <button class="btn sec sm" id="dall">${d.all?"Courses conseillées":"Tout le calendrier"}</button></div>
-    <div style="display:flex;flex-direction:column;gap:6px;max-height:52vh;overflow-y:auto">
-    ${liste.map(i=>{const rc=RACES[i];
-      return `<button class="btn sec rcs" data-rc="${i}" style="min-height:40px;text-align:left;display:flex;gap:8px;align-items:center">
-      <span class="stat" style="width:30px;flex:none">S${rc[1]}</span>
-      <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(rc[0])}</span>
-      <span class="stat" style="flex:none">${PRI[rc[3]]}${rc[5]>1?" "+rc[5]+"j":""}</span>${raceBadge(rc)}</button>`}).join("")}
-    </div>
-    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-    ${d.ix>0?'<button class="btn sec sm" id="dback">◂ Précédent</button>':""}
-    <button class="btn sec sm" id="dskip">Équipier · laisser le staff décider</button>
+  const rs=teamRiders(G.me).slice().sort((a,b)=>b.moy-a.moy);
+  const need=blocNeeds(),cov=blocCover();
+  const maj=MAJEURES();
+  const leaderOf=i=>rs.find(r=>r.c1===i); // un seul leader par course : l'objectif principal
+  const manque=need.map((n,p)=>n>0&&cov[p]<n?p:-1).filter(p=>p>=0);
+  const couvertes=maj.filter(x=>leaderOf(x.i)).length;
+
+  // --- panneau : désigner un leader sur une course ---
+  if(d.open!=null){
+    const i=d.open,rc=RACES[i];
+    const act=leaderOf(i);
+    const cands=rs.slice().sort((a,b)=>fitRace(b,i,null)-fitRace(a,i,null));
+    app().innerHTML=`<div class="card"><h3>${U.esc(rc[0])} <span class="stat">S${rc[1]} · ${SPNAME[rc[3]]}${rc[5]>1?" · "+rc[5]+"j":""}</span></h3>
+    <p class="stat">Qui joue la gagne ici ? Sa forme sera calée sur cette date et son programme construit autour.</p>
+    <div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap">
+    <button class="btn sec sm" id="dclose">◂ Retour</button>
+    ${act?`<button class="btn sec sm" id="dfree" style="color:var(--warn)">Retirer ${U.esc(act.n)}</button>`:""}</div>
+    <div style="display:flex;flex-direction:column;gap:5px;max-height:60vh;overflow-y:auto">
+    ${cands.slice(0,26).map(r=>{
+      const g=goalsOf(r),plein=g.length>=2&&!g.includes(i),conf=goalConflict(r,i);
+      const dej=g.includes(i);
+      const ko=!dej&&(plein||conf);
+      const note=dej?"objectif actuel":conf?"trop proche d'un autre objectif":plein?"a déjà deux objectifs":
+        g.length?"1er objectif : "+U.esc(RACES[g[0]][0]):"disponible";
+      return `<button class="btn ${dej?"":"sec"} sm dcand" data-c="${r.id}" ${ko?"disabled":""}
+      style="text-align:left;display:flex;gap:8px;align-items:center;min-height:38px;${ko?"opacity:.45":""}">
+      <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
+      <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
+      <b class="${col(r.moy)}">${r.moy}</b>
+      <span class="stat" style="flex:none;font-size:.66rem">${note}</span></button>`}).join("")}
     </div></div>`;
-  }else{
-    const miss=draftMissing();
-    const rs=teamRiders(G.me).slice().sort((a,b)=>b.moy-a.moy);
-    body=`<div class="card"><h3>Complétion de l'effectif</h3>
-    <p class="stat">Les coureurs non draftés reçoivent automatiquement les courses qui leur conviennent le mieux. La jauge du haut indique si votre effectif couvre toute la saison.</p>
-    ${miss.length?`<p class="stat" style="color:var(--warn)">Périodes peu couvertes : ${miss.join(" · ")}</p>`:'<p class="ok" style="font-size:.85rem">Toute la saison est couverte.</p>'}
-    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-    <button class="btn" id="dcomp" style="min-height:44px">Compléter l'effectif</button>
-    <button class="btn" id="dgo" style="min-height:44px">Valider et lancer la saison ▸</button>
-    <button class="btn sec sm" id="dreset">Recommencer le draft</button>
-    </div></div>
-    <div class="card"><h3>Objectifs de l'effectif</h3>
-    <p class="stat">Touchez un coureur pour revoir ses deux courses.</p>
-    ${rs.map(r=>`<div class="selrow one" data-edit="${r.id}" style="cursor:pointer">
-    <span class="nm" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
-    <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span><b class="${col(r.moy)}">${r.moy}</b>
-    <span class="stat" style="flex:1.4;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right">${
-      [r.c1,r.c2].filter(i=>i!=null&&i>=0&&RACES[i]).map(i=>U.esc(RACES[i][0])).join(" · ")||"—"}</span></div>`).join("")}</div>`;
-  }
-  app().innerHTML=`<div class="card" style="position:sticky;top:46px;z-index:5;padding-bottom:8px">
-  <h3>Programme de saison ${G.year}</h3>${draftDash(d)}</div>`+body;
-  if(!done){
-    const r=rid(d.q[d.ix]);
-    const valider=()=>{
-      setTargets(r,d.sel[0],d.sel[1]);
-      r.drafted=true;
-      d.sel.forEach(i=>{d.used[i]=(d.used[i]||0)+1;});
-      d.sel=[];d.ix++;renderDraft();saveGame();
+    $("#dclose").onclick=()=>{d.open=null;renderDraft();};
+    const fr=$("#dfree");
+    if(fr)fr.onclick=()=>{
+      const g=goalsOf(act).filter(x=>x!==i);
+      setTargets(act,g.length?g[0]:-1,g.length>1?g[1]:(g.length?g[0]:-1));
+      d.open=null;renderDraft();saveGame();
     };
-    document.querySelectorAll(".rcs").forEach(b=>b.onclick=()=>{
-      d.sel.push(+b.dataset.rc);
-      if(d.sel.length>=2)valider();else{renderDraft();saveGame();}
-    });
-    document.querySelectorAll("[data-unsel]").forEach(s=>s.onclick=()=>{
-      d.sel.splice(+s.dataset.unsel,1);renderDraft();
-    });
-    $("#dall").onclick=()=>{d.all=!d.all;renderDraft();};
-    $("#dskip").onclick=()=>{d.sel=[];d.ix++;renderDraft();saveGame();};
-    const bk=$("#dback");
-    if(bk)bk.onclick=()=>{
-      d.sel=[];d.ix--;
-      const pr=rid(d.q[d.ix]);
-      if(pr&&pr.drafted){
-        [pr.c1,pr.c2].forEach(i=>{if(i!=null&&i>=0&&d.used[i])d.used[i]--;});
-        pr.drafted=false;
+    document.querySelectorAll(".dcand").forEach(b=>b.onclick=()=>{
+      const r=rid(+b.dataset.c);
+      const prev=leaderOf(i);
+      if(prev&&prev!==r){
+        const g=goalsOf(prev).filter(x=>x!==i);
+        setTargets(prev,g.length?g[0]:-1,g.length>1?g[1]:(g.length?g[0]:-1));
       }
-      renderDraft();saveGame();
-    };
-  }else{
-    $("#dcomp").onclick=()=>{draftComplete();notice("Objectifs attribués au reste de l'effectif.");renderDraft();saveGame();};
-    $("#dgo").onclick=()=>{
-      const ko=teamRiders(G.me).filter(r=>peakWeeks(r).length<1).length;
-      if(ko){notice(ko+" coureur(s) sans objectif : utilisez Compléter l'effectif.");return;}
-      G.phase="run";G.tab="home";render();saveGame();};
-    $("#dreset").onclick=()=>{G.draft=null;teamRiders(G.me).forEach(r=>{r.drafted=false;});draftState();renderDraft();saveGame();};
-    document.querySelectorAll("[data-edit]").forEach(row=>row.onclick=()=>{
-      const id=+row.dataset.edit;
-      d.q=d.q.concat([id]);d.sel=[];renderDraft();saveGame();
+      const g=goalsOf(r).filter(x=>x!==i);
+      setTargets(r,i,g.length?g[0]:i);
+      r.drafted=true;
+      d.open=null;renderDraft();saveGame();
     });
+    return;
   }
-}
 
-/* --- Accueil --- */
-function vHome(){
-  const next=[];
-  for(let w=G.week;w<=42&&next.length<5;w++)racesStarting(w).forEach(r=>next.push(r));
-  const wk=racesStarting(G.week);
-  const rs=teamRiders(G.me).slice().sort((a,b)=>b.pts-a.pts).slice(0,5);
-  return `<div class="grid2">
-  <div class="card"><h3>Semaine ${G.week}</h3>
-  ${wk.length?wk.map(r=>{
-    const inv=invitedTeams(r).includes(G.me);
-    return `<div class="evt">🏁 <b>${r[0]}</b> · ${r[5]} j · ${inv?'<span class="ok">équipe invitée</span>':'<span class="stat">non invité</span>'}</div>`}).join(""):`<div class="evt stat">Pas de course cette semaine : récupération.</div>`}
-  <div style="margin-top:12px"><button class="btn" id="adv">Avancer ▸</button></div></div>
-  <div class="card"><h3>Prochaines courses</h3>
-  ${next.map(r=>`<div class="evt"><span class="stat">S${r[1]}</span> · ${r[4]>=4?"<b>"+r[0]+"</b>":r[0]}</div>`).join("")}</div>
-  </div>
-  <div class="card"><h3>Meilleurs coureurs</h3><div class="scroll"><table><thead><tr><th>Coureur</th><th>Pts UCI</th><th>Vict.</th><th>Forme</th><th>Fatigue</th></tr></thead><tbody>
-  ${rs.map(r=>`<tr><td class="lnk" data-rp="${r.id}">${U.esc(r.n)}</td><td class="n80">${Math.round(r.pts)}</td><td>${r.wins}</td><td>${formPct(r,G.week)}</td><td>${fatBar(r.fat)}</td></tr>`).join("")}
-  </tbody></table></div></div>`;
-}
-
-/* --- Effectif : tableau triable --- */
-function vSquad(){
-  if(!G.sq)G.sq={k:"moy",d:1};
-  const q=G.sq;
-  const S={
-    nom:(a,b)=>a.n.localeCompare(b.n),nat:(a,b)=>a.nat.localeCompare(b.nat),
-    age:(a,b)=>(a.an-b.an),prof:(a,b)=>a.prof.localeCompare(b.prof)||b.moy-a.moy,
-    moy:(a,b)=>b.moy-a.moy,pla:(a,b)=>b.pla-a.pla,mon:(a,b)=>b.mon-a.mon,pun:(a,b)=>b.pun-a.pun,
-    spr:(a,b)=>b.spr-a.spr,pav:(a,b)=>pavOf(b)-pavOf(a),chr:(a,b)=>b.chr-a.chr,end:(a,b)=>b.end-a.end,
-    pot:(a,b)=>(b.pot||b.moy)-(a.pot||a.moy),forme:(a,b)=>formOf(b,G.week)-formOf(a,G.week),
-    fat:(a,b)=>b.fat-a.fat,jours:(a,b)=>b.days-a.days,pts:(a,b)=>b.pts-a.pts};
-  const rs=teamRiders(G.me).slice().sort((a,b)=>q.d*S[q.k](a,b));
-  const ar=k=>q.k===k?(q.d>0?" ▼":" ▲"):"";
-  const th=(k,l)=>`<th class="srt ${q.k===k?"on":""}" data-sq="${k}">${l}${ar(k)}</th>`;
-  return `<div class="card"><h3>Effectif (${rs.length}) · masse salariale ${U.eur(masse(G.me))}/an</h3>
-  <div class="scroll"><table class="stick sqtab"><thead><tr>${th("nom","Coureur")}${th("nat","Nat")}${th("age","Âge")}${th("prof","Profil")}${th("moy","MOY")}${th("pla","PLA")}${th("mon","MON")}${th("pun","PUN")}${th("spr","SPR")}${th("pav","PAV")}${th("chr","CHR")}${th("end","END")}${th("pot","Pot.")}${th("forme","Forme")}${th("fat","Fatigue")}${th("jours","J")}${th("pts","Pts")}</tr></thead><tbody>
-  ${rs.map(r=>`<tr><td><b class="lnk" data-rp="${r.id}">${U.esc(r.n)}</b>${r.out?' <span class="tag warn">indispo</span>':''}</td><td>${r.nat}</td><td>${G.year-r.an}</td>
-  <td><span class="tag ${PROFTAG[r.prof]}">${PROFN[r.prof]}</span></td>
-  <td class="${col(r.moy)}"><b>${r.moy}</b></td>
-  <td class="${col(r.pla)}">${r.pla}</td><td class="${col(r.mon)}">${r.mon}</td><td class="${col(r.pun)}">${r.pun}</td>
-  <td class="${col(r.spr)}">${r.spr}</td><td class="${col(pavOf(r))}">${pavOf(r)}</td><td class="${col(r.chr)}">${r.chr}</td><td class="${col(r.end)}">${r.end}</td>
-  <td>${potTag(r)}</td><td>${formPct(r,G.week)}</td><td>${fatBar(r.fat)}</td><td class="stat">${r.days}</td><td class="n80">${Math.round(r.pts)}</td></tr>`).join("")}
-  </tbody></table></div></div>`;
-}
-function bindSquad(){
-  document.querySelectorAll("th[data-sq]").forEach(t=>t.onclick=()=>{
-    const k=t.dataset.sq;
-    if(G.sq.k===k)G.sq.d=-G.sq.d;else G.sq={k,d:1};
-    render();
+  // --- vue principale : les échéances de la saison ---
+  const groupe=(titre,filtre)=>{
+    const l=maj.filter(filtre);
+    if(!l.length)return "";
+    return `<div class="card"><h3>${titre}</h3>
+    ${l.map(x=>{
+      const ld=leaderOf(x.i);
+      // coureurs réellement mobilisables : libres cette semaine-là et pas au fond du trou
+      const eff=rs.filter(r=>!(r.prog||[]).some(j=>j!==x.i&&RACES[j][1]===x.rc[1])
+        &&formOf(r,x.rc[1])>=0.97).length;
+      const mini=x.rc[2]==="gt"?8:7;
+      const ok=eff>=mini;
+      return `<div class="selrow one" data-open="${x.i}" style="cursor:pointer">
+      <span class="stat" style="width:30px;flex:none">S${x.rc[1]}</span>
+      <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.rc[4]>=4||x.rc[2]==="gt"?"<b>"+U.esc(x.rc[0])+"</b>":U.esc(x.rc[0])}</span>
+      ${ld?`<span class="tag gc">${U.esc(ld.n.split(" ").slice(-1)[0])}</span>`
+          :'<span class="tag warn">à désigner</span>'}
+      <span class="stat ${ok?"":"ko"}" style="flex:none;width:44px;text-align:right">${eff}/${mini}</span>
+      </div>`}).join("")}</div>`;
+  };
+  app().innerHTML=`<div class="card" style="position:sticky;top:46px;z-index:5">
+  <h3>Programme de saison ${G.year}</h3>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0">
+  <span class="pill">Échéances pourvues <b>${couvertes}</b>/${maj.length}</span>
+  <span class="pill">Blocs sous-dotés <b class="${manque.length?"ko":"ok"}">${manque.length}</b></span></div>
+  <div class="covgrid">${PERIODS.map((p,i)=>{
+    const c=cov[i],t=need[i],cl=t===0||c>=t?"cok":c>=Math.ceil(t*0.7)?"cmid":"cko";
+    return `<div class="cov ${cl}"><b>${PSHORT[i]}</b><span>${c}${t?"/"+t:""}</span></div>`}).join("")}</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+  <button class="btn sec sm" id="dauto">Compléter automatiquement</button>
+  <button class="btn sm" id="dgo">Lancer la saison ▸</button>
+  <button class="btn sec sm" id="dreset">Tout remettre à zéro</button></div></div>
+  ${groupe("Grands tours",x=>x.rc[2]==="gt")}
+  ${groupe("Monuments et Mondiaux",x=>x.rc[2]!=="gt"&&(x.rc[2]==="wc"||x.rc[4]>=4))}
+  ${groupe("Classiques",x=>x.rc[2]==="cl"&&x.rc[4]===3)}
+  ${groupe("Courses à étapes",x=>x.rc[2]==="ce")}
+  <div class="card"><h3>Effectif</h3>
+  <p class="stat">Préparation : légère = une course de mise en route, chargée = trois. Touchez pour changer.</p>
+  ${rs.map(r=>{
+    const g=goalsOf(r);
+    return `<div class="selrow one">
+    <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
+    <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span><b class="${col(r.moy)}">${r.moy}</b>
+    <span class="rchip ${r.prep?"on":""}" data-prep="${r.id}">${PREPN[r.prep?1:0]}</span>
+    <span class="stat" style="flex:1.5;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right">${
+      g.length?g.map(i=>U.esc(RACES[i][0])).join(" · "):"équipier"} <b>(${(r.prog||[]).length}j)</b></span></div>`}).join("")}</div>`;
+  document.querySelectorAll("[data-open]").forEach(row=>row.onclick=()=>{
+    d.open=+row.dataset.open;renderDraft();
   });
+  document.querySelectorAll("[data-prep]").forEach(c=>c.onclick=e=>{
+    e.stopPropagation();
+    const r=rid(+c.dataset.prep);
+    r.prep=r.prep?0:1;syncProgram(r);renderDraft();saveGame();
+  });
+  $("#dauto").onclick=()=>{draftComplete();notice("Programmes complétés.");renderDraft();saveGame();};
+  $("#dreset").onclick=()=>{
+    teamRiders(G.me).forEach(r=>{r.drafted=false;r.c1=-1;r.c2=-1;r.prog=[];});
+    G.draft=null;draftState();renderDraft();saveGame();};
+  $("#dgo").onclick=()=>{
+    if(manque.length){notice("Blocs sous-dotés : "+manque.map(p=>PSHORT[p]).join(", ")+". Utilisez Compléter automatiquement.");return;}
+    G.phase="run";G.tab="home";render();saveGame();};
 }
-
-/* --- Calendrier compact (390px) + accès au récap --- */
-const TYB={cl:"CL",ce:"ÉT",gt:"GT",wc:"CM"},PRI={p:"▬",s:"◈",c:"▤",v:"◠",m:"▲",t:"⏱"};
-function vCal(){
-  return `<div class="card" style="padding:10px 8px"><table class="caltab"><thead><tr><th>S</th><th>Course</th><th></th><th>J</th><th>Vainqueur</th></tr></thead><tbody>
-  ${RACES.map((r,ri)=>{
-    const e=(G.logC||[]).find(l=>l.ri===ri);
-    const w=e?rid(e.top[0][0]):null;
-    const cur=r[1]===G.week;
-    return `<tr ${cur?'class="me"':''} ${e?`data-cal="${ri}" style="cursor:pointer"`:""}><td class="stat">${r[1]}</td>
-    <td class="calnm">${r[4]>=4?"<b>"+r[0]+"</b>":r[0]}</td>
-    <td class="stat" style="white-space:nowrap">${TYB[r[2]]} ${PRI[r[3]]}</td><td class="stat">${r[5]}</td>
-    <td class="calw">${w?`<span class="lnk ${meCls(w)}" data-rp="${w.id}">${w.t>=0?jer(w.t):""}${U.esc(w.n)}</span>`:'<span class="stat">—</span>'}</td></tr>`}).join("")}
-  </tbody></table></div>`;
-}
-function renderRaceLog(){
-  const e=(G.logC||[]).find(l=>l.ri===G.calSel);
-  if(!e){G.tab="cal";return render();}
-  const race=RACES[e.ri];
-  const R=id=>rid(id);
-  let h=tabsHtml()+`<div class="card"><h3>${race[0]} <span class="stat">· S${e.w} · ${race[5]} j</span></h3>
-  ${e.brk?'<p class="stat">Coup d\'éclat : la victoire a échappé aux favoris.</p>':""}
-  <div class="scroll"><table><tbody>
-  ${e.top.map(([id,g],i)=>{const r=R(id);if(!r)return "";return `<tr ${r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><b class="lnk ${meCls(r)}" data-rp="${id}">${U.esc(r.n)}</b></td><td ${r.t>=0?`class="lnk" data-tp="${r.t}"`:""}>${r.t>=0?jer(r.t)+'<span class="stat">'+TEAMS[r.t][0]+'</span>':'<span class="stat">—</span>'}</td><td class="stat">${i===0?"—":g<1?"m.t.":U.tm(g)}</td></tr>`}).join("")}
-  </tbody></table></div>
-  ${e.st?`<div style="margin-top:6px">${e.st.map(([st,id,prof,brk])=>{const r=R(id);if(!r)return "";return `<div style="display:flex;gap:6px;align-items:center;padding:2px 0;font-size:.8rem;border-bottom:1px solid var(--panel2)"><span class="stat" style="width:36px;flex:none">Ét. ${st}</span><span class="lnk ${meCls(r)}" data-rp="${id}" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat" style="font-size:.68rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.t>=0?TABR[r.t]:"—"} · ${r.nat}</span><span class="stat" style="flex:none">${SPNAME[prof]}${brk?" · éch.":""}</span></div>`}).join("")}</div>`:""}
-  ${e.jer?`<div class="jrow" style="margin-top:6px">
-    <span class="pill" style="background:#2e6b3f;color:#fff">${e.jer.pts!=null&&R(e.jer.pts)?U.esc(R(e.jer.pts).n):"—"}</span>
-    <span class="pill" style="background:#7a2530;color:#fff">${e.jer.kom!=null&&R(e.jer.kom)?U.esc(R(e.jer.kom).n):"—"}</span>
-    <span class="pill" style="background:#d9dee8;color:#111">${e.jer.young!=null&&R(e.jer.young)?U.esc(R(e.jer.young).n):"—"}</span></div>`:""}
-  ${e.ab&&e.ab.length?(()=>{const by=new Map();e.ab.forEach(([id,st])=>{if(!by.has(st))by.set(st,[]);by.get(st).push(id);});
-    return `<p class="stat" style="margin-top:6px;margin-bottom:2px">Abandons</p>${[...by.entries()].sort((a,b)=>a[0]-b[0]).map(([st,ids])=>`<div style="display:flex;gap:6px;align-items:baseline;padding:1px 0;font-size:.78rem"><span class="stat" style="width:36px;flex:none">${st?"Ét. "+st:"—"}</span><span style="min-width:0">${ids.map(id=>{const r=R(id);return r?`<span class="lnk ${r.t===G.me?"ldr":"stat"}" data-rp="${id}">${U.esc(r.n)}</span>`:""}).join(" · ")}</span></div>`).join("")}`})():""}
-  <button class="btn sec" style="margin-top:10px" id="backcal">◂ Calendrier</button></div>`;
-  app().innerHTML=h;bindTabs();
-  $("#backcal").onclick=()=>{G.tab="cal";render();};
-}
-
 /* --- Marché des agents libres, ouvert toute la saison --- */
 function freeAgents(){return G.riders.filter(r=>r.t===-1&&!r.retired).sort((a,b)=>b.moy-a.moy);}
 function proRata(sal){return Math.round(sal*Math.max(0,43-G.week)/42);}
@@ -1900,6 +1919,7 @@ function vMarket(){
   :'<div class="card"><p class="stat">Aucun coureur disponible pour le moment.</p></div>'}`;
 }
 /* --- Classements --- */
+
 function vRank(){
   const ri=G.riders.filter(r=>r.t>=0&&r.pts>0).sort((a,b)=>b.pts-a.pts).slice(0,50);
   const ts=G.teams.slice().sort((a,b)=>b.pts-a.pts);
