@@ -1098,17 +1098,33 @@ function endSeason(){
     const age=G.year-r.an;
     const ks=["pla","mon","spr","chr","pun","end"];
     const a0={};ks.forEach(k=>a0[k]=r[k]);
-    const pot=r.pot||r.moy;
+    let pot=r.pot||r.moy;
+    // une saison énorme révèle un coureur au-delà de ce qu'on imaginait de lui
+    if(age<=29&&r.pts>=1200){
+      const rev=Math.round(Math.min(6,1+(r.pts-1200)/900));
+      pot=r.pot=Math.min(97,Math.max(pot,r.moy+rev));
+    }
     const marge=Math.max(0,pot-r.moy);
-    if(age<27&&marge>0){
-      // développement piloté : exposition (jours de course), résultats, marge de potentiel, vitesse selon l'âge
+    const capA=Math.min(99,pot+3);
+    if(age<30&&marge>0){
+      // développement piloté : exposition, résultats, marge de potentiel, vitesse selon l'âge
       const expo=U.cl(r.days/35,0,1);
-      const perf=U.cl(r.pts/500,0,1);
-      const speed=age<=21?1:age<=23?0.85:age<=25?0.55:0.3;
-      const p=U.cl((0.30+expo*0.25+perf*0.20+marge*0.04)*speed,0.05,0.95);
-      const capA=Math.min(99,pot+3);
+      const perf=U.cl(Math.log10(1+r.pts/120)/1.4,0,1.25); // ne sature plus : 3000 pts pèsent plus que 500
+      const speed=age<=21?1:age<=23?0.9:age<=25?0.68:age<=27?0.45:0.24;
+      const p=U.cl((0.26+expo*0.24+perf*0.30+marge*0.035)*speed,0.04,0.95);
       const jump=marge>=8&&age<=23&&expo>0.4; // grand espoir aligné en course : bonds possibles
-      ks.forEach(k=>{if(U.r()<p)r[k]=U.cl(r[k]+1+(U.r()<(jump?0.65:0.15+expo*0.15+perf*0.2)?1:0)+(jump&&U.r()<0.45?1:0),30,capA)});
+      const w=GROWW[r.prof]||GROWW.pla;
+      ks.forEach(k=>{
+        // plafond propre à l'attribut : la spécialité peut dépasser le potentiel,
+        // le reste plafonne plus bas — un grimpeur ne devient pas sprinteur
+        // un attribut de spécialiste dépasse toujours le potentiel moyen (un sprinteur
+        // pointe à 93 pour une moyenne de 68) : il garde donc une marge propre
+        const capK=Math.min(99,Math.max(Math.round(pot+3+(w[k]-1)*20),w[k]>=1.2?r[k]+3:0));
+        if(r[k]>=capK)return; // un attribut déjà au-dessus n'est jamais raboté
+        if(U.r()>=U.cl(p*w[k],0.02,0.97))return;
+        const bonus=(U.r()<(jump?0.6:0.12+expo*0.15+perf*0.18)?1:0)+(jump&&U.r()<0.4?1:0);
+        r[k]=Math.min(capK,r[k]+1+bonus);
+      });
     }else{
       // déclin : plus tardif et plus lent quand le potentiel initial était élevé
       const declAge=pot>=88?33:pot>=82?32:pot>=75?31:30;
@@ -1119,8 +1135,8 @@ function endSeason(){
     }
     r.moy=Math.round((r.pla+r.mon+r.spr+r.chr+r.pun+r.end)/6);
     // évaporation du potentiel : la promesse non concrétisée expire
-    if(age>=27)r.pot=r.moy;
-    else if(age>=24)r.pot=Math.max(r.moy,(r.pot||r.moy)-2);
+    if(age>=30)r.pot=r.moy;
+    else if(age>=26)r.pot=Math.max(r.moy,(r.pot||r.moy)-2);
     if(age>=38||(age>=36&&U.r()<0.35))r.retired=true;
     if(r.t===G.me&&!r.retired&&r.moy!==m0){
       const attrs={};ks.forEach(k=>{if(r[k]!==a0[k])attrs[k]=r[k]-a0[k];});
@@ -1151,6 +1167,16 @@ const NEO={
   GBR:[["Oliver","Harry","Callum","Finn","Jack"],["Walker","Hughes","Bell","Shaw","Dean"]],
   DEN:[["Emil","Oscar","Magnus","Anton"],["Nielsen","Holm","Dahl","Skov"]],
   COL:[["Santiago","Juan","Camilo","Andrés"],["Rojas","Cárdenas","Mora","Quintero"]]
+};
+/* Progression ciblée : un coureur progresse d'abord dans ce qu'il travaille en course.
+   Un grimpeur gagne en montagne et en endurance, pas au sprint. */
+const GROWW={
+  mon:{mon:1.35,end:1.15,pun:0.95,chr:0.85,pla:0.60,spr:0.35},
+  spr:{spr:1.35,pla:1.15,end:0.90,pun:0.80,chr:0.60,mon:0.35},
+  pun:{pun:1.35,mon:1.05,end:1.00,pla:0.85,chr:0.70,spr:0.60},
+  fla:{pla:1.30,pun:1.10,end:1.05,spr:0.95,chr:0.75,mon:0.40},
+  chr:{chr:1.35,pla:1.15,end:1.00,pun:0.70,mon:0.65,spr:0.50},
+  pla:{pla:1.30,end:1.05,spr:0.90,pun:0.85,chr:0.85,mon:0.50}
 };
 function rollPot(moy){
   // tirage de rareté : le potentiel est décorrélé du niveau actuel
