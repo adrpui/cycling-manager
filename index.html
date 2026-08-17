@@ -516,7 +516,12 @@ const maxSquad=ti=>TEAMS[ti][2]===0?30:26;
 const askSalary=r=>{
   const age=G.year-r.an;
   let f=1+Math.min(0.5,r.pts/2500)+(r.moy>=85?0.18:0)-(age>=33?0.18:0)-(age>=36?0.15:0);
-  return Math.max(100000,Math.round((r.sal||salary(r))*Math.max(0.6,f)/1000)*1000);
+  if(r.t===-1){ // sans équipe : prétentions revues à la baisse, d'autant plus que la saison avance
+    let d=1-Math.min(0.12,(r.free||0)*0.06);
+    if(G.phase==="run")d*=0.74-Math.min(0.24,(G.week||1)/42*0.24);
+    f*=d;
+  }
+  return Math.max(100000,Math.round((r.sal||salary(r))*Math.max(r.t===-1?0.40:0.6,f)/1000)*1000);
 };
 
 /* ================= FORME / FATIGUE ================= */
@@ -1023,6 +1028,7 @@ function finishOneDay(res){
 }
 function endOfWeek(){
   recoverWeek();
+  freeAgentsAI();
   if(G.week%4===0){
     G.teams.forEach(t=>{t.cash+=t.budget/13;t.cash-=masse(t.i)/13+t.budget*0.026;});
   }
@@ -1223,7 +1229,16 @@ function newSeason(){
   aiFill();G.mktResolved=false;
   while(teamRiders(G.me).length<8){const r=genNeo();r.t=G.me;r.sal=askSalary(r);r.ctr=2;} // complément néo-pros
   G.year++;G.week=1;G.season++;
-  G.riders=G.riders.filter(r=>!r.retired&&r.t>=0);
+  // agents libres : ils restent sur le marché et peuvent signer en cours de saison.
+  // Sans contrat trop longtemps, ou trop âgé, le coureur raccroche.
+  G.riders.forEach(r=>{
+    if(r.retired)return;
+    if(r.t>=0){r.free=0;return;}
+    r.free=(r.free||0)+1;
+    const age=G.year-r.an;
+    if(r.free>=3||age>=34||r.moy<58)r.retired=true;
+  });
+  G.riders=G.riders.filter(r=>!r.retired);
   G.riders.forEach(r=>{r.pts=0;r.wins=0;r.races=0;r.days=0;r.fat=0;r.out=0;r.weekLock=false;r.hist=[];});
   reindex();
   TEAMS.forEach((t,i)=>teamPeaks(i));
@@ -1371,7 +1386,7 @@ function openSettings(){
 }
 
 function tabsHtml(){
-  const ts=[["home","Accueil"],["squad","Effectif"],["cal","Calendrier"],["rank","Classements"],["fin","Finances"]];
+  const ts=[["home","Accueil"],["squad","Effectif"],["cal","Calendrier"],["rank","Classements"],["fin","Finances"],["market","Marché"]];
   return `<div class="tabs">${ts.map(t=>`<button data-t="${t[0]}" class="${G.tab===t[0]?"on":""}">${t[1]}</button>`).join("")}</div>`;
 }
 function bindTabs(){
@@ -1398,9 +1413,11 @@ function render(){
   if(G.tab==="cal")h+=vCal();
   if(G.tab==="rank")h+=vRank();
   if(G.tab==="fin")h+=vFin();
+  if(G.tab==="market")h+=vMarket();
   app().innerHTML=h;bindTabs();
   const adv=$("#adv");if(adv)adv.onclick=advance;
   bindSquad();
+  document.querySelectorAll("[data-sign]").forEach(b=>b.onclick=()=>signFree(+b.dataset.sign));
   document.querySelectorAll("[data-cal]").forEach(tr=>tr.onclick=e=>{
     if(e.target.closest("[data-rp],[data-tp]"))return;
     G.calSel=+tr.dataset.cal;G.tab="racelog";render();
@@ -1706,6 +1723,62 @@ function renderRaceLog(){
   $("#backcal").onclick=()=>{G.tab="cal";render();};
 }
 
+/* --- Marché des agents libres, ouvert toute la saison --- */
+function freeAgents(){return G.riders.filter(r=>r.t===-1&&!r.retired).sort((a,b)=>b.moy-a.moy);}
+function proRata(sal){return Math.round(sal*Math.max(0,43-G.week)/42);}
+function signFree(id){
+  const r=rid(id);if(!r||r.t!==-1)return;
+  const cap=G.teams[G.me].budget*0.50,ask=askSalary(r),cout=proRata(ask);
+  if(teamRiders(G.me).length>=maxSquad(G.me))return notice("Effectif au complet.");
+  if(masse(G.me)+ask>cap)return notice("Plafond salarial dépassé de "+U.eur(masse(G.me)+ask-cap)+".");
+  if(cout>G.teams[G.me].cash)return notice("Trésorerie insuffisante : "+U.eur(cout)+" nécessaires.");
+  r.t=G.me;r.sal=ask;r.ctr=1;r.free=0;r.fat=0;r.out=0;r.weekLock=false;r.racedThisWeek=false;
+  if(r.p1<0||r.p2<0)autoPeaks(r);
+  G.teams[G.me].cash-=cout;
+  notice(U.esc(r.n)+" signe jusqu'à la fin de la saison.");
+  render();saveGame();
+}
+/* Les équipes IA piochent aussi sur le marché, au fil des semaines */
+function freeAgentsAI(){
+  const libres=freeAgents();
+  if(!libres.length)return;
+  G.teams.forEach(t=>{
+    if(t.i===G.me||U.r()>0.05)return;
+    if(teamRiders(t.i).length>=maxSquad(t.i))return;
+    const cap=t.budget*0.50;
+    // une équipe ne se renforce que sur un coureur qui améliore vraiment son effectif
+    const faible=teamRiders(t.i).slice().sort((a,b)=>a.moy-b.moy)[0];
+    const mini=faible?faible.moy+2:60;
+    const i=libres.findIndex(r=>r.moy>=mini&&masse(t.i)+askSalary(r)<=cap);
+    if(i<0)return;
+    const r=libres[i],sal=askSalary(r);
+    libres.splice(i,1);
+    r.t=t.i;r.sal=sal;r.ctr=1;r.free=0;
+    if(r.p1<0||r.p2<0)autoPeaks(r);
+  });
+}
+function vMarket(){
+  const libres=freeAgents();
+  const cap=G.teams[G.me].budget*0.50,m=masse(G.me);
+  const n=teamRiders(G.me).length,mx=maxSquad(G.me),cash=G.teams[G.me].cash;
+  return `<div class="card"><h3>Agents libres</h3>
+  <p class="stat">Coureurs sans contrat. Ils signent jusqu'à la fin de la saison et revoient leurs prétentions à la baisse à mesure qu'elle avance. Le salaire est réglé au prorata des semaines restantes.</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+  <span class="pill">Effectif <b class="${n>=mx?"ko":""}">${n}</b>/${mx}</span>
+  <span class="pill">Masse <b class="${m>cap?"ko":"ok"}">${U.eur(m)}</b> / ${U.eur(cap)}</span>
+  <span class="pill">Trésorerie <b>${U.eur(cash)}</b></span></div></div>
+  ${libres.length?`<div class="card">${libres.slice(0,40).map(r=>{
+    const ask=askSalary(r),cout=proRata(ask),ko=n>=mx||m+ask>cap||cout>cash;
+    return `<div class="selrow one">
+    <span class="nm lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
+    <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
+    <b class="${col(r.moy)}">${r.moy}</b>
+    <span class="stat">${G.year-r.an}a</span>
+    <span class="stat">${U.eur(cout)}</span>
+    <button class="btn ${ko?"sec":""} sm" data-sign="${r.id}" ${ko?"disabled":""}>Signer</button></div>`}).join("")}
+    ${libres.length>40?`<p class="stat" style="margin-top:8px">${libres.length-40} autre(s) coureur(s) disponible(s).</p>`:""}</div>`
+  :'<div class="card"><p class="stat">Aucun coureur disponible pour le moment.</p></div>'}`;
+}
 /* --- Classements --- */
 function vRank(){
   const ri=G.riders.filter(r=>r.t>=0&&r.pts>0).sort((a,b)=>b.pts-a.pts).slice(0,50);
