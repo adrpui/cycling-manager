@@ -64,6 +64,9 @@ td,th{padding:4px 5px}
 #pbox{background:var(--panel);border:1px solid var(--line);border-radius:16px 16px 0 0;max-height:82vh;overflow-y:auto;width:100%;max-width:640px;padding:16px}
 .lnk{cursor:pointer;text-decoration:underline dotted rgba(255,255,255,.22);text-underline-offset:3px}
 .attr{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:8px 0}
+.attr8{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin:6px 0}
+.attr8 div{background:var(--panel2);border-radius:7px;padding:5px 0;text-align:center;font-size:.56rem;color:var(--dim);display:flex;flex-direction:column;gap:1px}
+.attr8 b{font-size:.82rem}
 .attr div{background:var(--panel2);border-radius:8px;text-align:center;padding:6px 2px;font-size:.68rem;color:var(--dim)}
 .attr b{display:block;font-size:.95rem}
 /* Frise d'étapes */
@@ -104,7 +107,7 @@ select{background:var(--panel2);border:1px solid var(--line);color:var(--txt);pa
 .tag.warn{background:#4a1f1c;color:#ffb0a8}
 .ldr{color:#ffd97a!important;font-weight:800}.lt{color:#cdd8ea!important;font-weight:700}.tag.fla{background:#4a2418;color:#ff9a70}
 .tag.rou{background:#143d33;color:#7fe0c3}.tag.chrt{background:#2a3550;color:#aab8e8}
-.tag.pchamp{background:#4a1230;color:#ff9ad5}.tag.plead{background:#4a3812;color:#ffd97a}.tag.plt{background:#2e3a4d;color:#cdd8ea}.tag.peq{background:var(--panel2);color:var(--dim)}
+.stars{color:#ffd97a;font-size:.72rem;letter-spacing:1px;white-space:nowrap}.stars .off,.stars ☆{opacity:.3}
 .pill{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.72rem;background:var(--panel2);color:var(--dim);margin-right:6px}
 /* Overlays */
 #veil{position:fixed;inset:0;background:#0a0f18e6;display:none;align-items:center;justify-content:center;z-index:50;flex-direction:column;gap:14px}
@@ -112,6 +115,10 @@ select{background:var(--panel2);border:1px solid var(--line);color:var(--txt);pa
 .pkchips{display:flex;gap:5px;margin-top:6px}
 .pkc{flex:1;text-align:center;padding:7px 0;border-radius:8px;border:1px solid var(--panel2);color:var(--dim);font-size:.75rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
 .pkc.on{background:#1d4a30;border-color:#2e7d4f;color:#9fe6b4;font-weight:700}
+.jgrid{display:grid;grid-template-columns:minmax(0,1fr) 24px 38px 44px 58px 62px;gap:5px;align-items:center;padding:6px 0;border-bottom:1px solid var(--panel2);font-size:.78rem}
+.jgrid.jhead{color:var(--dim);font-size:.68rem;border-bottom:1px solid var(--dim);padding:2px 0}
+.jgrid .tag{font-size:.6rem;padding:1px 4px;text-align:center}
+.jgrid .btn{padding:5px 8px;font-size:.72rem}
 .dgt{margin-top:8px;display:flex;flex-direction:column;gap:4px}
 .dgtrow{display:flex;gap:5px;align-items:center;font-size:.72rem;min-width:0}
 .dgtrow b{width:52px;flex:none;color:var(--dim)}
@@ -123,11 +130,25 @@ select{background:var(--panel2);border:1px solid var(--line);color:var(--txt);pa
 .seltab th{padding:6px 3px;white-space:nowrap}
 .seltab th.srt{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
 .seltab th.srt.on{color:var(--acc)}
+.rchip{padding:4px 8px;border-radius:8px;border:1px solid var(--panel2);color:var(--dim);font-size:.68rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.rchip.on{background:#4a3812;border-color:var(--acc);color:var(--acc);font-weight:700}
+.ochip{padding:2px 7px;border-radius:8px;border:1px solid var(--panel2);color:var(--dim);font-size:.62rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.ochip.on{background:#1d4a30;border-color:#2e7d4f;color:#9fe6b4;font-weight:700}
+.sqtab th.srt{cursor:pointer;user-select:none;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.sqtab th.srt.on{color:var(--acc)}
 .seltab .bar{width:28px}
 .seltab .tag{font-size:.6rem;padding:1px 4px}
 .seltab td.selnm{max-width:27vw;overflow:hidden;text-overflow:ellipsis}
 .seltab tr.son td{background:#1d2f1c}
 .seltab tr.sdis{opacity:.4}
+.caltab{width:100%;table-layout:fixed;font-size:.74rem}
+.caltab th{font-size:.66rem}
+.caltab td,.caltab th{padding:6px 2px;white-space:nowrap}
+.caltab th:nth-child(1),.caltab td:nth-child(1){width:22px}
+.caltab th:nth-child(3),.caltab td:nth-child(3){width:42px}
+.caltab th:nth-child(4),.caltab td:nth-child(4){width:18px}
+.caltab th:nth-child(5),.caltab td:nth-child(5){width:31%}
+.caltab td.calnm,.caltab td.calw{overflow:hidden;text-overflow:ellipsis}
 .seltab input{width:15px;height:15px}
 #notice{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:var(--panel2);border:1px solid var(--acc);color:var(--txt);padding:10px 16px;border-radius:10px;font-size:.85rem;z-index:70;display:none;max-width:90vw;text-align:center;box-shadow:0 4px 18px #0008}
 .spin{width:38px;height:38px;border:4px solid var(--panel2);border-top-color:var(--acc);border-radius:50%;animation:sp 0.8s linear infinite}
@@ -499,60 +520,88 @@ function aiPlanWeek(ti,races){
   const m=new Map();rs2.forEach((race,i)=>m.set(race,sel[i]));
   return m;
 }
-/* Tactique IA simple */
-function aiTactic(sel,race){
-  const prof=race[3];
-  const lead=sel.slice().sort((a,b)=>baseScore(b,prof)-baseScore(a,prof))[0];
-  return {leader:lead,mode:prof==="p"?"sprint":(race[2]!=="cl"?"gc":"leader")};
+/* Rôles automatiques (joueur : pré-assignation ; IA : assignation) */
+function autoRoles(sel,race){
+  const prof=race[3],R={};
+  const byS=sel.slice().sort((a,b)=>baseScore(b,prof)-baseScore(a,prof));
+  const forced=sel.find(r=>r.role==="L"&&byS.indexOf(r)<3);
+  const ld=forced||byS[0];
+  sel.forEach(r=>R[r.id]={ro:"EQ",or:"gc"});
+  R[ld.id]={ro:"L",or:race[5]>1?"gc":"gagne"};
+  if(race[5]>1){
+    const spr=sel.filter(r=>r!==ld&&r.prof==="spr").sort((a,b)=>b.spr-a.spr)[0];
+    if(spr)R[spr.id]={ro:"SPR",or:"gc"};
+    const el=sel.filter(r=>r!==ld&&r!==spr&&byS.indexOf(r)>=3).sort((a,b)=>baseScore(b,"v")-baseScore(a,"v"))[0];
+    if(el)R[el.id]={ro:"EL",or:"echap"};
+  }else if(race[4]>=3&&byS[1]&&byS[1]!==ld&&byS[1].moy>=byS[0].moy-3){
+    R[byS[1].id]={ro:"EL",or:"gagne"}; // second couteau fort : carte à jouer
+  }
+  return {roles:R,leader:ld};
 }
+const aiTactic=autoRoles;
 /* Score en course d'un coureur */
 const NOISE={p:0.09,c:0.12,v:0.13,m:0.11,t:0.06};
 function riderScore(r,prof,week,ctx){
   let base=78*Math.pow(baseScore(r,prof)/78,0.88); // compression des écarts de niveau
   if(prof==="c"&&r.prof==="fla")base*=1.04; // les Flandriens excellent sur les pavés
   let s=base*formOf(r,week)*fatMult(r.fat+(ctx.extraFat||0));
-  const lead=ctx.leaders.get(r.t);
+  const role=(ctx.roles&&ctx.roles.get(r.id))||{ro:"EQ",or:"gc"};
   if(prof!=="t"){
-  if(lead===r){
-    const help=ctx.helpers.get(r.t)||0;
-    s*=1+0.085*help;
-    if(ctx.tactics.get(r.t)==="sprint"&&prof==="p")s*=1.03;
-    if(ctx.tactics.get(r.t)==="echappee")s*=0.97;
-  } else {
-    s*=0.955; // équipier au service
-    if(ctx.tactics.get(r.t)==="echappee")s*=1+(U.r()<0.12?0.09:0);
-  }
+    if(role.ro==="L"){
+      s*=1+Math.min(0.12,0.14*(ctx.helpers.get(r.t)||0));          // équipiers au service, rendement décroissant
+      if(prof==="p")s*=1+Math.min(0.08,0.10*(ctx.train.get(r.t)||0)); // train de sprint pour le leader sur le plat
+    }else if(role.ro==="EQ"){
+      s*=0.95; // au service du leader
+    }else if(role.ro==="SPR"){
+      if(prof==="p")s*=1+Math.min(0.08,0.10*(ctx.train.get(r.t)||0));
+    }else if(role.ro==="EL"){
+      if(role.or!=="gagne"&&prof==="m")s*=0.96; // le baroudeur sacrifie son général
+    }
   }
   const d=U.r();
   if(d<0.06)s*=0.90;else if(d<0.09)s*=1.06; // jour sans / jour avec
   return s*(1+U.g()*NOISE[prof]);
 }
-function buildCtx(entries,race){
-  const leaders=new Map(),tactics=new Map(),helpers=new Map();
+function buildCtxRoles(entries,prof,st){
+  const roles=new Map(),leaders=new Map(),helpers=new Map(),train=new Map();
   entries.forEach(e=>{
-    leaders.set(e.ti,e.leader);
-    tactics.set(e.ti,e.mode);
-    const hs=e.sel.filter(r=>r!==e.leader);
-    const prof=race[3];
-    const h=hs.length?hs.reduce((s,r)=>s+baseScore(r,prof),0)/hs.length/100:0;
-    helpers.set(e.ti,h);
+    const live=st?e.sel.filter(r=>!st.get(r).ab):e.sel;
+    if(!live.length)return;
+    const R=e.roles||{};
+    let ld=live.find(r=>R[r.id]&&R[r.id].ro==="L");
+    if(!ld)ld=(e.leader&&live.includes(e.leader))?e.leader:live.slice().sort((a,b)=>baseScore(b,prof)-baseScore(a,prof))[0];
+    leaders.set(e.ti,ld);
+    live.forEach(r=>roles.set(r.id,R[r.id]||{ro:r===ld?"L":"EQ",or:"gc"}));
+    const eqs=live.filter(r=>roles.get(r.id).ro==="EQ");
+    helpers.set(e.ti,(eqs.length?eqs.reduce((s,r)=>s+baseScore(r,prof),0)/eqs.length/100:0)*Math.min(1,eqs.length/4));
+    const tr=live.filter(r=>r.prof==="spr"||r.prof==="pla"||r.prof==="fla").map(r=>baseScore(r,"p")).sort((a,b)=>b-a).slice(1,4);
+    train.set(e.ti,tr.length?tr.reduce((s,v)=>s+v,0)/300:0);
   });
-  return {leaders,tactics,helpers};
+  return {roles,leaders,helpers,train};
 }
+const buildCtx=(entries,race)=>buildCtxRoles(entries,race[3],null);
 /* Course d'un jour */
-function simOneDay(race,entries){
+function simOneDay(race,entries,playerMod){
   const ctx=buildCtx(entries,race);
   const all=[];
   entries.forEach(e=>e.sel.forEach(r=>all.push(r)));
   const prof=race[3];
-  let rk=all.map(r=>({r,s:riderScore(r,prof,race[1],{...ctx,extraFat:0})}))
-    .sort((a,b)=>b.s-a.s);
+  let rk=all.map(r=>{
+    let s=riderScore(r,prof,race[1],{...ctx,extraFat:0});
+    if(playerMod&&playerMod.rider===r)s*=playerMod.mult;
+    return {r,s};
+  }).sort((a,b)=>b.s-a.s);
   // coup d'éclat d'un outsider (rare sur les Monuments)
   const pB=race[4]>=4?0.08:({p:0.10,c:0.16,v:0.18}[prof]||0.10);
   if(U.r()<pB&&rk.length>30){
     const size=1+Math.floor(Math.pow(U.r(),2)*3); // 1 à 3 coureurs
     const cands=rk.slice(8,50);
-    const picks=cands.map(x=>({x,w:x.s*(0.5+U.r())})).sort((a,b)=>b.w-a.w).slice(0,size).map(o=>o.x);
+    const rw=x=>{
+      const ro=ctx.roles.get(x.r.id)||{ro:"EQ"};
+      let w=ro.ro==="EQ"?0.3:ro.ro==="EL"?(ro.or==="echap"?6:1):0.5;
+      if(playerMod&&playerMod.rider===x.r)w*=Math.max(0.3,(playerMod.mult-1)*8+1);
+      return w;};
+    const picks=cands.map(x=>({x,w:x.s*(0.5+U.r())*rw(x)})).sort((a,b)=>b.w-a.w).slice(0,size).map(o=>o.x);
     picks.sort((a,b)=>b.s-a.s);
     rk=rk.filter(x=>!picks.includes(x));
     picks.forEach(p=>p.brk=true);
@@ -622,23 +671,8 @@ function initStageRace(race,entries){
   entries.forEach(e=>e.sel.forEach(r=>{all.push(r);st.set(r,{time:0,f:0,ab:false,pts:0,kom:0});}));
   return {race,entries,profs,st,all,si:0,stageWins:[],events:[],done:false,lastStage:null,mgTarget:null,mgMult:null};
 }
-/* Protégé du jour par équipe selon le profil de l'étape */
-function stageLeaders(rs,sp){
-  const leaders=new Map(),helpers=new Map(),tactics=new Map();
-  rs.entries.forEach(e=>{
-    const live=e.sel.filter(r=>!rs.st.get(r).ab);
-    if(!live.length)return;
-    let ld=live.slice().sort((a,b)=>baseScore(b,sp)-baseScore(a,sp))[0];
-    if(e.ti===G.me&&rs.playerProt!=null){
-      const pp=live.find(r=>r.id===rs.playerProt);
-      if(pp)ld=pp;
-    }
-    leaders.set(e.ti,ld);tactics.set(e.ti,e.mode);
-    const hs=live.filter(r=>r!==ld);
-    helpers.set(e.ti,hs.length?hs.reduce((s,r)=>s+baseScore(r,sp),0)/hs.length/100:0);
-  });
-  return {leaders,helpers,tactics};
-}
+/* Contexte d'étape : rôles par équipe (survivants uniquement) */
+function stageLeaders(rs,sp){return buildCtxRoles(rs.entries,sp,rs.st);}
 function simStage(rs,playerMod){
   const sp=rs.profs[rs.si];
   const ctx=stageLeaders(rs,sp);
@@ -672,9 +706,22 @@ function simStage(rs,playerMod){
       if(c2.length&&U.r()<0.01)raid={r:U.pick(c2),big:true};
       else if(c1.length&&U.r()<0.06)raid={r:U.pick(c1),big:false};
     }
+    const roleW=x=>{
+      const ro=ctx.roles.get(x.r.id)||{ro:"EQ",or:"gc"};
+      let w=ro.ro==="EQ"?0.15:ro.ro==="SPR"?0.3:1;
+      if(ro.ro==="EL"||ro.ro==="L"){
+        const o=ro.or;
+        if(o==="echap")w=6;
+        else if(o==="pois")w=(sp==="m"||sp==="v")?7:1.5;
+        else if(o==="vert")w=(sp==="p"||sp==="v")?7:1.5;
+        else w=ro.ro==="L"?0:1; // L orienté GC jamais échappé ; EL Gagne neutre
+        if(ro.ro==="L"&&w>0)w*=1+(ctx.helpers.get(x.r.t)||0); // l'équipe place son leader dans le coup
+      }
+      if(playerMod&&playerMod.rider===x.r)w*=Math.max(0.3,(playerMod.mult-1)*8+1);
+      return w;};
     if(cands.length>4){
       size=Math.min(size,cands.length-2);
-      const picks=cands.map(x=>({x,w:Math.pow(x.s,0.6)*(0.4+U.r())})).sort((a,b)=>b.w-a.w).slice(0,Math.max(1,size)).map(o=>o.x);
+      const picks=cands.map(x=>({x,w:Math.pow(x.s,0.6)*(0.4+U.r())*roleW(x)})).filter(o=>o.w>0).sort((a,b)=>b.w-a.w).slice(0,Math.max(1,size)).map(o=>o.x);
       if(raid){const rr=rows.find(x=>x.r===raid.r);if(rr&&!picks.includes(rr))picks.push(rr);raidBig=raid.big;
         rs.events.push("Ét. "+(rs.si+1)+" : "+(raid.big?"<b>Raid de "+U.esc(raid.r.n)+" !</b> Le général vacille.":U.esc(raid.r.n)+" part de loin pour bousculer le général."));}
       picks.sort((a,b)=>b.s-a.s);
@@ -702,7 +749,7 @@ function simStage(rs,playerMod){
     x.gap=gap;
     s0.time+=gap;
     s0.f+=2.6*(115-x.r.end)/45;
-    const risk=0.0015+Math.max(0,(x.r.fat+s0.f-75))*0.0035;
+    const risk=(0.0015+Math.max(0,(x.r.fat+s0.f-75))*0.0035)*((ctx.roles.get(x.r.id)||{}).ro==="L"?0.5:1); // leader protégé
     if(U.r()<risk&&rs.si<rs.profs.length-1){s0.ab=true;s0.abSt=rs.si+1;
       rs.events.push("Ét. "+(rs.si+1)+" : abandon de <b>"+U.esc(x.r.n)+"</b> ("+TEAMS[x.r.t][0]+")");}
   });
@@ -715,6 +762,12 @@ function simStage(rs,playerMod){
   for(let c=0;c<nc;c++){
     const climb=live.filter(r=>!rs.st.get(r).ab).map(r=>({r,w:r.mon*formOf(r,rs.race[1])*(0.5+U.r())})).sort((a,b)=>b.w-a.w);
     [10,8,6,4,2].forEach((p,i)=>{if(climb[i])rs.st.get(climb[i].r).kom+=p});
+  }
+  // points intermédiaires : l'échappée rafle sprints et cols du jour
+  const brkRows=rows.filter(x=>x.brk&&!rs.st.get(x.r).ab);
+  if(brkRows.length){
+    if(sp!=="m")[10,6,4,2].forEach((p,i)=>{if(brkRows[i])rs.st.get(brkRows[i].r).pts+=p});
+    if(sp==="m"||sp==="v")[8,5,3,2].forEach((p,i)=>{if(brkRows[i])rs.st.get(brkRows[i].r).kom+=p});
   }
   rs.stageWins.push({st:rs.si+1,prof:sp,r:surv[0].r,brk:!!surv[0].brk});
   rs.lastStage={rows:surv,sp};
@@ -759,6 +812,23 @@ function invitedTeams(race){
   if(G&&G.me!=null&&TEAMS[G.me][2]===1)out.push(G.me); // l'équipe du joueur ProTeam est toujours invitée
   return [...new Set(out)];
 }
+/* Journal compact d'une course (persistant en sauvegarde) */
+function logCompact(race,res){
+  const ri=RACES.indexOf(race);
+  const t0=res.times?res.times.get(res.rank[0]).time:0;
+  const gap=r=>res.times?Math.round(res.times.get(r).time-t0):(res.gaps?Math.round(res.gaps.get(r)):0);
+  const e={w:G.week,ri,brk:!!res.brk,top:res.rank.slice(0,10).map(r=>[r.id,gap(r)])};
+  if(res.stages)e.st=res.stages.map(s=>[s.st,s.r.id,s.prof,s.brk?1:0]);
+  if(res.rs){const J=jerseysOf(res.rs);e.jer={pts:J.pts?J.pts.id:null,kom:J.kom?J.kom.id:null,young:J.young?J.young.id:null};}
+  if(res.times){
+    const ab=[];
+    res.rank.concat(res.entries.flatMap(x=>x.sel)).filter((r,i,a)=>a.indexOf(r)===i).forEach(r=>{
+      const t=res.times.get(r);if(t&&t.ab)ab.push([r.id,t.abSt||0]);
+    });
+    if(ab.length)e.ab=ab;
+  }
+  G.logC=G.logC||[];G.logC.push(e);
+}
 /* Application des résultats : points, primes, fatigue, stats */
 function applyResults(race,res){
   const tier=race[4],scale=PTS[tier];
@@ -789,15 +859,23 @@ function applyResults(race,res){
 /* ================= SAUVEGARDE ================= */
 const SAVE_KEY="cm_save_v1";
 function saveGame(){
-  if(!G||G.me==null||G.live)return;
+  if(!G||G.me==null||G.live||G.oneDay)return;
   try{
     const s={v:1,me:G.me,year:G.year,week:G.week,season:G.season,phase:G.phase,
       tiers:TEAMS.map(t=>t[2]),gts:TEAMS.map(t=>t[3]),
       teams:G.teams,riders:G.riders,history:G.history,promo:G.promo||null,
       renew:G.renew||[],poolIds:(G.pool||[]).map(r=>r.id),agreed:G.agreed||{},nego:G.nego||{},
-      mktResolved:!!G.mktResolved,mktRes:G.mktRes||null,progInit:!!G.progInit,progLog:G.progLog||[]};
+      mktResolved:!!G.mktResolved,mktRes:G.mktRes||null,progInit:!!G.progInit,progLog:G.progLog||[],potV2:!!G.potV2,logC:G.logC||[]};
     localStorage.setItem(SAVE_KEY,JSON.stringify(s));
   }catch(e){}
+}
+function migratePot(){
+  if(!G||G.potV2)return;
+  G.riders.forEach(r=>{
+    const age=G.year-r.an;
+    if(age<24&&!r.retired&&(r.pot||r.moy)-r.moy<4)r.pot=Math.max(r.pot||r.moy,rollPot(r.moy));
+  });
+  G.potV2=true;
 }
 function loadGame(str){
   try{
@@ -808,11 +886,12 @@ function loadGame(str){
       riders:s.riders,teams:s.teams,history:s.history||[],promo:s.promo,
       renew:s.renew||[],pool:(s.poolIds||[]).map(i=>s.riders[i]).filter(Boolean),
       agreed:s.agreed||{},nego:s.nego||{},offers:{},
-      mktResolved:s.mktResolved,mktRes:s.mktRes,progInit:s.progInit,progLog:s.progLog||[],
+      mktResolved:s.mktResolved,mktRes:s.mktRes,progInit:s.progInit,progLog:s.progLog||[],potV2:!!s.potV2,logC:s.logC||[],
       log:[],pending:[],selBuf:null,lastRes:[],liveQueue:[],live:null,msub:"market"};
     return true;
   }catch(e){return false;}
 }
+const _loadGame=loadGame;loadGame=function(str){const ok=_loadGame(str);if(ok)migratePot();return ok;};
 function hasSave(){try{return !!localStorage.getItem(SAVE_KEY)}catch(e){return false}}
 function wipeSave(){try{localStorage.removeItem(SAVE_KEY)}catch(e){}}
 function saveInfo(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY));return s?{team:TEAMS[s.me][0],year:s.year,week:Math.min(s.week,42)}:null}catch(e){return null}}
@@ -844,7 +923,7 @@ async function advance(){
 function runWeek(list){
   G.lastRes=[];
   list.sort((a,b)=>b.race[5]-a.race[5]); // étapes d'abord : verrouillage hebdo
-  G.liveQueue=[];
+  G.liveQueue=[];G.oneQueue=[];
   // draft alterné pour les équipes engagées sur plusieurs courses à étapes simultanées
   const multiR=list.filter(x=>x.race[5]>1).map(x=>x.race);
   const plans=new Map();
@@ -860,12 +939,12 @@ function runWeek(list){
     inv.forEach(ti=>{
       if(ti===G.me){
         if(!player)return; // impasse
-        entries.push({ti,sel:player.sel,leader:player.leader,mode:player.mode});
+        entries.push({ti,sel:player.sel,leader:player.leader,roles:player.roles||autoRoles(player.sel,race).roles});
       } else {
         const sel=(plans.get(ti)&&plans.get(ti).get(race))||aiSelect(ti,race,n);
         if(sel.length<Math.min(5,n))return;
-        const t=aiTactic(sel,race);
-        entries.push({ti,sel,leader:t.leader,mode:t.mode});
+        const t=autoRoles(sel,race);
+        entries.push({ti,sel,leader:t.leader,roles:t.roles});
       }
     });
     if(race[5]>1)entries.forEach(e=>e.sel.forEach(r=>r.weekLock=true));
@@ -873,13 +952,31 @@ function runWeek(list){
       G.liveQueue.push(initStageRace(race,entries));
       return;
     }
+    if(player&&player.oneLive&&race[5]===1){
+      G.oneQueue.push({race,entries});
+      return;
+    }
     const res=race[5]>1?simStageRace(race,entries):simOneDay(race,entries);
     res.entries=entries;res.race=race;
     applyResults(race,res);
     G.lastRes.push(res);
     G.log.unshift({w:G.week,race,res});
+    logCompact(race,res);
   });
+  if(G.oneQueue.length){G.oneDay=G.oneQueue.shift();G.tab="oneday";render();return;}
   if(G.liveQueue.length){G.live=G.liveQueue.shift();G.tab="live";render();return;}
+  endOfWeek();
+}
+function finishOneDay(res){
+  const od=G.oneDay;
+  res.entries=od.entries;res.race=od.race;
+  applyResults(od.race,res);
+  G.lastRes.push(res);
+  G.log.unshift({w:G.week,race:od.race,res});
+  logCompact(od.race,res);
+  G.oneDay=null;
+  if(G.oneQueue&&G.oneQueue.length){G.oneDay=G.oneQueue.shift();G.tab="oneday";render();return;}
+  if(G.liveQueue&&G.liveQueue.length){G.live=G.liveQueue.shift();G.tab="live";render();return;}
   endOfWeek();
 }
 function endOfWeek(){
@@ -899,6 +996,7 @@ function finishLive(){
   applyResults(rs.race,res);
   G.lastRes.push(res);
   G.log.unshift({w:G.week,race:rs.race,res});
+  logCompact(rs.race,res);
   G.live=null;
   if(G.liveQueue.length){G.live=G.liveQueue.shift();G.tab="live";render();return;}
   endOfWeek();
@@ -937,16 +1035,18 @@ function endSeason(){
     const m0=r.moy;
     const age=G.year-r.an;
     const ks=["pla","mon","spr","chr","pun","end"];
+    const a0={};ks.forEach(k=>a0[k]=r[k]);
     const pot=r.pot||r.moy;
     const marge=Math.max(0,pot-r.moy);
     if(age<27&&marge>0){
-      // jeunes : progression rapide, proportionnelle au potentiel restant, ralentie vers la maturité
+      // développement piloté : exposition (jours de course), résultats, marge de potentiel, vitesse selon l'âge
+      const expo=U.cl(r.days/35,0,1);
       const perf=U.cl(r.pts/500,0,1);
       const speed=age<=21?1:age<=23?0.85:age<=25?0.55:0.3;
-      const p=U.cl((0.35+perf*0.2+marge*0.05)*speed,0.05,0.95);
+      const p=U.cl((0.30+expo*0.25+perf*0.20+marge*0.04)*speed,0.05,0.95);
       const capA=Math.min(99,pot+3);
-      const jump=marge>=8&&age<=23; // grand espoir : bonds possibles
-      ks.forEach(k=>{if(U.r()<p)r[k]=U.cl(r[k]+1+(U.r()<(jump?0.65:0.2+perf*0.25)?1:0)+(jump&&U.r()<0.45?1:0),30,capA)});
+      const jump=marge>=8&&age<=23&&expo>0.4; // grand espoir aligné en course : bonds possibles
+      ks.forEach(k=>{if(U.r()<p)r[k]=U.cl(r[k]+1+(U.r()<(jump?0.65:0.15+expo*0.15+perf*0.2)?1:0)+(jump&&U.r()<0.45?1:0),30,capA)});
     }else{
       // déclin : plus tardif et plus lent quand le potentiel initial était élevé
       const declAge=pot>=88?33:pot>=82?32:pot>=75?31:30;
@@ -956,8 +1056,14 @@ function endSeason(){
       }
     }
     r.moy=Math.round((r.pla+r.mon+r.spr+r.chr+r.pun+r.end)/6);
+    // évaporation du potentiel : la promesse non concrétisée expire
+    if(age>=27)r.pot=r.moy;
+    else if(age>=24)r.pot=Math.max(r.moy,(r.pot||r.moy)-2);
     if(age>=38||(age>=36&&U.r()<0.35))r.retired=true;
-    if(r.t===G.me&&!r.retired&&r.moy!==m0)G.progLog.push({id:r.id,d:r.moy-m0});
+    if(r.t===G.me&&!r.retired&&r.moy!==m0){
+      const attrs={};ks.forEach(k=>{if(r[k]!==a0[k])attrs[k]=r[k]-a0[k];});
+      G.progLog.push({id:r.id,d:r.moy-m0,days:r.days,pts:Math.round(r.pts),attrs});
+    }
   });
   // contrats : décompte, renouvellements IA, constitution du marché
   G.riders.forEach(r=>{if(!r.retired)r.ctr--;});
@@ -984,23 +1090,31 @@ const NEO={
   DEN:[["Emil","Oscar","Magnus","Anton"],["Nielsen","Holm","Dahl","Skov"]],
   COL:[["Santiago","Juan","Camilo","Andrés"],["Rojas","Cárdenas","Mora","Quintero"]]
 };
+function rollPot(moy){
+  // tirage de rareté : le potentiel est décorrélé du niveau actuel
+  const x=U.r();
+  if(x<0.03)return 86+Math.floor(U.r()*6);              // ★★★★ phénomène
+  if(x<0.15)return 79+Math.floor(U.r()*7);              // ★★★
+  if(x<0.45)return 72+Math.floor(U.r()*7);              // ★★
+  return U.cl(moy+2+Math.floor(U.r()*7),moy+2,71);      // ★ équipier de métier
+}
 function genNeo(){
   const nat=U.pick(Object.keys(NEO));
   const [f,l]=NEO[nat];
   const n=U.pick(f)[0]+". "+U.pick(l);
   const prof=U.pick(["mon","spr","pun","pla","chr","fla"]);
   const b=k=>U.cl(Math.round(56+U.g()*7+(k===prof?14:0)+(prof==="fla"?(k==="pla"?12:k==="pun"?8:0):0)),40,84);
-  const base=[n,nat,G.year-19-Math.floor(U.r()*3),b("pla"),b("mon"),b("spr"),b("chr"),b("pun"),U.cl(Math.round(66+U.g()*6),50,84)];
-  const r=newRider(base,-1);r.gen=true;r.ctr=0;r.sal=120000;autoPeaks(r);r.id=G.riders.length;G.riders.push(r);
+  const base=[n,nat,G.year-18-Math.floor(U.r()*4),b("pla"),b("mon"),b("spr"),b("chr"),b("pun"),U.cl(Math.round(66+U.g()*6),50,84)];
+  const r=newRider(base,-1);r.gen=true;r.ctr=0;r.sal=120000;
+  r.pot=Math.max(r.pot||r.moy,rollPot(r.moy));
+  autoPeaks(r);r.id=G.riders.length;G.riders.push(r);
   return r;
 }
 function resolveMarket(){
   G.mktRes={signed:[],lost:[]};G.mktResolved=true;
-  const capMe=G.teams[G.me].budget*0.50;
+  // les accords validés à l'écran Effectif N+1 sont honorés sans condition
   Object.entries(G.agreed||{}).forEach(([id,a])=>{
     const r=G.riders[+id];if(!r||r.t!==-1)return;
-    if(teamRiders(G.me).length>=maxSquad(G.me)||masse(G.me)+a.sal>capMe){
-      G.mktRes.lost.push({n:r.n,by:null,amt:0,mine:a.sal});return;}
     r.t=G.me;r.sal=a.sal;r.ctr=a.dur;
     if(a.role==="L"||a.role==="LT")r.role=a.role;
     const ix=G.pool.indexOf(r);if(ix>=0)G.pool.splice(ix,1);
@@ -1071,7 +1185,7 @@ function newSeason(){
   G.riders.forEach((r,i)=>{r.id=i;r.pts=0;r.wins=0;r.races=0;r.days=0;r.fat=0;r.out=0;r.weekLock=false;r.hist=[];});
   TEAMS.forEach((t,i)=>teamPeaks(i));
   G.teams.forEach(t=>{t.pts=0;t.wins=0;t.cash=Math.max(t.cash,t.budget*0.12);});
-  G.log=[];G.phase="peaks";G.tab="home";G.progInit=false;
+  G.log=[];G.logC=[];G.phase="peaks";G.tab="home";G.progInit=false;
   render();saveGame();
 }
 
@@ -1088,8 +1202,9 @@ const PROFN={mon:"Grimpeur",spr:"Sprinteur",pun:"Puncheur",chr:"Chrono",pla:"Rou
 const PROFTAG={mon:"mon",spr:"spr",pun:"gc",chr:"chrt",pla:"rou",fla:"fla"};
 const TABR=["UAD","TVL","RBH","LTK","INE","SOQ","APT","DCC","EFE","GFC","LTI","MOV","NSN","JAY","TPP","TBV","UNO","XAT","TUD","Q36","COF","TEN","URR","PTV","BCF","CJR","BBH","EKP","EUS","FLB","TNN","MBH","MAP","STN"];
 const pavOf=r=>U.cl(Math.round((0.50*r.pla+0.25*r.pun+0.15*r.spr+0.10*r.chr)*(r.prof==="fla"?1.08:1)),30,99);
-const POTCAT=p=>p>=88?["Champion","pchamp"]:p>=82?["Leader","plead"]:p>=75?["Lieutenant","plt"]:["Équipier","peq"];
-const potTag=r=>{const c=POTCAT(r.pot||r.moy);return `<span class="tag ${c[1]}">${c[0]}</span>`};
+const NSTARS=p=>p>=86?4:p>=79?3:p>=72?2:1;
+const starsHtml=n=>`<span class="stars">${"★".repeat(n)}${"☆".repeat(4-n)}</span>`;
+const potTag=r=>starsHtml(NSTARS(r.pot||r.moy));
 
 const PROFA={mon:"GRI",spr:"SPR",pun:"PUN",chr:"CHR",pla:"ROU",fla:"FLA"};
 function buildRoles(ti){
@@ -1105,23 +1220,29 @@ function buildRoles(ti){
   return m;
 }
 const roleCls=(m,id)=>({L:"ldr",LT:"lt"}[m.get(id)]||"");
+const meCls=r=>r.t===G.me?"ldr":"";
 const tierTag=ti=>TEAMS[ti][2]===0?'<span class="tag spr">WT</span>':'<span class="tag mon">PRO</span>';
 function showRider(id){
   const r=G&&G.riders[id];if(!r)return;
   const t=r.t>=0?TEAMS[r.t]:null;
   const best=r.hist.slice().sort((a,b)=>(a[1]-b[1])||(b[2]-a[2])).slice(0,5);
-  $("#pbox").innerHTML=`<h3 style="color:var(--acc)">${U.esc(r.n)} <span class="stat">${r.nat} · ${G.year-r.an} ans</span></h3>
-  <p style="margin:4px 0">${t?`<span class="lnk" data-tp="${r.t}">${jer(r.t)}${t[0]}</span>`:'<span class="stat">Sans équipe</span>'}
-  · <span class="tag ${PROFTAG[r.prof]}">${PROFN[r.prof]}</span></p>
-  <div class="attr">
-  <div><b class="${col(r.pla)}">${r.pla}</b>PLA</div><div><b class="${col(r.mon)}">${r.mon}</b>MON</div>
-  <div><b class="${col(r.spr)}">${r.spr}</b>SPR</div><div><b class="${col(r.chr)}">${r.chr}</b>CHR</div>
-  <div><b class="${col(r.pun)}">${r.pun}</b>PUN</div><div><b class="${col(r.end)}">${r.end}</b>END</div><div><b class="${col(pavOf(r))}">${pavOf(r)}</b>PAV</div></div>
-  <p class="stat">MOY <b class="${col(r.moy)}">${r.moy}</b> · ${potTag(r)} · Forme ${formPct(r,Math.min(G.week,42))} · Fatigue ${fatBar(r.fat)} · ${r.days} j de course</p>
-  <p class="stat">Pics : <b>${PSHORT[r.p1]}</b> et <b>${PSHORT[r.p2]}</b> · Contrat ${Math.max(0,r.ctr)} an(s) · ${U.eur(r.sal||salary(r))}/an</p>
-  <p class="stat">Saison : <b class="n80">${Math.round(r.pts)} pts UCI</b> · ${r.wins} victoire(s) · ${r.races} course(s)</p>
-  ${best.length?`<h3 style="color:var(--acc);margin-top:10px;font-size:.95rem">Meilleurs résultats</h3>${best.map(h=>`<div class="evt">${h[1]}ᵉ · ${U.esc(h[0])}</div>`).join("")}`:""}
-  <button class="btn sec" style="margin-top:12px" id="pclose">Fermer</button>`;
+  const hr='<div style="border-top:1px solid var(--panel2);margin:8px 0"></div>';
+  $("#pbox").innerHTML=`<h3 style="color:var(--acc)">${U.esc(r.n)} <span class="stat" style="font-weight:400">${r.nat} · ${G.year-r.an} ans</span></h3>
+  <p style="margin:5px 0;display:flex;gap:6px;align-items:center;flex-wrap:wrap">${t?`<span class="lnk" data-tp="${r.t}">${jer(r.t)}${t[0]}</span>`:'<span class="stat">Sans équipe</span>'}
+  <span class="tag ${PROFTAG[r.prof]}">${PROFN[r.prof]}</span> ${potTag(r)}</p>
+  <p class="stat" style="margin:2px 0">Contrat ${Math.max(0,r.ctr)} an(s) · ${U.eur(r.sal||salary(r))}/an</p>
+  ${hr}
+  <div class="attr8">
+  <div><b class="${col(r.moy)}">${r.moy}</b>MOY</div><div><b class="${col(r.pla)}">${r.pla}</b>PLA</div>
+  <div><b class="${col(r.mon)}">${r.mon}</b>MON</div><div><b class="${col(r.pun)}">${r.pun}</b>PUN</div>
+  <div><b class="${col(r.spr)}">${r.spr}</b>SPR</div><div><b class="${col(pavOf(r))}">${pavOf(r)}</b>PAV</div>
+  <div><b class="${col(r.chr)}">${r.chr}</b>CHR</div><div><b class="${col(r.end)}">${r.end}</b>END</div></div>
+  ${hr}
+  <p class="stat" style="margin:2px 0">Pics : <b>${PSHORT[r.p1]}</b> · <b>${PSHORT[r.p2]}</b></p>
+  <p class="stat" style="margin:2px 0">Forme ${formPct(r,Math.min(G.week,42))} · Fatigue ${fatBar(r.fat)} · ${r.days} j de course</p>
+  <p class="stat" style="margin:2px 0"><b class="n80">${Math.round(r.pts)} pts UCI</b> · ${r.wins} victoire(s)</p>
+  ${best.length?`${hr}<p class="stat" style="margin:2px 0 4px;font-weight:700;color:var(--acc)">Meilleurs résultats</p>${best.map(h=>`<div class="evt">${h[1]}ᵉ · ${U.esc(h[0])}</div>`).join("")}`:""}
+  <button class="btn sec" style="margin-top:10px" id="pclose">Fermer</button>`;
   $("#panel").classList.add("on");
   $("#pclose").onclick=closePanel;
 }
@@ -1221,10 +1342,13 @@ function render(){
   if(G.phase==="endseason"&&G.tab==="home")return renderEndSeason();
   if(G.phase==="contracts")return renderContracts();
   if(G.phase==="jeunes")return renderJeunes();
+  if(G.phase==="preval")return renderPreval();
   if(G.phase==="mercato")return renderMercato();
   if(G.tab==="select")return renderSelect();
+  if(G.tab==="oneday")return renderOneDay();
   if(G.tab==="live")return renderLive();
   if(G.tab==="results")return renderResults();
+  if(G.tab==="racelog")return renderRaceLog();
   let h=tabsHtml();
   if(G.tab==="home")h+=vHome();
   if(G.tab==="squad")h+=vSquad();
@@ -1234,6 +1358,10 @@ function render(){
   app().innerHTML=h;bindTabs();
   const adv=$("#adv");if(adv)adv.onclick=advance;
   bindSquad();
+  document.querySelectorAll("[data-cal]").forEach(tr=>tr.onclick=e=>{
+    if(e.target.closest("[data-rp],[data-tp]"))return;
+    G.calSel=+tr.dataset.cal;G.tab="racelog";render();
+  });
 }
 
 /* --- Choix d'équipe --- */
@@ -1349,7 +1477,6 @@ function draftMissing(){
 }
 function renderDraft(){
   const d=draftState();
-  const RMD=buildRoles(G.me);
   const done=d.ix>=d.q.length;
   let body;
   if(!done){
@@ -1357,7 +1484,7 @@ function renderDraft(){
     const objs=(OBJDEF[r.prof]||OBJDEF.pla).filter(o=>!o[2].length||o[2].some(k=>d.slots[k]==null));
     body=`<div class="card"><h3>Carte ${d.ix+1}/${d.q.length}</h3>
     <div style="display:flex;gap:8px;align-items:center;margin:6px 0">
-    <span class="nm lnk ${roleCls(RMD,r.id)}" data-rp="${r.id}" style="font-size:1.05rem;font-weight:800;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
+    <span class="nm lnk" data-rp="${r.id}" style="font-size:1.05rem;font-weight:800;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
     <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
     <b class="${col(r.moy)}">${r.moy}</b></div>
     <p class="stat">Choisissez son objectif principal : ses deux pics de forme seront calés dessus.</p>
@@ -1410,8 +1537,7 @@ function renderPeaks(){
   const cov=Array(PERIODS.length).fill(0);
   rs.forEach(r=>pkSlots(r).forEach(p=>cov[p]++));
   const bad=rs.filter(r=>pkSlots(r).length<2).length;
-  const RMPK=buildRoles(G.me);
-  app().innerHTML=`<div class="card" style="position:sticky;top:46px;z-index:5;padding-bottom:10px">
+    app().innerHTML=`<div class="card" style="position:sticky;top:46px;z-index:5;padding-bottom:10px">
   <h3>Programme de saison ${G.year}</h3>
   <p class="stat">Cochez exactement deux pics de forme par coureur. Jauge : coureurs au pic / cible calculée depuis le calendrier (▲ = grand tour).</p>
   <div class="covgrid">${PERIODS.map((p,i)=>{
@@ -1426,7 +1552,7 @@ function renderPeaks(){
     const inc=pkSlots(r).length<2;
     return `<div style="padding:7px 0;border-bottom:1px solid var(--panel2)${inc?";border-left:3px solid var(--warn);padding-left:7px":""}">
   <div style="display:flex;gap:8px;align-items:center;min-width:0">
-  <span class="nm lnk ${roleCls(RMPK,r.id)}" data-rp="${r.id}" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
+  <span class="nm lnk" data-rp="${r.id}" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
   <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
   <b class="${col(r.moy)}">${r.moy}</b></div>
   <div class="pkchips">${PERIODS.map((p,i)=>`<span class="pkc ${r.p1===i||r.p2===i?"on":""}" data-r="${r.id}" data-p="${i}">${PCHIP[i]}</span>`).join("")}</div>
@@ -1469,40 +1595,72 @@ function vHome(){
   </tbody></table></div></div>`;
 }
 
-/* --- Effectif --- */
+/* --- Effectif : tableau triable --- */
 function vSquad(){
-  const rs=teamRiders(G.me).slice().sort((a,b)=>b.moy-a.moy);
-  const canP2=G.week<=23;
+  if(!G.sq)G.sq={k:"moy",d:1};
+  const q=G.sq;
+  const S={
+    nom:(a,b)=>a.n.localeCompare(b.n),nat:(a,b)=>a.nat.localeCompare(b.nat),
+    age:(a,b)=>(a.an-b.an),prof:(a,b)=>a.prof.localeCompare(b.prof)||b.moy-a.moy,
+    moy:(a,b)=>b.moy-a.moy,pla:(a,b)=>b.pla-a.pla,mon:(a,b)=>b.mon-a.mon,pun:(a,b)=>b.pun-a.pun,
+    spr:(a,b)=>b.spr-a.spr,pav:(a,b)=>pavOf(b)-pavOf(a),chr:(a,b)=>b.chr-a.chr,end:(a,b)=>b.end-a.end,
+    pot:(a,b)=>(b.pot||b.moy)-(a.pot||a.moy),forme:(a,b)=>formOf(b,G.week)-formOf(a,G.week),
+    fat:(a,b)=>b.fat-a.fat,jours:(a,b)=>b.days-a.days,pts:(a,b)=>b.pts-a.pts};
+  const rs=teamRiders(G.me).slice().sort((a,b)=>q.d*S[q.k](a,b));
+  const ar=k=>q.k===k?(q.d>0?" ▼":" ▲"):"";
+  const th=(k,l)=>`<th class="srt ${q.k===k?"on":""}" data-sq="${k}">${l}${ar(k)}</th>`;
   return `<div class="card"><h3>Effectif (${rs.length}) · masse salariale ${U.eur(masse(G.me))}/an</h3>
-  <p class="stat"><span class="ldr">Doré</span> = leader (top 3) · <span class="lt">argenté</span> = lieutenant</p>
-  <div class="scroll"><table class="stick"><thead><tr><th>Coureur</th><th>Nat</th><th>Âge</th><th>Profil</th><th>PLA</th><th>MON</th><th>SPR</th><th>CHR</th><th>PUN</th><th>END</th><th>MOY</th><th>POT</th><th>Forme</th><th>Fatigue</th><th>J</th><th>Pts</th><th>Pic 2</th></tr></thead><tbody>
-  ${(()=>{const RM=buildRoles(G.me);return rs.map(r=>`<tr><td><b class="lnk ${roleCls(RM,r.id)}" data-rp="${r.id}">${U.esc(r.n)}</b>${r.out?' <span class="tag warn">indispo</span>':''}</td><td>${r.nat}</td><td>${G.year-r.an}</td>
+  <div class="scroll"><table class="stick sqtab"><thead><tr>${th("nom","Coureur")}${th("nat","Nat")}${th("age","Âge")}${th("prof","Profil")}${th("moy","MOY")}${th("pla","PLA")}${th("mon","MON")}${th("pun","PUN")}${th("spr","SPR")}${th("pav","PAV")}${th("chr","CHR")}${th("end","END")}${th("pot","Pot.")}${th("forme","Forme")}${th("fat","Fatigue")}${th("jours","J")}${th("pts","Pts")}</tr></thead><tbody>
+  ${rs.map(r=>`<tr><td><b class="lnk" data-rp="${r.id}">${U.esc(r.n)}</b>${r.out?' <span class="tag warn">indispo</span>':''}</td><td>${r.nat}</td><td>${G.year-r.an}</td>
   <td><span class="tag ${PROFTAG[r.prof]}">${PROFN[r.prof]}</span></td>
-  <td class="${col(r.pla)}">${r.pla}</td><td class="${col(r.mon)}">${r.mon}</td><td class="${col(r.spr)}">${r.spr}</td>
-  <td class="${col(r.chr)}">${r.chr}</td><td class="${col(r.pun)}">${r.pun}</td><td class="${col(r.end)}">${r.end}</td>
-  <td class="${col(r.moy)}"><b>${r.moy}</b></td><td>${potTag(r)}</td><td>${formPct(r,G.week)}</td><td>${fatBar(r.fat)}</td><td class="stat">${r.days}</td><td class="n80">${Math.round(r.pts)}</td>
-  <td>${canP2?`<select data-r="${r.id}" data-k="p2">${PERIODS.map((o,i)=>`<option value="${i}" ${r.p2===i?"selected":""}>${PSHORT[i]}</option>`).join("")}</select>`:`<span class="stat">${PSHORT[r.p2]}</span>`}</td></tr>`).join("")})()}
+  <td class="${col(r.moy)}"><b>${r.moy}</b></td>
+  <td class="${col(r.pla)}">${r.pla}</td><td class="${col(r.mon)}">${r.mon}</td><td class="${col(r.pun)}">${r.pun}</td>
+  <td class="${col(r.spr)}">${r.spr}</td><td class="${col(pavOf(r))}">${pavOf(r)}</td><td class="${col(r.chr)}">${r.chr}</td><td class="${col(r.end)}">${r.end}</td>
+  <td>${potTag(r)}</td><td>${formPct(r,G.week)}</td><td>${fatBar(r.fat)}</td><td class="stat">${r.days}</td><td class="n80">${Math.round(r.pts)}</td></tr>`).join("")}
   </tbody></table></div></div>`;
 }
 function bindSquad(){
-  document.querySelectorAll("select[data-r]").forEach(s=>s.onchange=()=>{
-    const r=G.riders[+s.dataset.r],k=s.dataset.k,o=k==="p1"?"p2":"p1",v=+s.value;
-    if(r[o]===v){r[o]=r[k];notice("Pics échangés : "+PSHORT[r[k]]+" ↔ "+PSHORT[v]);}
-    r[k]=v;});
+  document.querySelectorAll("th[data-sq]").forEach(t=>t.onclick=()=>{
+    const k=t.dataset.sq;
+    if(G.sq.k===k)G.sq.d=-G.sq.d;else G.sq={k,d:1};
+    render();
+  });
 }
 
-/* --- Calendrier --- */
+/* --- Calendrier compact (390px) + accès au récap --- */
+const TYB={cl:"CL",ce:"ÉT",gt:"GT"},PRI={p:"▬",c:"▤",v:"◠",m:"▲"};
 function vCal(){
-  const TY={cl:"Classique",ce:"Étapes",gt:"Grand Tour"},PR={p:"Plat",c:"Pavés",v:"Vallonné",m:"Montagne"};
-  return `<div class="card"><div class="scroll"><table><thead><tr><th>Sem.</th><th>Course</th><th>Type</th><th>Profil</th><th>Jours</th><th>Vainqueur</th></tr></thead><tbody>
-  ${RACES.map(r=>{
-    const done=G.log.find(l=>l.race===r);
-    const w=done?done.res.rank[0]:null;
+  return `<div class="card" style="padding:10px 8px"><table class="caltab"><thead><tr><th>S</th><th>Course</th><th></th><th>J</th><th>Vainqueur</th></tr></thead><tbody>
+  ${RACES.map((r,ri)=>{
+    const e=(G.logC||[]).find(l=>l.ri===ri);
+    const w=e?G.riders[e.top[0][0]]:null;
     const cur=r[1]===G.week;
-    return `<tr ${cur?'class="me"':''}><td class="stat">S${r[1]}</td><td>${r[4]>=4?"<b>"+r[0]+"</b>":r[0]}</td>
-    <td>${TY[r[2]]}</td><td>${PR[r[3]]}</td><td>${r[5]}</td>
-    <td>${w?`<span class="lnk" data-rp="${w.id}">${jer(w.t)}${U.esc(w.n)}</span>`:'<span class="stat">—</span>'}</td></tr>`}).join("")}
-  </tbody></table></div></div>`;
+    return `<tr ${cur?'class="me"':''} ${e?`data-cal="${ri}" style="cursor:pointer"`:""}><td class="stat">${r[1]}</td>
+    <td class="calnm">${r[4]>=4?"<b>"+r[0]+"</b>":r[0]}</td>
+    <td class="stat" style="white-space:nowrap">${TYB[r[2]]} ${PRI[r[3]]}</td><td class="stat">${r[5]}</td>
+    <td class="calw">${w?`<span class="lnk ${meCls(w)}" data-rp="${w.id}">${w.t>=0?jer(w.t):""}${U.esc(w.n)}</span>`:'<span class="stat">—</span>'}</td></tr>`}).join("")}
+  </tbody></table></div>`;
+}
+function renderRaceLog(){
+  const e=(G.logC||[]).find(l=>l.ri===G.calSel);
+  if(!e){G.tab="cal";return render();}
+  const race=RACES[e.ri];
+  const R=id=>G.riders[id];
+  let h=tabsHtml()+`<div class="card"><h3>${race[0]} <span class="stat">· S${e.w} · ${race[5]} j</span></h3>
+  ${e.brk?'<p class="stat">Coup d\'éclat : la victoire a échappé aux favoris.</p>':""}
+  <div class="scroll"><table><tbody>
+  ${e.top.map(([id,g],i)=>{const r=R(id);if(!r)return "";return `<tr ${r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><b class="lnk ${meCls(r)}" data-rp="${id}">${U.esc(r.n)}</b></td><td ${r.t>=0?`class="lnk" data-tp="${r.t}"`:""}>${r.t>=0?jer(r.t)+'<span class="stat">'+TEAMS[r.t][0]+'</span>':'<span class="stat">—</span>'}</td><td class="stat">${i===0?"—":g<1?"m.t.":U.tm(g)}</td></tr>`}).join("")}
+  </tbody></table></div>
+  ${e.st?`<div style="margin-top:6px">${e.st.map(([st,id,prof,brk])=>{const r=R(id);if(!r)return "";return `<div style="display:flex;gap:6px;align-items:center;padding:2px 0;font-size:.8rem;border-bottom:1px solid var(--panel2)"><span class="stat" style="width:36px;flex:none">Ét. ${st}</span><span class="lnk ${meCls(r)}" data-rp="${id}" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat" style="font-size:.68rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.t>=0?TABR[r.t]:"—"} · ${r.nat}</span><span class="stat" style="flex:none">${SPNAME[prof]}${brk?" · éch.":""}</span></div>`}).join("")}</div>`:""}
+  ${e.jer?`<div class="jrow" style="margin-top:6px">
+    <span class="pill" style="background:#2e6b3f;color:#fff">${e.jer.pts!=null&&R(e.jer.pts)?U.esc(R(e.jer.pts).n):"—"}</span>
+    <span class="pill" style="background:#7a2530;color:#fff">${e.jer.kom!=null&&R(e.jer.kom)?U.esc(R(e.jer.kom).n):"—"}</span>
+    <span class="pill" style="background:#d9dee8;color:#111">${e.jer.young!=null&&R(e.jer.young)?U.esc(R(e.jer.young).n):"—"}</span></div>`:""}
+  ${e.ab&&e.ab.length?(()=>{const by=new Map();e.ab.forEach(([id,st])=>{if(!by.has(st))by.set(st,[]);by.get(st).push(id);});
+    return `<p class="stat" style="margin-top:6px;margin-bottom:2px">Abandons</p>${[...by.entries()].sort((a,b)=>a[0]-b[0]).map(([st,ids])=>`<div style="display:flex;gap:6px;align-items:baseline;padding:1px 0;font-size:.78rem"><span class="stat" style="width:36px;flex:none">${st?"Ét. "+st:"—"}</span><span style="min-width:0">${ids.map(id=>{const r=R(id);return r?`<span class="lnk ${r.t===G.me?"ldr":"stat"}" data-rp="${id}">${U.esc(r.n)}</span>`:""}).join(" · ")}</span></div>`).join("")}`})():""}
+  <button class="btn sec" style="margin-top:10px" id="backcal">◂ Calendrier</button></div>`;
+  app().innerHTML=h;bindTabs();
+  $("#backcal").onclick=()=>{G.tab="cal";render();};
 }
 
 /* --- Classements --- */
@@ -1511,7 +1669,7 @@ function vRank(){
   const ts=G.teams.slice().sort((a,b)=>b.pts-a.pts);
   return `<div class="grid2">
   <div class="card"><h3>UCI individuel</h3><div class="scroll"><table><thead><tr><th>#</th><th>Coureur</th><th>Équipe</th><th>Pts</th></tr></thead><tbody>
-  ${ri.map((r,i)=>`<tr ${r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td class="lnk" data-rp="${r.id}">${U.esc(r.n)}</td><td class="lnk" data-tp="${r.t}">${jer(r.t)}<span class="stat">${TEAMS[r.t][0]}</span></td><td class="n80">${Math.round(r.pts)}</td></tr>`).join("")}
+  ${ri.map((r,i)=>`<tr ${r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td class="lnk ${meCls(r)}" data-rp="${r.id}">${U.esc(r.n)}</td><td class="lnk" data-tp="${r.t}">${jer(r.t)}<span class="stat">${TEAMS[r.t][0]}</span></td><td class="n80">${Math.round(r.pts)}</td></tr>`).join("")}
   </tbody></table></div></div>
   <div class="card"><h3>UCI équipes</h3><div class="scroll"><table><thead><tr><th>#</th><th>Équipe</th><th>Pts</th><th>Vict.</th></tr></thead><tbody>
   ${ts.map((t,i)=>`<tr ${t.i===G.me?'class="me"':''}><td class="stat">${i+1}</td><td class="lnk" data-tp="${t.i}">${jer(t.i)}${TEAMS[t.i][0]} ${tierTag(t.i)}</td><td class="n80">${Math.round(t.pts)}</td><td>${t.wins}</td></tr>`).join("")}
@@ -1530,9 +1688,56 @@ function vFin(){
   ${G.history.length?`<div class="card"><h3>Historique</h3>${G.history.map(h=>`<div class="evt">${h.year} : <b>${h.rank}ᵉ</b> UCI · ${Math.round(h.pts)} pts · ${h.wins} victoires · leader ${U.esc(h.best)}</div>`).join("")}</div>`:""}`;
 }
 
+/* --- Rôles : composants partagés --- */
+const ROLLM=["L","EQ","SPR","EL"],ROLL1=["L","EQ","EL"];
+const ROLN={L:"L",EQ:"ÉQ",SPR:"SPR",EL:"EL"};
+const ORIS={L:["gc","echap","pois","vert"],EL:["gagne","echap","pois","vert"]};
+const ORIS1={L:null,EL:["gagne","echap"]};
+const ORIN={gc:"GC",gagne:"Gagne",echap:"Échap",pois:"Pois",vert:"Vert"};
+function rolesHtml(sel,roles,oneday,dead){
+  return sel.map(r=>{
+    const st=roles[r.id]||(roles[r.id]={ro:"EQ",or:"gc"});
+    const ab=dead&&dead.has(r.id);
+    const list=oneday?ROLL1:ROLLM;
+    const oris=ab?null:(oneday?ORIS1[st.ro]:ORIS[st.ro]);
+    return `<div style="padding:5px 0;border-bottom:1px solid var(--panel2)${ab?";opacity:.35":""}">
+    <div style="display:flex;gap:5px;align-items:center;min-width:0">
+    <span class="lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem">${U.esc(r.n)}${ab?" ✕":""}</span>
+    <span class="tag ${PROFTAG[r.prof]}" style="font-size:.58rem">${PROFA[r.prof]}</span>
+    ${ab?"":list.map(k=>`<span class="rchip ${st.ro===k?"on":""}" data-ro="${r.id}|${k}">${ROLN[k]}</span>`).join("")}
+    </div>
+    ${oris?`<div style="display:flex;gap:5px;margin-top:4px;padding-left:4px">${oris.map(o=>`<span class="ochip ${st.or===o?"on":""}" data-or="${r.id}|${o}">${ORIN[o]}</span>`).join("")}</div>`:""}
+    </div>`;
+  }).join("");
+}
+function bindRoles(roles,rerender){
+  document.querySelectorAll("[data-ro]").forEach(c=>c.onclick=()=>{
+    const [id,k]=c.dataset.ro.split("|");
+    if(k==="L")Object.keys(roles).forEach(i2=>{if(roles[i2].ro==="L")roles[i2]={ro:"EQ",or:"gc"};});
+    roles[+id]={ro:k,or:k==="EL"?"echap":"gc"};
+    rerender();
+  });
+  document.querySelectorAll("[data-or]").forEach(c=>c.onclick=()=>{
+    const [id,o]=c.dataset.or.split("|");
+    roles[+id].or=o;
+    rerender();
+  });
+}
+function rolesValid(sel,roles,dead){
+  return sel.filter(r=>!(dead&&dead.has(r.id))&&(roles[r.id]||{}).ro==="L").length===1;
+}
+function effElig(sel,roles,dead){
+  return sel.filter(r=>!(dead&&dead.has(r.id))&&["L","SPR","EL"].includes((roles[r.id]||{}).ro));
+}
+function effDefault(elig,roles,sp){
+  if(sp==="p"){const s=elig.find(r=>roles[r.id].ro==="SPR");if(s)return s.id;}
+  const l=elig.find(r=>roles[r.id].ro==="L");
+  return l?l.id:(elig.length?elig[0].id:null);
+}
 /* --- Sélection pré-course --- */
 function renderSelect(){
   const p=G.pending.find(x=>!x.decided);
+  if(p&&p.stage==="roles")return renderRolesPre(p);
   if(!p){
     const list=[];
     G.pending.forEach(x=>list.push({race:x.race,player:x.entry||null}));
@@ -1565,13 +1770,10 @@ function renderSelect(){
   if(!G.selBuf||G.selBuf.race!==race){
     const sug=(p.sug||[]).filter(elig);
     const auto=sug.length>=Math.min(4,n)?sug.slice(0,n):autoPick(1);
-    G.selBuf={race,ids:new Set(auto.map(r=>r.id)),
-      leader:auto.length?aiTactic(auto,race).leader.id:null,
-      mode:race[3]==="p"?"sprint":"leader",sort:"adeq",sdir:1};
+    G.selBuf={race,ids:new Set(auto.map(r=>r.id)),sort:"adeq",sdir:1};
   }
   const buf=G.selBuf;
   [...buf.ids].forEach(id=>{if(!elig(G.riders[id]))buf.ids.delete(id)});
-  if(buf.leader!=null&&!buf.ids.has(buf.leader))buf.leader=null;
   const adq=r=>baseScore(r,race[3])*formOf(r,race[1])*fatMult(r.fat);
   const pkOf=r=>PC[inPeriod(r.p1,race[1])?r.p1:inPeriod(r.p2,race[1])?r.p2:nextPeak(r,race[1])];
   const sorters={
@@ -1587,17 +1789,12 @@ function renderSelect(){
   app().innerHTML=`<div class="card"><h3>Sélection : ${race[0]}</h3>
   <p class="stat">${race[5]} jour(s) · profil ${{p:"plat",c:"pavés",v:"vallonné",m:"montagne"}[race[3]]} · ${n} coureurs.${mand?' <b>Participation obligatoire (Grand Tour).</b>':''}</p>
   <div style="margin:8px 0;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-  <select id="mode">
-    <option value="leader" ${buf.mode==="leader"?"selected":""}>Tout pour le leader</option>
-    <option value="sprint" ${buf.mode==="sprint"?"selected":""}>Train de sprint</option>
-    <option value="echappee" ${buf.mode==="echappee"?"selected":""}>Jouer les échappées</option>
-  </select>
   <button class="btn sec sm" id="autoA">Auto adéquation</button>
   <button class="btn sec sm" id="autoF">Auto forme</button>
   <button class="btn sec sm" id="clr">Vider</button>
   <span class="pill">Sélection : <b>${buf.ids.size}</b>/${n}</span></div>
-  <div class="scroll"><table class="seltab"><thead><tr><th>✓</th><th>Ldr</th>${(()=>{const ar=k=>buf.sort===k?(buf.sdir>0?" ▼":" ▲"):"";const th=(k,l)=>`<th class="srt ${buf.sort===k?"on":""}" data-st="${k}">${l}${ar(k)}</th>`;return th("nom","Coureur")+th("spec","Spé")+th("adeq","ADQ")+th("forme","Forme")+th("fatigue","Fat")+th("jours","J")+th("pic","Pic");})()}</tr></thead><tbody>
-  ${(()=>{const RM=buildRoles(G.me);return rs.map(r=>{
+  <div class="scroll"><table class="seltab"><thead><tr><th>✓</th>${(()=>{const ar=k=>buf.sort===k?(buf.sdir>0?" ▼":" ▲"):"";const th=(k,l)=>`<th class="srt ${buf.sort===k?"on":""}" data-st="${k}">${l}${ar(k)}</th>`;return th("nom","Coureur")+th("spec","Spé")+th("adeq","ADQ")+th("forme","Forme")+th("fatigue","Fat")+th("jours","J")+th("pic","Pic");})()}</tr></thead><tbody>
+  ${(()=>{return rs.map(r=>{
     const dis=!elig(r);
     const on=buf.ids.has(r.id);
     const ad=Math.round(adq(r));
@@ -1605,8 +1802,7 @@ function renderSelect(){
     const hot=inPeriod(r.p1,race[1])||inPeriod(r.p2,race[1]);
     return `<tr class="${on?"son":""} ${dis?"sdis":""}">
     <td><input type="checkbox" data-c="${r.id}" ${on?"checked":""} ${dis?"disabled":""}></td>
-    <td><input type="radio" name="ld" data-l="${r.id}" ${buf.leader===r.id?"checked":""} ${dis?"disabled":""} title="Leader"></td>
-    <td class="selnm"><span class="lnk ${roleCls(RM,r.id)}" data-rp="${r.id}">${U.esc(r.n)}</span></td>
+    <td class="selnm"><span class="lnk" data-rp="${r.id}">${U.esc(r.n)}</span></td>
     <td><span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span></td>
     <td><b class="${col(ad)}">${ad}</b></td>
     <td>${formPct(r,race[1])}</td>
@@ -1615,48 +1811,108 @@ function renderSelect(){
     <td><span class="pk ${hot?"hot":""}">${PSHORT[nx]}</span></td>
     </tr>`}).join("")})()}
   </tbody></table></div>
-  <p class="stat" style="margin-top:4px"><span class="ldr">Doré</span> = leader · <span class="lt">argenté</span> = lieutenant</p>
   <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-  <button class="btn" id="go">${multi?"Simulation en bloc":"Valider la sélection"}</button>
-  ${multi?'<button class="btn" id="golive" style="background:var(--info);color:#fff">Jouer étape par étape</button>':""}
+  <button class="btn" id="go">Valider la sélection ▸</button>
   ${mand?"":'<button class="btn sec" id="skip">Faire l\'impasse</button>'}
   </div></div>`;
-  $("#mode").onchange=e=>buf.mode=e.target.value;
   document.querySelectorAll(".seltab th.srt").forEach(t=>t.onclick=()=>{
     const k=t.dataset.st;
     if(buf.sort===k)buf.sdir=-buf.sdir;
     else{buf.sort=k;buf.sdir=1;}
     renderSelect();
   });
-  const setAuto=a=>{buf.ids=new Set(a.map(r=>r.id));buf.leader=a.length?aiTactic(a,race).leader.id:null;renderSelect();};
+  const setAuto=a=>{buf.ids=new Set(a.map(r=>r.id));renderSelect();};
   $("#autoA").onclick=()=>setAuto(autoPick(1));
   $("#autoF").onclick=()=>setAuto(autoPick(3));
-  $("#clr").onclick=()=>{buf.ids.clear();buf.leader=null;renderSelect();};
+  $("#clr").onclick=()=>{buf.ids.clear();renderSelect();};
   document.querySelectorAll("input[data-c]").forEach(c=>c.onchange=()=>{
     const id=+c.dataset.c;
     if(c.checked){if(buf.ids.size>=n){c.checked=false;return;}buf.ids.add(id);}
-    else{buf.ids.delete(id);if(buf.leader===id)buf.leader=null;}
+    else{buf.ids.delete(id);}
     renderSelect();
   });
-  document.querySelectorAll("input[data-l]").forEach(c=>c.onchange=()=>{
-    buf.leader=+c.dataset.l;
-    if(!buf.ids.has(buf.leader)&&buf.ids.size<n)buf.ids.add(buf.leader);
+  $("#go").onclick=()=>{
+    if(buf.ids.size!==n){notice(`Sélection incomplète : ${buf.ids.size}/${n}.`);return;}
+    const sel=[...buf.ids].map(i=>G.riders[i]);
+    const ar=autoRoles(sel,race);
+    p.entry={sel,roles:ar.roles,leader:ar.leader};
+    p.stage="roles";
     renderSelect();
-  });
-  const val=live=>{
-    if(buf.ids.size!==n||buf.leader==null||!buf.ids.has(buf.leader)){
-      notice(buf.ids.size!==n?`Sélection incomplète : ${buf.ids.size}/${n}.`:"Désignez un leader parmi les sélectionnés.");
-      return;
-    }
-    p.decided=true;
-    p.entry={sel:[...buf.ids].map(i=>G.riders[i]),leader:G.riders[buf.leader],mode:buf.mode,live};
-    G.selBuf=null;renderSelect();
   };
-  $("#go").onclick=()=>val(false);
-  const gl=$("#golive");if(gl)gl.onclick=()=>val(true);
   const sk=$("#skip");if(sk)sk.onclick=()=>{p.decided=true;p.entry=null;G.selBuf=null;renderSelect();};
 }
+/* --- Écran Rôles pré-course --- */
+function renderRolesPre(p){
+  const race=p.race,multi=race[5]>1;
+  const roles=p.entry.roles;
+  app().innerHTML=`<div class="card"><h3>Rôles : ${race[0]}</h3>
+  <p class="stat">L soutenu par les ÉQ${multi?", SPR pour les sprints massifs":""}, EL électron libre. Un seul leader.</p>
+  <div>${rolesHtml(p.entry.sel,roles,!multi,null)}</div>
+  <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+  <button class="btn sec" id="rback">◂ Sélection</button>
+  <button class="btn" id="rgo">${multi?"Simulation en bloc ▸":"Simuler ▸"}</button>
+  <button class="btn" id="rlive" style="background:var(--info);color:#fff">${multi?"Étape par étape ▸":"Jouer la course ▸"}</button>
+  </div></div>`;
+  bindRoles(roles,()=>renderRolesPre(p));
+  $("#rback").onclick=()=>{p.stage=null;p.entry=null;render();};
+  const dec=(live,ol)=>{
+    if(!rolesValid(p.entry.sel,roles,null)){notice("Désignez exactement un leader (L).");return;}
+    p.entry.leader=p.entry.sel.find(r=>roles[r.id].ro==="L");
+    p.entry.live=live;p.entry.oneLive=ol;
+    p.decided=true;p.stage=null;G.selBuf=null;render();
+  };
+  $("#rgo").onclick=()=>dec(false,false);
+  $("#rlive").onclick=()=>dec(multi,!multi);
+}
 
+/* --- Course d'un jour jouable : rôles + Effort + lancement --- */
+function renderOneDay(){
+  stopMG();
+  const od=G.oneDay,race=od.race;
+  const myE=od.entries.find(e=>e.ti===G.me);
+  if(!myE.roles)myE.roles=autoRoles(myE.sel,race).roles;
+  const elig=effElig(myE.sel,myE.roles,null);
+  if(od.effT==null||!elig.some(r=>r.id===od.effT))od.effT=effDefault(elig,myE.roles,race[3]);
+  app().innerHTML=`<div class="card"><h3>${race[0]} <span class="stat">${SPICON[race[3]]} ${SPNAME[race[3]]}${race[4]>=4?" · Monument":""}</span></h3>
+  <div>${rolesHtml(myE.sel,myE.roles,true,null)}</div></div>
+  <div class="card"><h3>L'Effort</h3>
+  <p class="stat">Figez l'aiguille au centre : bonus de forme du jour pour le coureur ciblé.</p>
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin:6px 0">${elig.map(r=>`<span class="rchip ${od.effT===r.id?"on":""}" data-eff="${r.id}">${U.esc(r.n)}</span>`).join("")}</div>
+  <canvas id="mgc" width="320" height="64" style="width:100%;max-width:360px;background:var(--panel2);border-radius:10px;touch-action:manipulation;margin-top:6px"></canvas>
+  <div style="margin-top:8px;display:flex;gap:8px">
+  <button class="btn" id="mgstop">Stop !</button>
+  <button class="btn sec" id="mgpass">Passer</button>
+  </div>
+  <p id="mgres" class="stat" style="margin-top:6px"></p></div>
+  <button class="btn" id="odgo" disabled>Lancer la course ▸</button>`;
+  bindRoles(myE.roles,renderOneDay);
+  document.querySelectorAll("[data-eff]").forEach(c=>c.onclick=()=>{od.effT=+c.dataset.eff;renderOneDay();});
+  const done=()=>{$("#mgstop").disabled=true;$("#mgpass").disabled=true;$("#odgo").disabled=false;};
+  const tgtE=od.effT!=null?G.riders[od.effT]:null;
+  const okCv=tgtE?startEffort(tgtE,race[3],false,0):false;
+  if(!okCv){od.mgMult=1;$("#mgres").textContent="Mini-jeu indisponible ici.";done();}
+  const stopFn=()=>{
+    if(!MG)return;
+    const j=judgeEffort();
+    od.mgMult=j.mult;stopMG();
+    $("#mgres").innerHTML="Résultat : <b class='"+j.cls+"'>"+j.label+"</b>";
+    done();
+  };
+  $("#mgstop").onclick=stopFn;
+  const cv=$("#mgc");if(cv)cv.onclick=stopFn;
+  $("#mgpass").onclick=()=>{od.mgMult=1;stopMG();$("#mgres").textContent="Effort passé : aucun bonus.";done();};
+  $("#odgo").onclick=()=>{
+    if(!rolesValid(myE.sel,myE.roles,null)){notice("Désignez exactement un leader (L).");return;}
+    stopMG();
+    const tgt=od.effT!=null?G.riders[od.effT]:null;
+    showVeil();
+    setTimeout(()=>{
+      const res=simOneDay(race,od.entries,(tgt&&od.mgMult&&od.mgMult!==1)?{rider:tgt,mult:od.mgMult}:null);
+      hideVeil();
+      finishOneDay(res);
+    },30);
+  };
+}
 /* --- Mode étape par étape + mini-jeu L'Effort --- */
 const SPNAME={p:"Plat",c:"Pavés",v:"Vallonné",m:"Montagne",t:"Chrono ind."};
 const SPICON={p:"▬",c:"▤",v:"◠",m:"▲",t:"⏱"};
@@ -1667,21 +1923,15 @@ function stopMG(){if(MG){CAF(MG.raf);MG=null;}}
 function friseHtml(rs){
   return `<div class="frise">${rs.profs.map((p,i)=>`<span class="fs ${i<rs.si?"done":i===rs.si?"cur":""}">${SPICON[p]}</span>`).join("")}</div>`;
 }
-/* Protégé auto : leader GC si un général est à défendre en montagne/chrono, sinon meilleur du profil */
+/* (ancien smartProtege supprimé : la cible de l'Effort découle des rôles) */
 function smartProtege(rs,myE,sp){
   const live=myE.sel.filter(r=>!rs.st.get(r).ab);
-  if(!live.length)return null;
-  if((sp==="m"||sp==="t")&&rs.si>0){
-    const gc=gcOf(rs);
-    const mine=gc.filter(r=>r.t===G.me);
-    if(mine.length&&gc.indexOf(mine[0])<12)return mine[0];
-  }
-  return live.slice().sort((a,b)=>baseScore(b,sp)-baseScore(a,sp))[0];
+  return live.length?live.slice().sort((a,b)=>baseScore(b,sp)-baseScore(a,sp))[0]:null;
 }
 function simRest(){
   stopMG();
   const rs=G.live;
-  rs.playerProt=null;rs.exp=null;
+  rs.exp=null;
   showVeil();
   setTimeout(()=>{
     while(!rs.done)simStage(rs,null);
@@ -1695,29 +1945,26 @@ function renderLive(){
   rs.mgMult=null;
   const sp=rs.profs[rs.si];
   const myE=rs.entries.find(e=>e.ti===G.me);
-  const auto=smartProtege(rs,myE,sp);
-  const myLive=myE.sel.filter(r=>!rs.st.get(r).ab);
-  if(rs.playerProt==null||!myLive.some(r=>r.id===rs.playerProt))rs.playerProt=auto?auto.id:null;
+  if(!myE.roles)myE.roles=autoRoles(myE.sel,rs.race).roles;
+  const dead=new Set(myE.sel.filter(r=>rs.st.get(r).ab).map(r=>r.id));
+  const elig=effElig(myE.sel,myE.roles,dead);
+  if(rs.effT==null||!elig.some(r=>r.id===rs.effT))rs.effT=effDefault(elig,myE.roles,sp);
   const gc=gcOf(rs),t0=gc.length?rs.st.get(gc[0]).time:0;
-  const RML=buildRoles(G.me);
   const mine=gc.map((r,i)=>({r,i})).filter(o=>o.r.t===G.me&&o.i>=3).slice(0,3);
   app().innerHTML=`<div class="card"><h3>${rs.race[0]} · ét. ${rs.si+1}/${rs.profs.length} <span class="stat">${SPICON[sp]} ${SPNAME[sp]}${rs.si>=14?" · 3ᵉ sem.":""}</span></h3>
   ${friseHtml(rs)}
   ${rs.si>0&&gc.length?`<div style="margin-top:6px">
-  ${gc.slice(0,3).map((r,i)=>`<div style="display:flex;gap:8px;align-items:center;font-size:.8rem;padding:2px 0"><span class="stat" style="width:14px">${i+1}</span><span class="lnk ${r.t===G.me?roleCls(RML,r.id):""}" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat">${i===0?"—":U.tm(rs.st.get(r).time-t0)}</span></div>`).join("")}
+  ${gc.slice(0,3).map((r,i)=>`<div style="display:flex;gap:8px;align-items:center;font-size:.8rem;padding:2px 0"><span class="stat" style="width:14px">${i+1}</span><span class="lnk ${meCls(r)}" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat">${i===0?"—":U.tm(rs.st.get(r).time-t0)}</span></div>`).join("")}
   ${mine.length?`<div style="padding-top:4px;border-top:1px solid var(--panel2)">
-  ${mine.map(o=>`<div style="display:flex;gap:8px;align-items:center;padding:1px 0;font-size:.8rem"><span class="stat" style="width:30px">${o.i+1}ᵉ</span><span class="lnk ${roleCls(RML,o.r.id)}" data-rp="${o.r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(o.r.n)}</span><span class="stat">${U.tm(rs.st.get(o.r).time-t0)}</span></div>`).join("")}</div>`:""}
+  ${mine.map(o=>`<div style="display:flex;gap:8px;align-items:center;padding:1px 0;font-size:.8rem"><span class="stat" style="width:30px">${o.i+1}ᵉ</span><span class="lnk ldr" data-rp="${o.r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(o.r.n)}</span><span class="stat">${U.tm(rs.st.get(o.r).time-t0)}</span></div>`).join("")}</div>`:""}
   </div>`:""}
-  <div style="margin:8px 0;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-  <select id="mode">
-    <option value="leader" ${myE.mode==="leader"?"selected":""}>Tout pour le protégé</option>
-    <option value="sprint" ${myE.mode==="sprint"?"selected":""}>Train de sprint</option>
-    <option value="echappee" ${myE.mode==="echappee"?"selected":""}>Jouer les échappées</option>
-  </select>
-  <select id="prot">${myLive.map(r=>`<option value="${r.id}" ${rs.playerProt===r.id?"selected":""}>Protégé : ${U.esc(r.n)}</option>`).join("")}</select>
+  <div style="margin:8px 0">
+  <button class="btn sec sm" id="rlro">${rs.rolesOpen?"Fermer les rôles ▴":"Rôles ▾"}</button>
+  ${rs.rolesOpen?`<div style="margin-top:6px">${rolesHtml(myE.sel,myE.roles,false,dead)}</div>`:""}
   </div></div>
   <div class="card"><h3>L'Effort</h3>
-  <p class="stat">Figez l'aiguille au centre : bonus/malus pour le protégé sur l'étape. Zone réduite par la fatigue, la montagne et la 3ᵉ semaine.</p>
+  <p class="stat">Figez l'aiguille au centre : bonus de forme du jour pour le coureur ciblé. Zone réduite par la fatigue, la montagne et la 3ᵉ semaine.</p>
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin:6px 0">${elig.map(r=>`<span class="rchip ${rs.effT===r.id?"on":""}" data-eff="${r.id}">${U.esc(r.n)}</span>`).join("")||'<span class="stat">Aucun coureur éligible (L, SPR ou EL).</span>'}</div>
   <canvas id="mgc" width="320" height="64" style="width:100%;max-width:360px;background:var(--panel2);border-radius:10px;touch-action:manipulation;margin-top:6px"></canvas>
   <div style="margin-top:8px;display:flex;gap:8px">
   <button class="btn" id="mgstop">Stop !</button>
@@ -1728,10 +1975,12 @@ function renderLive(){
   <button class="btn" id="run" disabled>Lancer l'étape ▸</button>
   <button class="btn sec" id="rest">Simuler le reste ▸</button>
   </div>`;
-  $("#mode").onchange=e=>myE.mode=e.target.value;
-  $("#prot").onchange=e=>{rs.playerProt=+e.target.value;if(MG)startEffort(rs);else renderLive();};
+  $("#rlro").onclick=()=>{rs.rolesOpen=!rs.rolesOpen;renderLive();};
+  bindRoles(myE.roles,renderLive);
+  document.querySelectorAll("[data-eff]").forEach(c=>c.onclick=()=>{rs.effT=+c.dataset.eff;renderLive();});
   const done=()=>{$("#mgstop").disabled=true;$("#mgpass").disabled=true;$("#run").disabled=false;};
-  const okCv=startEffort(rs);
+  const tgtE=rs.effT!=null?G.riders[rs.effT]:null;
+  const okCv=tgtE?startEffort(tgtE,sp,rs.si>=14,rs.st.get(tgtE).f):false;
   if(!okCv){rs.mgMult=1;$("#mgres").textContent="Mini-jeu indisponible ici.";done();}
   const stopFn=()=>{
     if(!MG)return;
@@ -1744,26 +1993,24 @@ function renderLive(){
   const cv=$("#mgc");if(cv)cv.onclick=stopFn;
   $("#mgpass").onclick=()=>{rs.mgMult=1;stopMG();$("#mgres").textContent="Effort passé : aucun bonus.";done();};
   $("#run").onclick=()=>{
+    if(!rolesValid(myE.sel,myE.roles,dead)){rs.rolesOpen=true;notice("Votre leader a quitté la course : désignez un nouveau L.");renderLive();return;}
     stopMG();
-    const tgt=G.riders[rs.playerProt];
-    simStage(rs,rs.mgMult&&rs.mgMult!==1?{rider:tgt,mult:rs.mgMult}:null);
+    const tgt=rs.effT!=null?G.riders[rs.effT]:null;
+    simStage(rs,(tgt&&rs.mgMult&&rs.mgMult!==1)?{rider:tgt,mult:rs.mgMult}:null);
     rs.mgMult=null;
     renderStageResult();
   };
   $("#rest").onclick=simRest;
 }
-function startEffort(rs){
+function startEffort(tgt,sp,wk3,extraFat){
   const cv=$("#mgc");
   const ctx=cv&&cv.getContext?cv.getContext("2d"):null;
   if(!ctx)return false;
   stopMG();
-  const sp=rs.profs[rs.si];
-  const tgt=G.riders[rs.playerProt];
-  const st=tgt?rs.st.get(tgt):null;
-  const fat=U.cl((tgt?tgt.fat:0)+(st?st.f:0),0,100);
-  let ease=1-fat/260-(sp==="m"?0.13:0)-(rs.si>=14?0.08:0);
+  const fat=U.cl((tgt?tgt.fat:0)+(extraFat||0),0,100);
+  let ease=1-fat/260-(sp==="m"?0.13:0)-(wk3?0.08:0);
   ease=U.cl(ease,0.45,1);
-  const speed=3.0+(rs.si>=14?1.0:0);
+  const speed=3.0+(wk3?1.0:0);
   MG={raf:0,t:U.r()*6,speed,ease,x:0.5,last:null};
   const wp=0.045*ease,wg=0.16*ease;
   const W=cv.width,H=cv.height;
@@ -1785,10 +2032,10 @@ function startEffort(rs){
 function judgeEffort(){
   const d=Math.abs(MG.x-0.5);
   const wp=0.045*MG.ease,wg=0.16*MG.ease;
-  if(d<=wp)return{mult:1.04,label:"Parfait ! +4 %",cls:"n90"};
-  if(d<=wg)return{mult:1.02,label:"Bon effort : +2 %",cls:"ok"};
+  if(d<=wp)return{mult:1.05,label:"Parfait ! Forme +5 %",cls:"n90"};
+  if(d<=wg)return{mult:1.025,label:"Bon effort : forme +2,5 %",cls:"ok"};
   if(d<=0.30)return{mult:1.0,label:"Dans le rythme : neutre",cls:"stat"};
-  return{mult:0.97,label:"À contretemps : −3 %",cls:"ko"};
+  return{mult:0.97,label:"À contretemps : forme −3 %",cls:"ko"};
 }
 /* Classements annexes génériques */
 function standingsRows(rs,kind){
@@ -1803,7 +2050,7 @@ function standingsRows(rs,kind){
 }
 function standingsTable(rs,kind,limit){
   const rows=standingsRows(rs,kind).slice(0,limit||1000);
-  return `<div class="scroll"><table><tbody>${rows.map((o,i)=>`<tr ${o.r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><span class="lnk" data-rp="${o.r.id}">${U.esc(o.r.n)}</span> <span class="stat">${TEAMS[o.r.t][0]}</span></td><td class="stat">${o.txt}</td></tr>`).join("")}</tbody></table></div>`;
+  return `<div class="scroll"><table><tbody>${rows.map((o,i)=>`<tr ${o.r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><span class="lnk ${meCls(o.r)}" data-rp="${o.r.id}">${U.esc(o.r.n)}</span> <span class="stat">${TEAMS[o.r.t][0]}</span></td><td class="stat">${o.txt}</td></tr>`).join("")}</tbody></table></div>`;
 }
 function renderStageResult(){
   const rs=G.live;
@@ -1817,7 +2064,7 @@ function renderStageResult(){
   ${rows[0].brk?"<p class=\"stat\">L'échappée va au bout !"+((n=>n>1?" ("+n+" coureurs)":"")(rows.filter(x=>x.brk).length))+"</p>":""}
   ${exp.stage?'<button class="btn sec sm exps" style="margin-bottom:6px">Réduire</button>':""}
   <div class="scroll"><table><tbody>
-  ${stRows.map((x,i)=>`<tr ${x.r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><b class="lnk" data-rp="${x.r.id}">${U.esc(x.r.n)}</b></td><td class="lnk" data-tp="${x.r.t}">${jer(x.r.t)}<span class="stat">${TEAMS[x.r.t][0]}</span></td><td class="stat">${i===0?"—":(x.gap<1?"m.t.":U.tm(x.gap))}</td></tr>`).join("")}
+  ${stRows.map((x,i)=>`<tr ${x.r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><b class="lnk ${meCls(x.r)}" data-rp="${x.r.id}">${U.esc(x.r.n)}</b></td><td class="lnk" data-tp="${x.r.t}">${jer(x.r.t)}<span class="stat">${TEAMS[x.r.t][0]}</span></td><td class="stat">${i===0?"—":(x.gap<1?"m.t.":U.tm(x.gap))}</td></tr>`).join("")}
   </tbody></table></div>
   <button class="btn sec sm exps">${exp.stage?"Réduire":"Tout afficher"}</button>
   ${evts.length?`<div style="margin-top:6px">${evts.map(e=>`<div class="evt">${e}</div>`).join("")}</div>`:""}
@@ -1845,7 +2092,6 @@ function renderStageResult(){
 
 /* --- Résultats --- */
 function renderResults(){
-  const RMres=buildRoles(G.me);
   let h=tabsHtml();
   h+=G.lastRes.map((res,ri)=>{
     const race=res.race;
@@ -1859,7 +2105,7 @@ function renderResults(){
     const hasGap=race[5]>1||!!res.gaps;
     x+=`<div class="scroll"><table><thead><tr><th>#</th><th>Coureur</th><th>Équipe</th>${hasGap?"<th>Écart</th>":""}<th>Pts</th></tr></thead><tbody>`;
     res.rank.slice(0,lim).forEach((r,i)=>{
-      x+=`<tr ${r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><b class="lnk" data-rp="${r.id}">${U.esc(r.n)}</b></td>
+      x+=`<tr ${r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><b class="lnk ${meCls(r)}" data-rp="${r.id}">${U.esc(r.n)}</b></td>
       <td class="lnk" data-tp="${r.t}">${jer(r.t)}<span class="stat">${TEAMS[r.t][0]}</span></td>
       ${hasGap?`<td class="stat">${i===0?"—":race[5]>1?U.tm(res.times.get(r).time-t0):(res.gaps.get(r)<1?"m.t.":U.tm(res.gaps.get(r)))}</td>`:""}
       <td class="n80">${PTS[race[4]][i]||""}</td></tr>`;
@@ -1874,7 +2120,7 @@ function renderResults(){
         if(res.gaps){const g=res.gaps.get(o.r);return g<1?"m.t.":U.tm(g);}
         return "";};
       if(mine.length)x+=`<div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--panel2)"><span class="stat" style="color:var(--acc);font-weight:700">Vos coureurs</span>
-      ${mine.map(o=>`<div style="display:flex;gap:8px;align-items:center;padding:2px 0;font-size:.82rem"><span class="stat" style="width:30px">${o.i+1}ᵉ</span><span class="lnk ${o.i<3?"ldr":""}" data-rp="${o.r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(o.r.n)}</span><span class="stat">${gtxt(o)}</span></div>`).join("")}</div>`;
+      ${mine.map(o=>`<div style="display:flex;gap:8px;align-items:center;padding:2px 0;font-size:.82rem"><span class="stat" style="width:30px">${o.i+1}ᵉ</span><span class="lnk ldr" data-rp="${o.r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(o.r.n)}</span><span class="stat">${gtxt(o)}</span></div>`).join("")}</div>`;
       const myE=res.entries.find(e=>e.ti===G.me);
       const ab=res.times?myE.sel.filter(r=>res.times.get(r)&&res.times.get(r).ab):[];
       if(ab.length){const byS=new Map();ab.forEach(r=>{const st=res.times.get(r).abSt||0;if(!byS.has(st))byS.set(st,[]);byS.get(st).push(r);});x+=`<div style="padding:2px 0">${[...byS.entries()].sort((a,b)=>a[0]-b[0]).map(([st,rs])=>`<div style="display:flex;gap:6px;font-size:.78rem"><span class="stat" style="width:36px;flex:none">${st?"Ét. "+st:"—"}</span><span class="ko">${rs.map(r=>U.esc(r.n)).join(" · ")}</span></div>`).join("")}</div>`;}
@@ -1883,8 +2129,8 @@ function renderResults(){
       const sw=new Map();
       res.stages.forEach(s=>sw.set(s.r,(sw.get(s.r)||0)+1));
       const multi=[...sw.entries()].filter(([r,c])=>c>1).sort((a,b)=>b[1]-a[1]);
-      if(multi.length)x+=`<p class="stat" style="margin-top:6px">Multi-vainqueurs : ${multi.map(([r,c])=>`<span class="lnk ${r.t===G.me?roleCls(RMres,r.id):""}" data-rp="${r.id}"><b>${U.esc(r.n)}</b></span> ×${c}`).join(" · ")}</p>`;
-      x+=`<div style="margin-top:6px">${res.stages.map(s=>`<div style="display:flex;gap:6px;align-items:center;padding:2px 0;font-size:.8rem;border-bottom:1px solid var(--panel2)"><span class="stat" style="width:36px;flex:none">Ét. ${s.st}</span><span class="lnk ${s.r.t===G.me?roleCls(RMres,s.r.id):""}" data-rp="${s.r.id}" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(s.r.n)}</span><span class="stat" style="font-size:.68rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${TABR[s.r.t]} · ${s.r.nat}</span><span class="stat" style="flex:none">${SPNAME[s.prof]}${s.brk?" · éch.":""}</span></div>`).join("")}</div>`;
+      if(multi.length)x+=`<p class="stat" style="margin-top:6px">Multi-vainqueurs : ${multi.map(([r,c])=>`<span class="lnk ${meCls(r)}" data-rp="${r.id}"><b>${U.esc(r.n)}</b></span> ×${c}`).join(" · ")}</p>`;
+      x+=`<div style="margin-top:6px">${res.stages.map(s=>`<div style="display:flex;gap:6px;align-items:center;padding:2px 0;font-size:.8rem;border-bottom:1px solid var(--panel2)"><span class="stat" style="width:36px;flex:none">Ét. ${s.st}</span><span class="lnk ${meCls(s.r)}" data-rp="${s.r.id}" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(s.r.n)}</span><span class="stat" style="font-size:.68rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${TABR[s.r.t]} · ${s.r.nat}</span><span class="stat" style="flex:none">${SPNAME[s.prof]}${s.brk?" · éch.":""}</span></div>`).join("")}</div>`;
       if(res.rs){
         const J=jerseysOf(res.rs);
         const view=exp&&exp.view;
@@ -1898,7 +2144,7 @@ function renderResults(){
       if(abAll.length){
         const bySt=new Map();
         abAll.forEach(r=>{const st=res.times.get(r).abSt||0;if(!bySt.has(st))bySt.set(st,[]);bySt.get(st).push(r);});
-        x+=`<p class="stat" style="margin-top:6px;margin-bottom:2px">Abandons</p>${[...bySt.entries()].sort((a,b)=>a[0]-b[0]).map(([st,rs])=>`<div style="display:flex;gap:6px;align-items:baseline;padding:1px 0;font-size:.78rem"><span class="stat" style="width:36px;flex:none">${st?"Ét. "+st:"—"}</span><span style="min-width:0">${rs.map(r=>`<span class="lnk ${r.t===G.me?"ko":"stat"}" data-rp="${r.id}">${U.esc(r.n)}</span>`).join(" · ")}</span></div>`).join("")}`;
+        x+=`<p class="stat" style="margin-top:6px;margin-bottom:2px">Abandons</p>${[...bySt.entries()].sort((a,b)=>a[0]-b[0]).map(([st,rs])=>`<div style="display:flex;gap:6px;align-items:baseline;padding:1px 0;font-size:.78rem"><span class="stat" style="width:36px;flex:none">${st?"Ét. "+st:"—"}</span><span style="min-width:0">${rs.map(r=>`<span class="lnk ${r.t===G.me?"ldr":"stat"}" data-rp="${r.id}">${U.esc(r.n)}</span>`).join(" · ")}</span></div>`).join("")}`;
       }
     }
     return x+"</div>";
@@ -1928,11 +2174,10 @@ function renderEndSeason(){
   stopMG();
   const me=G.teams[G.me],h=G.history[G.history.length-1];
   const cap=me.budget*0.50;
-  const RM=buildRoles(G.me);
   const top5=teamRiders(G.me).slice().sort((a,b)=>b.pts-a.pts).slice(0,5);
   const gains=(G.progLog||[]).filter(x=>x.d>0).sort((a,b)=>b.d-a.d).slice(0,8);
   const losses=(G.progLog||[]).filter(x=>x.d<0).sort((a,b)=>a.d-b.d).slice(0,5);
-  const pline=x=>{const r=G.riders[x.id];return `<div style="display:flex;gap:8px;align-items:center;padding:2px 0;font-size:.82rem"><span class="lnk ${roleCls(RM,r.id)}" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat">${G.year-r.an}a</span><b class="${x.d>0?"ok":"ko"}">${x.d>0?"+":""}${x.d} MOY</b></div>`};
+  const pline=x=>{const r=G.riders[x.id];return `<div style="display:flex;gap:8px;align-items:center;padding:2px 0;font-size:.82rem"><span class="lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat">${G.year-r.an}a</span><b class="${x.d>0?"ok":"ko"}">${x.d>0?"+":""}${x.d} MOY</b></div>`};
   let h2=tabsHtml();
   h2+=`<div class="card"><h3>Bilan ${h.year}</h3>
   <div class="evt">Classement UCI : <b>${h.rank}ᵉ</b> · ${Math.round(h.pts)} pts · <b>${h.wins}</b> victoires</div>
@@ -1944,14 +2189,35 @@ function renderEndSeason(){
     <div class="evt">▼ Relégué en ProTeam : ${inv(G.promo.down)} <span class="tag mon">PRO</span>${G.promo.down===G.me?" · <b class='ko'>votre équipe.</b>":""}</div></div>`;
   }
   h2+=`<div class="card"><h3>Vos hommes forts ${h.year}</h3>
-  ${top5.map((r,i)=>`<div style="display:flex;gap:8px;align-items:center;padding:3px 0;font-size:.84rem"><span class="stat" style="width:16px">${i+1}</span><span class="lnk ${roleCls(RM,r.id)}" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat">${r.wins} V</span><b class="n80">${Math.round(r.pts)} pts</b></div>`).join("")}</div>
+  ${top5.map((r,i)=>`<div style="display:flex;gap:8px;align-items:center;padding:3px 0;font-size:.84rem"><span class="stat" style="width:16px">${i+1}</span><span class="lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat">${r.wins} V</span><b class="n80">${Math.round(r.pts)} pts</b></div>`).join("")}</div>
   <div class="card"><h3>Progression hivernale</h3>
   <p class="stat">Notes déjà mises à jour pour ${h.year+1}.</p>
   ${gains.length?gains.map(pline).join(""):'<p class="stat">Aucune progression cette année.</p>'}
-  ${losses.length?`<p class="stat" style="margin-top:6px">En déclin :</p>${losses.map(pline).join("")}`:""}</div>
+  ${losses.length?`<p class="stat" style="margin-top:6px">En déclin :</p>${losses.map(pline).join("")}`:""}
+  ${(G.progLog||[]).length?'<button class="btn sec sm" id="progdet" style="margin-top:8px">Voir le détail ▸</button>':""}</div>
   <button class="btn" id="tocont">Suivant : contrats ▸</button>`;
   app().innerHTML=h2;bindTabs();
+  const pd=$("#progdet");if(pd)pd.onclick=renderProgDetail;
   $("#tocont").onclick=()=>{G.phase="contracts";render();saveGame();};
+}
+/* --- Détail de la progression hivernale --- */
+const AK={pla:"PLA",mon:"MON",spr:"SPR",chr:"CHR",pun:"PUN",end:"END"};
+function renderProgDetail(){
+  const log=(G.progLog||[]).slice().sort((a,b)=>b.d-a.d);
+  app().innerHTML=tabsHtml()+`<div class="card"><h3>Détail de la progression ${G.year}</h3>
+  <p class="stat">Moteurs : jours de course (plafond d'effet 35 j), points UCI, marge de potentiel, âge.</p>
+  ${log.map(x=>{
+    const r=G.riders[x.id];if(!r)return "";
+    const age=G.year-r.an;
+    const chips=Object.entries(x.attrs||{}).map(([k,v])=>`<span class="tag" style="background:${v>0?"#1d4a30":"#3a1d1d"};color:${v>0?"#9fe6b4":"#c98a8a"}">${AK[k]} ${v>0?"+":""}${v}</span>`).join(" ");
+    const frein=x.d>0?"":(x.days!=null&&x.days<12&&age<27?" · peu couru":(r.pot||r.moy)<=r.moy&&age<27?" · plafond atteint":"");
+    return `<div style="padding:7px 0;border-bottom:1px solid var(--panel2)">
+    <div style="display:flex;gap:8px;align-items:center"><span class="lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>${potTag(r)}<span class="stat">${age}a</span><b class="${x.d>0?"ok":"ko"}">${x.d>0?"+":""}${x.d} MOY</b></div>
+    <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;align-items:center">${chips}<span class="stat" style="font-size:.7rem">${x.days!=null?x.days+" j · "+(x.pts||0)+" pts":""}${frein}</span></div>
+    </div>`}).join("")}
+  <button class="btn sec" style="margin-top:10px" id="backbil">◂ Bilan</button></div>`;
+  bindTabs();
+  $("#backbil").onclick=()=>render();
 }
 /* --- Écran contrats : prolonger / libérer / rôles --- */
 function renderContracts(){
@@ -1972,7 +2238,7 @@ function renderContracts(){
   <div class="card"><h3>Contrats expirants (${exp.length})</h3>
   ${exp.length?exp.map(r=>{
     const ask=askSalary(r);
-    return `<div class="selrow one"><span class="nm lnk ${roleCls(RM,r.id)}" data-rp="${r.id}">${U.esc(r.n)}</span>
+    return `<div class="selrow one"><span class="nm lnk" data-rp="${r.id}">${U.esc(r.n)}</span>
     <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
     <b class="${col(r.moy)}">${r.moy}</b><span class="stat">${G.year-r.an}a</span>
     <span class="stat">${U.eur(ask)}</span>
@@ -1981,7 +2247,7 @@ function renderContracts(){
   :'<p class="stat">Aucun contrat à renouveler.</p>'}</div>
   <div class="card"><h3>Effectif</h3>
   ${squad.map(r=>`<div class="selrow one">
-  <span class="nm lnk ${roleCls(RM,r.id)}" data-rp="${r.id}">${U.esc(r.n)}</span>
+  <span class="nm lnk" data-rp="${r.id}">${U.esc(r.n)}</span>
   <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
   <b class="${col(r.moy)}">${r.moy}</b>
   <span class="stat">${U.eur(r.sal||salary(r))}</span><span class="stat">${Math.max(0,r.ctr)} an</span>
@@ -2072,14 +2338,15 @@ function renderJeunes(){
   const fzp=r=>(((r.id*40503)>>>0)%7)-3;
   app().innerHTML=specBar()+`<div class="card"><h3>Jeunes (${pool.length}) · masse ${U.eur(masse(G.me))} / plafond ${U.eur(cap)}</h3>
   <p class="stat">Néo-pros disponibles. Niveau et potentiel sont des estimations de vos recruteurs. Signature directe, contrat 3 ans.</p>
+  <div class="jgrid jhead"><span>Coureur</span><span>Âge</span><span>Spé</span><span>Niv.</span><span>Pot.</span><span></span></div>
   ${pool.map(r=>{
     const lo=U.cl(r.moy+fz(r)-2,40,95),hi=lo+4;
-    const c=POTCAT(U.cl((r.pot||r.moy)+fzp(r),50,95));
-    return `<div class="selrow one"><span class="nm lnk" data-rp="${r.id}">${U.esc(r.n)}</span>
-    <span class="stat">${G.year-r.an}a</span>
+    const est=NSTARS(U.cl((r.pot||r.moy)+fzp(r),50,95));
+    return `<div class="jgrid"><span class="lnk" data-rp="${r.id}" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
+    <span class="stat">${G.year-r.an}</span>
     <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
     <span class="stat">${lo}-${hi}</span>
-    <span class="tag ${c[1]}">${c[0]}</span>
+    ${starsHtml(est)}
     <button class="btn sec sm" data-sj="${r.id}">Signer</button></div>`}).join("")||'<p class="stat">Aucun jeune disponible cette année.</p>'}</div>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
   <button class="btn sec" id="backct2">◂ Contrats</button>
@@ -2143,7 +2410,7 @@ function renderMercato(){
   const bottom=G.mktResolved
     ?`<button class="btn" id="ns2">Lancer la saison ${G.year+1} ▸</button>`
     :`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sec" id="backct">◂ Jeunes</button>
-    <button class="btn" id="ns">Clôturer le mercato ▸</button></div>`;
+    <button class="btn" id="ns">Suivant : effectif ${G.year+1} ▸</button></div>`;
   app().innerHTML=body+bottom;
   document.querySelectorAll("[data-ngo]").forEach(b=>b.onclick=()=>{
     const id=+b.dataset.ngo;
@@ -2171,7 +2438,7 @@ function renderMercato(){
     G.negoOff={...c};negoAnswer(r,{...c});renderMercato();saveGame();};
   const bc=$("#backct");if(bc)bc.onclick=()=>{G.phase="jeunes";render();};
   const ns=$("#ns");if(ns)ns.onclick=()=>{
-    resolveMarket();renderMercato();saveGame();};
+    G.phase="preval";render();saveGame();};
   const ns2=$("#ns2");if(ns2)ns2.onclick=()=>{
     showVeil("Intersaison…");
     setTimeout(()=>{
@@ -2181,13 +2448,59 @@ function renderMercato(){
   };
 }
 
+/* --- Écran Effectif N+1 : validation d'intersaison --- */
+function renderPreval(){
+  stopMG();
+  const cap=G.teams[G.me].budget*0.50;
+  const squad=teamRiders(G.me).slice().sort((a,b)=>b.moy-a.moy);
+  const agreed=Object.entries(G.agreed||{}).map(([id,a])=>({r:G.riders[+id],a})).filter(x=>x.r&&x.r.t===-1);
+  const masseProj=masse(G.me)+agreed.reduce((s,x)=>s+x.a.sal,0);
+  const nProj=squad.length+agreed.length;
+  const over=masseProj-cap;
+  const okAll=over<=0&&nProj>=8&&nProj<=maxSquad(G.me);
+  app().innerHTML=`<div class="card" style="position:sticky;top:46px;z-index:5;padding:8px 12px">
+  <h3>Effectif ${G.year+1}</h3>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:4px">
+  <span class="pill">Coureurs <b class="${nProj<8||nProj>maxSquad(G.me)?"ko":""}">${nProj}</b>/${maxSquad(G.me)}</span>
+  <span class="pill">Masse <b class="${over>0?"ko":"ok"}">${U.eur(masseProj)}</b> / ${U.eur(cap)}</span>
+  ${over>0?`<span class="stat" style="color:var(--warn)">${U.eur(over)} au-dessus du plafond</span>`:""}
+  </div></div>
+  ${agreed.length?`<div class="card"><h3>Accords mercato (${agreed.length})</h3>
+  ${agreed.map(x=>`<div class="selrow one"><span class="nm lnk" data-rp="${x.r.id}">${U.esc(x.r.n)}</span>
+  <span class="tag ${PROFTAG[x.r.prof]}">${PROFA[x.r.prof]}</span><b class="${col(x.r.moy)}">${x.r.moy}</b>
+  <span class="stat">${U.eur(x.a.sal)}·${x.a.dur}an</span>
+  <button class="btn sec sm" data-pvx="${x.r.id}" style="color:var(--warn)">Annuler</button></div>`).join("")}</div>`:""}
+  <div class="card"><h3>Sous contrat (${squad.length})</h3>
+  ${squad.map(r=>`<div class="selrow one"><span class="nm lnk" data-rp="${r.id}">${U.esc(r.n)}${r.gen&&r.ctr===3?' <span class="tag">N</span>':""}</span>
+  <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span><b class="${col(r.moy)}">${r.moy}</b>
+  <span class="stat">${U.eur(r.sal||salary(r))}</span>
+  <button class="btn sec sm" data-pvr="${r.id}" style="color:var(--warn)">Libérer</button></div>`).join("")}</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+  <button class="btn sec" id="pvback">◂ Mercato</button>
+  <button class="btn" id="pvok">Valider et clôturer ▸</button></div>`;
+  document.querySelectorAll("[data-pvx]").forEach(b=>b.onclick=()=>{
+    delete G.agreed[+b.dataset.pvx];renderPreval();saveGame();});
+  document.querySelectorAll("[data-pvr]").forEach(b=>b.onclick=()=>{
+    const r=G.riders[+b.dataset.pvr];
+    r.t=-1;r.ctr=0;r.role=undefined;if(!G.pool.includes(r))G.pool.push(r);
+    G.renew=(G.renew||[]).filter(id=>id!==r.id);
+    renderPreval();saveGame();});
+  $("#pvback").onclick=()=>{G.phase="mercato";G.msub="market";render();};
+  $("#pvok").onclick=()=>{
+    if(!okAll){
+      notice(over>0?"Masse au-dessus du plafond : libérez ou annulez ("+U.eur(over)+").":nProj<8?"Effectif minimum : 8 coureurs.":"Effectif maximum dépassé.");
+      return;
+    }
+    resolveMarket();G.phase="mercato";render();saveGame();
+  };
+}
 /* ================= TESTS (harnais) ================= */
 window.TestAPI={
   get G(){return G},init,advance:advanceSync,formOf,baseScore,simOneDay,simStageRace,
   invitedTeams,aiSelect,aiTactic,salary,masse,endSeason,newSeason,racesStarting,stageProfiles,
   initStageRace,simStage,finishStageRace,gcOf,jerseysOf,
   askSalary,resolveMarket,aiFill,teamPeaks,smartProtege,standingsRows,
-  aiPlanWeek,buildRoles,negoAnswer,saveGame,loadGame,hasSave,wipeSave,
+  aiPlanWeek,buildRoles,negoAnswer,saveGame,loadGame,hasSave,wipeSave,autoRoles,buildCtxRoles,rolesValid,
   autoSeason(){ // joue la saison entière, sélections auto pour le joueur
     let guard=0;
     while(G.week<=42&&guard++<400){
@@ -2197,8 +2510,8 @@ window.TestAPI={
         const n=race[2]==="gt"?8:7;
         const sel=aiSelect(G.me,race,n);
         if(sel.length<n)return {race,player:null};
-        const t=aiTactic(sel,race);
-        return {race,player:{sel,leader:t.leader,mode:t.mode}};
+        const t=autoRoles(sel,race);
+        return {race,player:{sel,leader:t.leader,roles:t.roles}};
       });
       runWeekSync(list);
     }
