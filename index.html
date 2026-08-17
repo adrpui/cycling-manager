@@ -254,34 +254,45 @@ const ROSTERS=[
 
 const RACES=[
 ["Tour Down Under",3,"ce","v",2,6],
+["Cadel Evans Road Race",5,"cl","v",2,1],
 ["UAE Tour",7,"ce","p",2,7],
 ["Omloop Het Nieuwsblad",9,"cl","c",2,1],
 ["Strade Bianche",10,"cl","v",3,1],
-["Paris-Nice",11,"ce","v",3,8],
-["Tirreno-Adriatico",11,"ce","v",3,7],
+["Paris-Nice",10,"ce","v",3,8],
+["Tirreno-Adriatico",10,"ce","v",3,7],
 ["Milan-San Remo",12,"cl","s",4,1],
-["Tour de Catalogne",13,"ce","m",3,7],
+["Tour de Catalogne",12,"ce","m",3,7],
+["Ronde van Brugge",12,"cl","p",2,1],
 ["E3 Saxo Classic",13,"cl","c",3,1],
 ["Gand-Wevelgem",13,"cl","s",2,1],
+["À travers la Flandre",13,"cl","c",2,1],
 ["Tour des Flandres",14,"cl","c",4,1],
-["Tour du Pays basque",15,"ce","m",3,6],
+["Itzulia Pays basque",14,"ce","m",3,6],
 ["Paris-Roubaix",15,"cl","c",4,1],
 ["Amstel Gold Race",16,"cl","v",3,1],
-["Flèche Wallonne",17,"cl","v",3,1],
+["Flèche Wallonne",16,"cl","v",3,1],
 ["Liège-Bastogne-Liège",17,"cl","v",4,1],
-["Tour de Romandie",18,"ce","m",2,6],
+["Tour de Romandie",17,"ce","m",2,6],
+["Eschborn-Francfort",18,"cl","v",2,1],
 ["Giro d'Italia",19,"gt","m",5,21],
-["Critérium du Dauphiné",23,"ce","m",3,8],
-["Tour de Suisse",24,"ce","m",3,8],
+["Tour Auvergne-Rhône-Alpes",23,"ce","m",3,8],
+["Copenhagen Sprint",24,"cl","p",2,1],
+["Tour de Suisse",24,"ce","m",3,5],
 ["Tour de France",27,"gt","m",5,21],
 ["Clásica San Sebastián",31,"cl","v",3,1],
 ["Tour de Pologne",31,"ce","v",2,7],
+["ADAC Cyclassics",33,"cl","s",2,1],
 ["Renewi Tour",33,"ce","c",2,5],
 ["Vuelta a España",34,"gt","m",5,21],
+["Bretagne Classic",35,"cl","s",2,1],
 ["GP de Québec",37,"cl","v",2,1],
 ["GP de Montréal",37,"cl","v",3,1],
-["Il Lombardia",41,"cl","m",4,1]
+["Mondial · contre-la-montre",38,"wc","t",4,1],
+["Mondial · course en ligne",39,"wc","v",4,1],
+["Il Lombardia",41,"cl","m",4,1],
+["Tour of Guangxi",41,"ce","p",2,6]
 ];
+
 
 /* Déduplication globale des homonymes (suffixe romain, idempotent) */
 (()=>{const seen=new Map(),ROM=["II","III","IV","V","VI","VII","VIII","IX","X"];
@@ -606,14 +617,15 @@ function riderScore(r,prof,week,ctx){
   if(prof==="c"&&r.prof==="fla")base*=1.04; // les Flandriens excellent sur les pavés
   let s=base*formOf(r,week)*fatMult(r.fat+(ctx.extraFat||0));
   const role=(ctx.roles&&ctx.roles.get(r.id))||{ro:"EQ",or:"gc"};
+  const kt=ctx.key?ctx.key(r):r.t; // équipe, ou sélection nationale aux Mondiaux
   if(prof!=="t"){
     if(role.ro==="L"){
-      s*=1+Math.min(0.12,0.14*(ctx.helpers.get(r.t)||0));          // équipiers au service, rendement décroissant
-      if(prof==="p")s*=1+Math.min(0.08,0.10*(ctx.train.get(r.t)||0)); // train de sprint pour le leader sur le plat
+      s*=1+Math.min(0.12,0.14*(ctx.helpers.get(kt)||0));          // équipiers au service, rendement décroissant
+      if(prof==="p")s*=1+Math.min(0.08,0.10*(ctx.train.get(kt)||0)); // train de sprint pour le leader sur le plat
     }else if(role.ro==="EQ"){
       s*=0.95; // au service du leader
     }else if(role.ro==="SPR"){
-      if(prof==="p")s*=1+Math.min(0.08,0.10*(ctx.train.get(r.t)||0));
+      if(prof==="p")s*=1+Math.min(0.08,0.10*(ctx.train.get(kt)||0));
     }else if(role.ro==="EL"){
       if(role.or!=="gagne"&&prof==="m")s*=0.96; // le baroudeur sacrifie son général
     }
@@ -622,8 +634,11 @@ function riderScore(r,prof,week,ctx){
   if(d<0.06)s*=0.90;else if(d<0.09)s*=1.06; // jour sans / jour avec
   return s*(1+U.g()*NOISE[prof]);
 }
-function buildCtxRoles(entries,prof,st){
+/* keyOf : comment regrouper les coureurs en formations. Par équipe d'ordinaire,
+   par nation aux championnats du monde. */
+function buildCtxRoles(entries,prof,st,keyOf){
   const roles=new Map(),leaders=new Map(),helpers=new Map(),train=new Map();
+  const key=keyOf||null;
   entries.forEach(e=>{
     const live=st?e.sel.filter(r=>!st.get(r).ab):e.sel;
     if(!live.length)return;
@@ -637,12 +652,12 @@ function buildCtxRoles(entries,prof,st){
     const tr=live.filter(r=>r.prof==="spr"||r.prof==="pla"||r.prof==="fla").map(r=>baseScore(r,"p")).sort((a,b)=>b-a).slice(1,4);
     train.set(e.ti,tr.length?tr.reduce((s,v)=>s+v,0)/300:0);
   });
-  return {roles,leaders,helpers,train};
+  return {roles,leaders,helpers,train,key};
 }
-const buildCtx=(entries,race)=>buildCtxRoles(entries,race[3],null);
+const buildCtx=(entries,race,keyOf)=>buildCtxRoles(entries,race[3],null,keyOf);
 /* Course d'un jour */
-function simOneDay(race,entries,playerMod){
-  const ctx=buildCtx(entries,race);
+function simOneDay(race,entries,playerMod,keyOf){
+  const ctx=buildCtx(entries,race,keyOf);
   const all=[];
   entries.forEach(e=>e.sel.forEach(r=>all.push(r)));
   const prof=race[3];
@@ -852,9 +867,33 @@ function simStageRace(race,entries){
   while(!rs.done)simStage(rs,null);
   return finishStageRace(rs);
 }
+/* Championnats du monde : sélections nationales composées automatiquement.
+   Le quota d'une nation dépend de la profondeur de son vivier. */
+function worldsEntries(race){
+  const prof=race[3];
+  const byNat=new Map();
+  G.riders.forEach(r=>{
+    if(r.t<0||r.out>0||r.retired)return;
+    if(!byNat.has(r.nat))byNat.set(r.nat,[]);
+    byNat.get(r.nat).push(r);
+  });
+  // une sélection nationale retient d'abord le spécialiste, la forme ne fait qu'arbitrer
+  const sc=r=>baseScore(r,prof)*Math.pow(formOf(r,race[1]),1.4)*fatMult(r.fat);
+  const entries=[];
+  byNat.forEach((rs,nat)=>{
+    const q=prof==="t"?2:U.cl(Math.round(rs.length/9),1,8); // le chrono se court à deux
+    const pick=rs.slice().sort((a,b)=>sc(b)-sc(a)).slice(0,q);
+    if(!pick.length)return;
+    const roles={};
+    pick.forEach((r,i)=>roles[r.id]={ro:i===0?"L":"EQ",or:"gagne"});
+    entries.push({ti:nat,sel:pick,leader:pick[0],roles});
+  });
+  return entries;
+}
 /* Invitations à une course */
 function invitedTeams(race){
   const out=[];
+  if(race[2]==="wc")return out; // sélections nationales : aucune équipe n'est conviée
   if(race[2]==="gt"){
     const mask=race[0].includes("Giro")?1:race[0].includes("France")?2:4;
     TEAMS.forEach((t,i)=>{if(t[3]&mask)out.push(i)});
@@ -994,6 +1033,19 @@ function runWeek(list){
     cnt.forEach((c,ti)=>{if(c>1&&ti!==G.me)plans.set(ti,aiPlanWeek(ti,multiR.filter(r=>invitedTeams(r).includes(ti))));});
   }
   list.forEach(({race,player})=>{
+    if(race[2]==="wc"){ // championnats du monde : sélections nationales, pas de choix du joueur
+      const entries=worldsEntries(race);
+      if(entries.length){
+        const res=simOneDay(race,entries,null,r=>r.nat);
+        res.entries=entries;res.race=race;
+        applyResults(race,res);
+        if(res.rank[0])res.rank[0].wc=G.year; // maillot arc-en-ciel
+        G.lastRes.push(res);
+        G.log.unshift({w:G.week,race,res});
+        logCompact(race,res);
+      }
+      return;
+    }
     const inv=invitedTeams(race);
     const n=race[2]==="gt"?8:7;
     const entries=[];
@@ -1327,7 +1379,8 @@ function showRider(id){
   const hr='<div style="border-top:1px solid var(--panel2);margin:8px 0"></div>';
   $("#pbox").innerHTML=`<h3 style="color:var(--acc)">${U.esc(r.n)} <span class="stat" style="font-weight:400">${r.nat} · ${G.year-r.an} ans</span></h3>
   <p style="margin:5px 0;display:flex;gap:6px;align-items:center;flex-wrap:wrap">${t?`<span class="lnk" data-tp="${r.t}">${jer(r.t)}${t[0]}</span>`:'<span class="stat">Sans équipe</span>'}
-  <span class="tag ${PROFTAG[r.prof]}">${PROFN[r.prof]}</span> ${potTag(r)}</p>
+  <span class="tag ${PROFTAG[r.prof]}">${PROFN[r.prof]}</span> ${potTag(r)}
+  ${r.wc?`<span class="tag" style="background:linear-gradient(90deg,#4da3ff,#e30613,#1a1a1a,#ffd200,#1e8f4e);color:#fff;font-weight:700;text-shadow:0 1px 2px #0009">Champion du monde ${r.wc}</span>`:""}</p>
   <p class="stat" style="margin:2px 0">Contrat ${Math.max(0,r.ctr)} an(s) · ${U.eur(r.sal||salary(r))}/an</p>
   ${hr}
   <div class="attr8">
@@ -1728,7 +1781,7 @@ function bindSquad(){
 }
 
 /* --- Calendrier compact (390px) + accès au récap --- */
-const TYB={cl:"CL",ce:"ÉT",gt:"GT"},PRI={p:"▬",c:"▤",v:"◠",m:"▲"};
+const TYB={cl:"CL",ce:"ÉT",gt:"GT",wc:"CM"},PRI={p:"▬",s:"◈",c:"▤",v:"◠",m:"▲",t:"⏱"};
 function vCal(){
   return `<div class="card" style="padding:10px 8px"><table class="caltab"><thead><tr><th>S</th><th>Course</th><th></th><th>J</th><th>Vainqueur</th></tr></thead><tbody>
   ${RACES.map((r,ri)=>{
