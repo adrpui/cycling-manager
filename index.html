@@ -380,6 +380,17 @@ const nextPeak=(r,w)=>{const c=[r.p1,r.p2].sort((a,b)=>PC[a]-PC[b]);for(const p 
 
 /* ================= ÉTAT ================= */
 let G=null;
+/* Identifiant stable : r.id ne change jamais de la vie d'un coureur.
+   L'index de G.riders bouge (retraites, arrivées), donc tout accès passe par rid(). */
+let RIDX=new Map();
+function reindex(){RIDX=new Map();if(G&&G.riders)G.riders.forEach(r=>RIDX.set(r.id,r));}
+function rid(i){
+  i=+i;
+  const r=RIDX.get(i);
+  if(r&&r.id===i)return r;
+  reindex();
+  return RIDX.get(i);
+}
 
 function newRider(base,ti){
   const [n,nat,an,pla,mon,spr,chr,pun,end,pot]=base;
@@ -495,6 +506,7 @@ function init(teamIdx){
     const r=newRider(b,ti);G.riders.push(r);
   }));
   G.riders.forEach((r,i)=>{r.id=i;r.sal=salary(r);});
+  G.nextId=G.riders.length;reindex();
   TEAMS.forEach((t,i)=>teamPeaks(i));
 }
 const teamRiders=ti=>G.riders.filter(r=>r.t===ti&&!r.retired);
@@ -888,7 +900,7 @@ const SAVE_KEY="cm_save_v1";
 function saveGame(){
   if(!G||G.me==null||G.live||G.oneDay)return;
   try{
-    const s={v:1,me:G.me,year:G.year,week:G.week,season:G.season,phase:G.phase,
+    const s={v:1,me:G.me,year:G.year,week:G.week,season:G.season,phase:G.phase,nextId:G.nextId,
       tiers:TEAMS.map(t=>t[2]),gts:TEAMS.map(t=>t[3]),
       teams:G.teams,riders:G.riders,history:G.history,promo:G.promo||null,
       renew:G.renew||[],poolIds:(G.pool||[]).map(r=>r.id),agreed:G.agreed||{},nego:G.nego||{},
@@ -911,10 +923,13 @@ function loadGame(str){
     s.tiers.forEach((t,i)=>{if(TEAMS[i]){TEAMS[i][2]=t;TEAMS[i][3]=s.gts[i];}});
     G={me:s.me,year:s.year,week:s.week,season:s.season,phase:s.phase,tab:"home",
       riders:s.riders,teams:s.teams,history:s.history||[],promo:s.promo,
-      renew:s.renew||[],pool:(s.poolIds||[]).map(i=>s.riders[i]).filter(Boolean),
+      renew:s.renew||[],pool:(s.poolIds||[]).map(i=>s.riders.find(r=>r.id===i)).filter(Boolean),
       agreed:s.agreed||{},nego:s.nego||{},offers:{},
       mktResolved:s.mktResolved,mktRes:s.mktRes,progInit:s.progInit,progLog:s.progLog||[],potV2:!!s.potV2,logC:s.logC||[],
       log:[],pending:[],selBuf:null,lastRes:[],liveQueue:[],live:null,msub:"market"};
+    // identifiants stables : reprendre le compteur, ou le déduire d'une sauvegarde antérieure
+    G.nextId=s.nextId!=null?s.nextId:G.riders.reduce((m,r)=>Math.max(m,r.id),-1)+1;
+    reindex();
     return true;
   }catch(e){return false;}
 }
@@ -1134,14 +1149,14 @@ function genNeo(){
   const base=[n,nat,G.year-18-Math.floor(U.r()*4),b("pla"),b("mon"),b("spr"),b("chr"),b("pun"),U.cl(Math.round(66+U.g()*6),50,84)];
   const r=newRider(base,-1);r.gen=true;r.ctr=0;r.sal=120000;
   r.pot=Math.max(r.pot||r.moy,rollPot(r.moy));
-  autoPeaks(r);r.id=G.riders.length;G.riders.push(r);
+  autoPeaks(r);r.id=G.nextId++;G.riders.push(r);RIDX.set(r.id,r);
   return r;
 }
 function resolveMarket(){
   G.mktRes={signed:[],lost:[]};G.mktResolved=true;
   // les accords validés à l'écran Effectif N+1 sont honorés sans condition
   Object.entries(G.agreed||{}).forEach(([id,a])=>{
-    const r=G.riders[+id];if(!r||r.t!==-1)return;
+    const r=rid(+id);if(!r||r.t!==-1)return;
     r.t=G.me;r.sal=a.sal;r.ctr=a.dur;
     if(a.role==="L"||a.role==="LT")r.role=a.role;
     const ix=G.pool.indexOf(r);if(ix>=0)G.pool.splice(ix,1);
@@ -1149,7 +1164,7 @@ function resolveMarket(){
   });
   G.agreed={};G.negoOpen=null;
   // contrats non renouvelés par le joueur : départ au marché (plancher de 8 coureurs garanti)
-  const exp=(G.renew||[]).map(id=>G.riders[id]).filter(r=>r&&r.ctr<=0&&r.t===G.me)
+  const exp=(G.renew||[]).map(id=>rid(id)).filter(r=>r&&r.ctr<=0&&r.t===G.me)
     .sort((a,b)=>b.moy-a.moy);
   const keepN=Math.max(0,8-(teamRiders(G.me).length-exp.length));
   exp.forEach((r,i)=>{
@@ -1209,7 +1224,8 @@ function newSeason(){
   while(teamRiders(G.me).length<8){const r=genNeo();r.t=G.me;r.sal=askSalary(r);r.ctr=2;} // complément néo-pros
   G.year++;G.week=1;G.season++;
   G.riders=G.riders.filter(r=>!r.retired&&r.t>=0);
-  G.riders.forEach((r,i)=>{r.id=i;r.pts=0;r.wins=0;r.races=0;r.days=0;r.fat=0;r.out=0;r.weekLock=false;r.hist=[];});
+  G.riders.forEach(r=>{r.pts=0;r.wins=0;r.races=0;r.days=0;r.fat=0;r.out=0;r.weekLock=false;r.hist=[];});
+  reindex();
   TEAMS.forEach((t,i)=>teamPeaks(i));
   G.teams.forEach(t=>{t.pts=0;t.wins=0;t.cash=Math.max(t.cash,t.budget*0.12);});
   G.log=[];G.logC=[];G.phase="peaks";G.tab="home";G.progInit=false;
@@ -1250,7 +1266,7 @@ const roleCls=(m,id)=>({L:"ldr",LT:"lt"}[m.get(id)]||"");
 const meCls=r=>r.t===G.me?"ldr":"";
 const tierTag=ti=>TEAMS[ti][2]===0?'<span class="tag spr">WT</span>':'<span class="tag mon">PRO</span>';
 function showRider(id){
-  const r=G&&G.riders[id];if(!r)return;
+  const r=G&&rid(id);if(!r)return;
   const t=r.t>=0?TEAMS[r.t]:null;
   const best=r.hist.slice().sort((a,b)=>(a[1]-b[1])||(b[2]-a[2])).slice(0,5);
   const hr='<div style="border-top:1px solid var(--panel2);margin:8px 0"></div>';
@@ -1439,7 +1455,7 @@ function draftCov(){
 }
 function draftDash(d){
   const tg=periodTargets(),cov=draftCov();
-  const nm=id=>{const r=id!=null?G.riders[id]:null;return r?U.esc(r.n.split(" ").slice(-1)[0]):null;};
+  const nm=id=>{const r=id!=null?rid(id):null;return r?U.esc(r.n.split(" ").slice(-1)[0]):null;};
   const dot=k=>{const v=nm(d.slots[k]);return `<span class="ddot ${v?"don":"dko"}">${v||"—"}</span>`};
   return `<div class="covgrid">${PERIODS.map((p,i)=>{
     const c=cov[i],t=tg[i],cl=t===0||c>=t?"cok":c>=Math.ceil(t/2)?"cmid":"cko";
@@ -1507,7 +1523,7 @@ function renderDraft(){
   const done=d.ix>=d.q.length;
   let body;
   if(!done){
-    const r=G.riders[d.q[d.ix]];
+    const r=rid(d.q[d.ix]);
     const objs=(OBJDEF[r.prof]||OBJDEF.pla).filter(o=>!o[2].length||o[2].some(k=>d.slots[k]==null));
     body=`<div class="card"><h3>Carte ${d.ix+1}/${d.q.length}</h3>
     <div style="display:flex;gap:8px;align-items:center;margin:6px 0">
@@ -1534,7 +1550,7 @@ function renderDraft(){
   app().innerHTML=`<div class="card" style="position:sticky;top:46px;z-index:5;padding-bottom:8px">
   <h3>Programme de saison ${G.year}</h3>${draftDash(d)}</div>`+body;
   if(!done){
-    const r=G.riders[d.q[d.ix]];
+    const r=rid(d.q[d.ix]);
     const objs=(OBJDEF[r.prof]||OBJDEF.pla).filter(o=>!o[2].length||o[2].some(k=>d.slots[k]==null));
     document.querySelectorAll(".obtn").forEach(b=>b.onclick=()=>{
       const o=objs[+b.dataset.ob];
@@ -1585,7 +1601,7 @@ function renderPeaks(){
   <div class="pkchips">${PERIODS.map((p,i)=>`<span class="pkc ${r.p1===i||r.p2===i?"on":""}" data-r="${r.id}" data-p="${i}">${PCHIP[i]}</span>`).join("")}</div>
   </div>`}).join("")}</div>`;
   document.querySelectorAll(".pkc").forEach(c=>c.onclick=()=>{
-    const r=G.riders[+c.dataset.r],p=+c.dataset.p;
+    const r=rid(+c.dataset.r),p=+c.dataset.p;
     if(r.p1===p)r.p1=-1;
     else if(r.p2===p)r.p2=-1;
     else if(r.p1<0)r.p1=p;
@@ -1660,7 +1676,7 @@ function vCal(){
   return `<div class="card" style="padding:10px 8px"><table class="caltab"><thead><tr><th>S</th><th>Course</th><th></th><th>J</th><th>Vainqueur</th></tr></thead><tbody>
   ${RACES.map((r,ri)=>{
     const e=(G.logC||[]).find(l=>l.ri===ri);
-    const w=e?G.riders[e.top[0][0]]:null;
+    const w=e?rid(e.top[0][0]):null;
     const cur=r[1]===G.week;
     return `<tr ${cur?'class="me"':''} ${e?`data-cal="${ri}" style="cursor:pointer"`:""}><td class="stat">${r[1]}</td>
     <td class="calnm">${r[4]>=4?"<b>"+r[0]+"</b>":r[0]}</td>
@@ -1672,7 +1688,7 @@ function renderRaceLog(){
   const e=(G.logC||[]).find(l=>l.ri===G.calSel);
   if(!e){G.tab="cal";return render();}
   const race=RACES[e.ri];
-  const R=id=>G.riders[id];
+  const R=id=>rid(id);
   let h=tabsHtml()+`<div class="card"><h3>${race[0]} <span class="stat">· S${e.w} · ${race[5]} j</span></h3>
   ${e.brk?'<p class="stat">Coup d\'éclat : la victoire a échappé aux favoris.</p>':""}
   <div class="scroll"><table><tbody>
@@ -1800,7 +1816,7 @@ function renderSelect(){
     G.selBuf={race,ids:new Set(auto.map(r=>r.id)),sort:"adeq",sdir:1};
   }
   const buf=G.selBuf;
-  [...buf.ids].forEach(id=>{if(!elig(G.riders[id]))buf.ids.delete(id)});
+  [...buf.ids].forEach(id=>{if(!elig(rid(id)))buf.ids.delete(id)});
   const adq=r=>baseScore(r,race[3])*formOf(r,race[1])*fatMult(r.fat);
   const pkOf=r=>PC[inPeriod(r.p1,race[1])?r.p1:inPeriod(r.p2,race[1])?r.p2:nextPeak(r,race[1])];
   const sorters={
@@ -1860,7 +1876,7 @@ function renderSelect(){
   });
   $("#go").onclick=()=>{
     if(buf.ids.size!==n){notice(`Sélection incomplète : ${buf.ids.size}/${n}.`);return;}
-    const sel=[...buf.ids].map(i=>G.riders[i]);
+    const sel=[...buf.ids].map(i=>rid(i));
     const ar=autoRoles(sel,race);
     p.entry={sel,roles:ar.roles,leader:ar.leader};
     p.stage="roles";
@@ -1915,7 +1931,7 @@ function renderOneDay(){
   bindRoles(myE.roles,renderOneDay);
   document.querySelectorAll("[data-eff]").forEach(c=>c.onclick=()=>{od.effT=+c.dataset.eff;renderOneDay();});
   const done=()=>{$("#mgstop").disabled=true;$("#mgpass").disabled=true;$("#odgo").disabled=false;};
-  const tgtE=od.effT!=null?G.riders[od.effT]:null;
+  const tgtE=od.effT!=null?rid(od.effT):null;
   const okCv=tgtE?startEffort(tgtE,race[3],false,0):false;
   if(!okCv){od.mgMult=1;$("#mgres").textContent="Mini-jeu indisponible ici.";done();}
   const stopFn=()=>{
@@ -1931,7 +1947,7 @@ function renderOneDay(){
   $("#odgo").onclick=()=>{
     if(!rolesValid(myE.sel,myE.roles,null)){notice("Désignez exactement un leader (L).");return;}
     stopMG();
-    const tgt=od.effT!=null?G.riders[od.effT]:null;
+    const tgt=od.effT!=null?rid(od.effT):null;
     showVeil();
     setTimeout(()=>{
       const res=simOneDay(race,od.entries,(tgt&&od.mgMult&&od.mgMult!==1)?{rider:tgt,mult:od.mgMult}:null);
@@ -2006,7 +2022,7 @@ function renderLive(){
   bindRoles(myE.roles,renderLive);
   document.querySelectorAll("[data-eff]").forEach(c=>c.onclick=()=>{rs.effT=+c.dataset.eff;renderLive();});
   const done=()=>{$("#mgstop").disabled=true;$("#mgpass").disabled=true;$("#run").disabled=false;};
-  const tgtE=rs.effT!=null?G.riders[rs.effT]:null;
+  const tgtE=rs.effT!=null?rid(rs.effT):null;
   const okCv=tgtE?startEffort(tgtE,sp,rs.si>=14,rs.st.get(tgtE).f):false;
   if(!okCv){rs.mgMult=1;$("#mgres").textContent="Mini-jeu indisponible ici.";done();}
   const stopFn=()=>{
@@ -2022,7 +2038,7 @@ function renderLive(){
   $("#run").onclick=()=>{
     if(!rolesValid(myE.sel,myE.roles,dead)){rs.rolesOpen=true;notice("Votre leader a quitté la course : désignez un nouveau L.");renderLive();return;}
     stopMG();
-    const tgt=rs.effT!=null?G.riders[rs.effT]:null;
+    const tgt=rs.effT!=null?rid(rs.effT):null;
     simStage(rs,(tgt&&rs.mgMult&&rs.mgMult!==1)?{rider:tgt,mult:rs.mgMult}:null);
     rs.mgMult=null;
     renderStageResult();
@@ -2191,7 +2207,7 @@ function renderResults(){
 function specBar(){
   const cnt={};teamRiders(G.me).forEach(r=>cnt[r.prof]=(cnt[r.prof]||0)+1);
   let plus=0;
-  Object.keys(G.agreed||{}).forEach(id=>{const r=G.riders[+id];if(r&&r.t===-1){cnt[r.prof]=(cnt[r.prof]||0)+1;plus++;}});
+  Object.keys(G.agreed||{}).forEach(id=>{const r=rid(+id);if(r&&r.t===-1){cnt[r.prof]=(cnt[r.prof]||0)+1;plus++;}});
   return `<div class="card" style="position:sticky;top:46px;z-index:5;padding:8px 12px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
   ${["mon","pun","spr","fla","pla","chr"].map(p=>`<span class="tag ${PROFTAG[p]}">${PROFA[p]} ${cnt[p]||0}</span>`).join("")}
   <span class="pill">Effectif <b>${teamRiders(G.me).length+plus}</b>/${maxSquad(G.me)}</span></div>`;
@@ -2204,7 +2220,7 @@ function renderEndSeason(){
   const top5=teamRiders(G.me).slice().sort((a,b)=>b.pts-a.pts).slice(0,5);
   const gains=(G.progLog||[]).filter(x=>x.d>0).sort((a,b)=>b.d-a.d).slice(0,8);
   const losses=(G.progLog||[]).filter(x=>x.d<0).sort((a,b)=>a.d-b.d).slice(0,5);
-  const pline=x=>{const r=G.riders[x.id];return `<div style="display:flex;gap:8px;align-items:center;padding:2px 0;font-size:.82rem"><span class="lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat">${G.year-r.an}a</span><b class="${x.d>0?"ok":"ko"}">${x.d>0?"+":""}${x.d} MOY</b></div>`};
+  const pline=x=>{const r=rid(x.id);return `<div style="display:flex;gap:8px;align-items:center;padding:2px 0;font-size:.82rem"><span class="lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span><span class="stat">${G.year-r.an}a</span><b class="${x.d>0?"ok":"ko"}">${x.d>0?"+":""}${x.d} MOY</b></div>`};
   let h2=tabsHtml();
   h2+=`<div class="card"><h3>Bilan ${h.year}</h3>
   <div class="evt">Classement UCI : <b>${h.rank}ᵉ</b> · ${Math.round(h.pts)} pts · <b>${h.wins}</b> victoires</div>
@@ -2234,7 +2250,7 @@ function renderProgDetail(){
   app().innerHTML=tabsHtml()+`<div class="card"><h3>Détail de la progression ${G.year}</h3>
   <p class="stat">Moteurs : jours de course (plafond d'effet 35 j), points UCI, marge de potentiel, âge.</p>
   ${log.map(x=>{
-    const r=G.riders[x.id];if(!r)return "";
+    const r=rid(x.id);if(!r)return "";
     const age=G.year-r.an;
     const chips=Object.entries(x.attrs||{}).map(([k,v])=>`<span class="tag" style="background:${v>0?"#1d4a30":"#3a1d1d"};color:${v>0?"#9fe6b4":"#c98a8a"}">${AK[k]} ${v>0?"+":""}${v}</span>`).join(" ");
     const frein=x.d>0?"":(x.days!=null&&x.days<12&&age<27?" · peu couru":(r.pot||r.moy)<=r.moy&&age<27?" · plafond atteint":"");
@@ -2250,7 +2266,7 @@ function renderProgDetail(){
 function renderContracts(){
   stopMG();
   const cap=G.teams[G.me].budget*0.50;
-  const exp=(G.renew||[]).map(id=>G.riders[id]).filter(r=>r&&r.ctr<=0&&r.t===G.me).sort((a,b)=>b.moy-a.moy);
+  const exp=(G.renew||[]).map(id=>rid(id)).filter(r=>r&&r.ctr<=0&&r.t===G.me).sort((a,b)=>b.moy-a.moy);
   const squad=teamRiders(G.me).slice().sort((a,b)=>b.moy-a.moy);
   const proj=squad.length-exp.length;
   const RM=buildRoles(G.me);
@@ -2285,19 +2301,19 @@ function renderContracts(){
   <button class="btn sec" id="backes">◂ Bilan</button>
   <button class="btn" id="tomkt">Suivant : mercato ▸</button></div>`;
   document.querySelectorAll("[data-rn]").forEach(b=>b.onclick=()=>{
-    const r=G.riders[+b.dataset.rn];const ask=askSalary(r);
+    const r=rid(+b.dataset.rn);const ask=askSalary(r);
     if(masse(G.me)-(r.sal||0)+ask>cap){notice("Plafond salarial dépassé.");return;}
     r.ctr=2;r.sal=ask;G.renew=G.renew.filter(id=>id!==r.id);renderContracts();saveGame();});
   document.querySelectorAll("[data-relx]").forEach(b=>b.onclick=()=>{
-    const r=G.riders[+b.dataset.relx];
+    const r=rid(+b.dataset.relx);
     r.t=-1;r.ctr=0;r.role=undefined;G.pool.push(r);
     G.renew=(G.renew||[]).filter(id=>id!==r.id);renderContracts();saveGame();});
   document.querySelectorAll("[data-rel]").forEach(b=>b.onclick=()=>{
-    const r=G.riders[+b.dataset.rel];
+    const r=rid(+b.dataset.rel);
     if(teamRiders(G.me).length<=8){notice("Effectif minimum atteint (8 coureurs).");return;}
     r.t=-1;r.ctr=0;r.role=undefined;G.pool.push(r);G.renew=(G.renew||[]).filter(id=>id!==r.id);renderContracts();saveGame();});
   document.querySelectorAll("[data-role]").forEach(b=>b.onclick=()=>{
-    const r=G.riders[+b.dataset.role];
+    const r=rid(+b.dataset.role);
     r.role=r.role==null?"L":r.role==="L"?"LT":r.role==="LT"?"EQ":undefined;
     renderContracts();});
   $("#backes").onclick=()=>{G.phase="endseason";render();};
@@ -2379,7 +2395,7 @@ function renderJeunes(){
   <button class="btn sec" id="backct2">◂ Contrats</button>
   <button class="btn" id="tomkt2">Suivant : mercato ▸</button></div>`;
   document.querySelectorAll("[data-sj]").forEach(b=>b.onclick=()=>{
-    const r=G.riders[+b.dataset.sj];
+    const r=rid(+b.dataset.sj);
     if(teamRiders(G.me).length+Object.keys(G.agreed||{}).length>=maxSquad(G.me)){notice("Effectif maximum atteint.");return;}
     if(masse(G.me)+r.sal>cap){notice("Plafond salarial dépassé.");return;}
     r.t=G.me;r.ctr=3;G.pool.splice(G.pool.indexOf(r),1);renderJeunes();saveGame();});
@@ -2446,20 +2462,20 @@ function renderMercato(){
   document.querySelectorAll("[data-nago]").forEach(b=>b.onclick=()=>{
     delete G.agreed[+b.dataset.nago];renderMercato();});
   document.querySelectorAll("[data-nsal]").forEach(b=>b.onclick=()=>{
-    const r=G.riders[G.negoOpen];
+    const r=rid(G.negoOpen);
     const o=G.negoOff||{sal:askSalary(r),dur:2,role:"LT"};
     o.sal=Math.max(100000,Math.round(o.sal*(b.dataset.nsal==="+"?1.1:0.9)/1000)*1000);
     o.dur=+($("#ngdur")?$("#ngdur").value:o.dur);o.role=$("#ngrole")?$("#ngrole").value:o.role;
     G.negoOff=o;renderMercato();});
   const prop=$("#ngprop");if(prop)prop.onclick=()=>{
-    const r=G.riders[G.negoOpen];
+    const r=rid(G.negoOpen);
     const o=G.negoOff||{sal:askSalary(r),dur:2,role:"LT"};
     o.dur=+$("#ngdur").value;o.role=$("#ngrole").value;
     if(teamRiders(G.me).length+Object.keys(G.agreed||{}).length>=maxSquad(G.me)){notice("Effectif maximum atteint.");return;}
     if(masse(G.me)+o.sal>cap){notice("Plafond salarial dépassé.");return;}
     negoAnswer(r,o);G.negoOff=o;renderMercato();saveGame();};
   const acc=$("#ngacc");if(acc)acc.onclick=()=>{
-    const r=G.riders[G.negoOpen];
+    const r=rid(G.negoOpen);
     const c=G.nego[r.id].counter;
     if(masse(G.me)+c.sal>cap){notice("Plafond salarial dépassé.");return;}
     G.negoOff={...c};negoAnswer(r,{...c});renderMercato();saveGame();};
@@ -2480,7 +2496,7 @@ function renderPreval(){
   stopMG();
   const cap=G.teams[G.me].budget*0.50;
   const squad=teamRiders(G.me).slice().sort((a,b)=>b.moy-a.moy);
-  const agreed=Object.entries(G.agreed||{}).map(([id,a])=>({r:G.riders[+id],a})).filter(x=>x.r&&x.r.t===-1);
+  const agreed=Object.entries(G.agreed||{}).map(([id,a])=>({r:rid(+id),a})).filter(x=>x.r&&x.r.t===-1);
   const masseProj=masse(G.me)+agreed.reduce((s,x)=>s+x.a.sal,0);
   const nProj=squad.length+agreed.length;
   const over=masseProj-cap;
@@ -2508,7 +2524,7 @@ function renderPreval(){
   document.querySelectorAll("[data-pvx]").forEach(b=>b.onclick=()=>{
     delete G.agreed[+b.dataset.pvx];renderPreval();saveGame();});
   document.querySelectorAll("[data-pvr]").forEach(b=>b.onclick=()=>{
-    const r=G.riders[+b.dataset.pvr];
+    const r=rid(+b.dataset.pvr);
     r.t=-1;r.ctr=0;r.role=undefined;if(!G.pool.includes(r))G.pool.push(r);
     G.renew=(G.renew||[]).filter(id=>id!==r.id);
     renderPreval();saveGame();});
@@ -2523,7 +2539,7 @@ function renderPreval(){
 }
 /* ================= TESTS (harnais) ================= */
 window.TestAPI={
-  get G(){return G},init,advance:advanceSync,formOf,baseScore,simOneDay,simStageRace,
+  get G(){return G},init,advance:advanceSync,formOf,baseScore,simOneDay,simStageRace,rid,reindex,
   invitedTeams,aiSelect,aiTactic,salary,masse,endSeason,newSeason,racesStarting,stageProfiles,
   initStageRace,simStage,finishStageRace,gcOf,jerseysOf,
   askSalary,resolveMarket,aiFill,teamPeaks,smartProtege,standingsRows,
