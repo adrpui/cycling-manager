@@ -316,8 +316,47 @@ const WGT={
   m:{mon:.62,chr:.12,pun:.14,pla:.12,spr:0},
   t:{chr:.72,pla:.22,pun:.06,mon:0,spr:0}
 };
-/* Écarts de temps par point de score selon profil d'étape */
-const GAPK={p:1.6,c:6.0,v:3.1,m:8.6,t:4.2}; // s par (écart de score)^0.72
+/* ===== Écarts de temps : modèle de groupes d'arrivée =====
+   t = K × (d − d0)^E  où d = écart de score au premier du peloton.
+   d0 = marge sous laquelle l'écart est nul (le coureur reste dans le groupe).
+   E > 1 : convexe, les grands écarts se creusent au lieu de se comprimer.
+   W = largeur d'un groupe en secondes : tout coureur à moins de W du premier
+   de son groupe partage son temps (« m.t. »). Élevé en plaine, quasi nul en montagne. */
+const GAPK={p:7.0,c:7.5,v:6.0,m:7.4,t:5.6};
+const GAPD={p:36,c:14,v:20,m:6,t:0.4};
+const GAPE={p:1.20,c:1.26,v:1.28,m:1.32,t:1.05};
+const GAPW={p:190,c:70,v:110,m:26,t:0};
+/* Décrochage : surcoût d'écart des équipiers ayant travaillé, et de la fatigue accumulée */
+const WORK={p:0.5,c:2.0,v:2.5,m:5.0,t:0};
+const DECR={p:0.03,c:0.08,v:0.10,m:0.16,t:0};
+/* Hors-délai : durée type d'étape (s) et pourcentage toléré */
+const DUREE={p:16200,c:21600,v:17100,m:18000,t:2700};
+const DELAI={p:0.16,c:0.14,v:0.13,m:0.115,t:0.25};
+/* Conversion score → temps, puis regroupement en pelotons.
+   rows est trié par score décroissant ; extra(x) ajoute un surcoût d'écart. */
+function groupGaps(rows,sp,brkGap,extra){
+  if(!rows.length)return rows;
+  const K=GAPK[sp],d0=GAPD[sp],E=GAPE[sp],W=GAPW[sp];
+  const pel=rows.filter(x=>!x.brk);
+  const pelTop=pel.length?pel[0].s:rows[0].s;
+  rows.forEach((x,i)=>{
+    if(x.brk){ // échappée : écart interne resserré, plafonné par la marge sur le peloton
+      x._t=i===0?0:Math.min(brkGap*0.8,Math.pow(Math.max(0,rows[0].s-x.s),0.72)*K*0.25+i*1.5);
+      return;
+    }
+    const d=Math.max(0,pelTop-x.s)+(extra?extra(x):0);
+    x._t=d<=d0?0:K*Math.pow(d-d0,E);
+  });
+  let gStart=null,gT=0;
+  rows.forEach(x=>{
+    if(x.brk){x.gap=x._t;return;}
+    if(gStart===null||x._t-gStart>W){gStart=x._t;gT=x._t;}
+    x.gap=gT+brkGap;
+  });
+  let prev=0;
+  rows.forEach(x=>{if(x.gap<prev)x.gap=prev;prev=x.gap;});
+  return rows;
+}
 
 /* Barèmes points UCI (top 15) par tier ; GT: barème GC + bonus étape */
 const PTS={
@@ -607,26 +646,11 @@ function simOneDay(race,entries,playerMod){
     picks.forEach(p=>p.brk=true);
     rk=picks.concat(rk);
   }
-  // écarts de temps réalistes selon le profil
-  const K={p:1.4,c:6.0,v:3.1,m:7.6}[prof]||3.1;
-  const pel1=rk.find(x=>!x.brk);
-  const s0=pel1?pel1.s:rk[0].s;
+  // écarts : groupes d'arrivée, décrochage des coureurs déjà fatigués
   const brkGap=rk[0].brk?15+U.r()*30:0; // marge du coup d'éclat
-  const gaps=new Map();let prev=0,pi=0;
-  rk.forEach((x,i)=>{
-    let g=0;
-    if(i>0){
-      if(x.brk)g=Math.min(brkGap*0.8,Math.pow(Math.max(0,rk[0].s-x.s),0.72)*K*0.4+i*1.5);
-      else{
-        g=Math.pow(Math.max(0,s0-x.s),0.72)*K;
-        if(prof==="p"&&pi<Math.min(30,rk.length*0.5))g=0; // arrivée groupée
-        g+=brkGap;
-      }
-      g=Math.max(g,prev);prev=g;
-    }
-    if(!x.brk)pi++;
-    gaps.set(x.r,g);
-  });
+  groupGaps(rk,prof,brkGap,x=>Math.max(0,x.r.fat-70)*DECR[prof]);
+  const gaps=new Map();
+  rk.forEach(x=>gaps.set(x.r,x.gap));
   return {rank:rk.map(x=>x.r),stages:null,events:[],brk:!!rk[0].brk,gaps};
 }
 /* Profils d'étapes d'une course à étapes */
@@ -730,28 +754,31 @@ function simStage(rs,playerMod){
       rows=picks.concat(rows);
     }
   }
-  const top=rows[0].s;
-  const pelFirst=rows.find(x=>!x.brk);
-  const pelTop=pelFirst?pelFirst.s:top;
   const brkGap=rows[0].brk?(raidBig?90+U.r()*210:28+U.r()*50):0; // le peloton concède un écart commun
-  let pi=0;
-  rows.forEach((x,i)=>{
+  // décrochage : les équipiers qui ont roulé toute l'étape et les organismes entamés lâchent prise
+  const extraD=x=>{
+    const ro=(ctx.roles.get(x.r.id)||{}).ro||"EQ";
+    const f=rs.st.get(x.r).f;
+    let m=Math.max(0,x.r.fat+f-70)*DECR[sp];
+    if(ro==="EQ")m+=WORK[sp]*(0.55+f/70);
+    if(rs.profs.length>=15&&rs.si>=14)m*=1.35; // 3ᵉ semaine : les organismes cèdent
+    return m;
+  };
+  groupGaps(rows,sp,brkGap,extraD);
+  // hors délai : au-delà d'un pourcentage du temps du vainqueur, élimination —
+  // sauf repêchage collectif quand un groupe trop nombreux est concerné (règle réelle)
+  const limite=DUREE[sp]*DELAI[sp];
+  const derniere=rs.si>=rs.profs.length-1;
+  const repeche=rows.filter(x=>x.gap>limite).length>rows.length*0.15;
+  rows.forEach(x=>{
     const s0=rs.st.get(x.r);
-    let gap;
-    if(x.brk){
-      gap=i===0?0:Math.min(brkGap*0.8,Math.pow(Math.max(0,top-x.s),0.72)*GAPK[sp]*0.4+i*1.5);
-    }else{
-      gap=Math.pow(Math.max(0,pelTop-x.s),0.72)*GAPK[sp];
-      if(sp==="p"&&pi<Math.min(40,rows.length*0.6))gap=0; // arrivée groupée
-      pi++;
-      gap+=brkGap;
-    }
-    x.gap=gap;
-    s0.time+=gap;
+    s0.time+=x.gap;
     s0.f+=2.6*(115-x.r.end)/45;
     const risk=(0.0015+Math.max(0,(x.r.fat+s0.f-75))*0.0035)*((ctx.roles.get(x.r.id)||{}).ro==="L"?0.5:1); // leader protégé
-    if(U.r()<risk&&rs.si<rs.profs.length-1){s0.ab=true;s0.abSt=rs.si+1;
+    if(U.r()<risk&&!derniere){s0.ab=true;s0.abSt=rs.si+1;
       rs.events.push("Ét. "+(rs.si+1)+" : abandon de <b>"+U.esc(x.r.n)+"</b> ("+TEAMS[x.r.t][0]+")");}
+    else if(!s0.ab&&!repeche&&!derniere&&x.gap>limite){s0.ab=true;s0.abSt=rs.si+1;s0.hd=true;
+      rs.events.push("Ét. "+(rs.si+1)+" : <b>"+U.esc(x.r.n)+"</b> ("+TEAMS[x.r.t][0]+") éliminé hors délai.");}
   });
   // bonifications, points, montagne (survivants uniquement)
   let surv=rows.filter(x=>!rs.st.get(x.r).ab);
