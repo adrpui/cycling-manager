@@ -1,0 +1,8 @@
+# Anciennes versions archivées localement
+index_[0-9].html
+
+# Documentation de travail
+cycling-manager-doc.xlsx
+
+# macOS
+.DS_Store
