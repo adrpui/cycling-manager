@@ -510,7 +510,7 @@ function blocNeeds(){
     const courses=RACES.filter(r=>r[1]>=p[1]&&r[1]<=p[2]&&invitedTeams(r).includes(G.me));
     if(!courses.length)return;
     const gt=courses.some(r=>r[2]==="gt");
-    need[i]=Math.min(N,gt?12:Math.min(10,4+courses.length));
+    need[i]=Math.min(N,gt?8:7);
   });
   return need;
 }
@@ -1680,55 +1680,7 @@ function renderDraft(){
   const manque=draftMissing();
   const enForme=(w,seuil)=>rs.filter(r=>formOf(r,w)>=(seuil||1.0)).length;
 
-  if(d.open!=null){
-    const i=d.open,rc=RACES[i],p=weekPeriod(rc[1]);
-    const act=leaderOf(i);
-    const cands=rs.slice().sort((a,b)=>
-      (formOf(b,rc[1])*baseScore(b,rc[3]))-(formOf(a,rc[1])*baseScore(a,rc[3])));
-    app().innerHTML=`<div class="card"><h3>${U.esc(rc[0])} <span class="stat">S${rc[1]} · ${SPNAME[rc[3]]}${rc[5]>1?" · "+rc[5]+"j":""}</span></h3>
-    <p class="stat">Bloc <b>${PERIODS[p][0]}</b>. Les coureurs qui visent ce bloc sont au sommet ; les autres montent encore ou redescendent.</p>
-    <div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap">
-    <button class="btn sec sm" id="dclose">◂ Retour</button>
-    <button class="btn sec sm" id="dauto2">Laisser le staff choisir</button></div>
-    <div style="display:flex;flex-direction:column;gap:5px;max-height:60vh;overflow-y:auto">
-    ${cands.slice(0,24).map(r=>{
-      const f=formOf(r,rc[1]);
-      const pct=Math.round((f-0.94)/0.14*100);
-      const on=act&&act.id===r.id;
-      const force=(r.lead||[]).includes(i);
-      return `<button class="btn ${on?"":"sec"} sm dcand" data-c="${r.id}"
-      style="text-align:left;display:flex;gap:8px;align-items:center;min-height:38px">
-      <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
-      <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
-      <b class="${col(r.moy)}">${r.moy}</b>
-      <span class="stat" style="flex:none;width:38px;text-align:right;color:${pct>=90?"var(--ok)":pct>=45?"var(--acc)":"var(--dim)"}">${pct}%</span>
-      <span class="stat" style="flex:none;font-size:.64rem;width:52px">${force?"désigné":on?"choisi":""}</span></button>`}).join("")}
-    </div></div>`;
-    $("#dclose").onclick=()=>{d.open=null;renderDraft();};
-    $("#dauto2").onclick=()=>{setLeader(i,null);d.open=null;renderDraft();saveGame();};
-    document.querySelectorAll(".dcand").forEach(b=>b.onclick=()=>{
-      setLeader(i,rid(+b.dataset.c));d.open=null;renderDraft();saveGame();
-    });
-    return;
-  }
 
-  const groupe=(titre,filtre)=>{
-    const l=maj.filter(filtre);
-    if(!l.length)return "";
-    return `<div class="card"><h3>${titre}</h3>
-    ${l.map(x=>{
-      const ld=leaderOf(x.i);
-      const n=enForme(x.rc[1]);
-      const mini=x.rc[2]==="gt"?8:7;
-      const f=ld?Math.round((formOf(ld,x.rc[1])-0.94)/0.14*100):0;
-      return `<div class="selrow one" data-open="${x.i}" style="cursor:pointer">
-      <span class="stat" style="width:30px;flex:none">S${x.rc[1]}</span>
-      <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.rc[4]>=4||x.rc[2]==="gt"?"<b>"+U.esc(x.rc[0])+"</b>":U.esc(x.rc[0])}</span>
-      ${ld?`<span class="tag ${f>=90?"gc":""}">${U.esc(ld.n.split(" ").slice(-1)[0])} ${f}%</span>`
-          :'<span class="tag warn">personne</span>'}
-      <span class="stat ${n>=mini?"":"ko"}" style="flex:none;width:52px;text-align:right">${n} dispo</span>
-      </div>`}).join("")}</div>`;
-  };
 
   app().innerHTML=`<div class="card" style="position:sticky;top:46px;z-index:5">
   <h3>Programme de saison ${G.year}</h3>
@@ -1740,10 +1692,6 @@ function renderDraft(){
   <button class="btn sec sm" id="dauto">Répartition automatique</button>
   <button class="btn sm" id="dgo">Lancer la saison ▸</button></div>
   ${manque.length?`<p class="stat" style="color:var(--warn);margin-top:6px">Blocs légers : ${manque.join(" · ")}</p>`:""}</div>
-  ${groupe("Grands tours",x=>x.rc[2]==="gt")}
-  ${groupe("Monuments et Mondiaux",x=>x.rc[2]!=="gt"&&(x.rc[2]==="wc"||x.rc[4]>=4))}
-  ${groupe("Classiques",x=>x.rc[2]==="cl"&&x.rc[4]===3)}
-  ${groupe("Courses à étapes",x=>x.rc[2]==="ce")}
   <div class="card"><h3>Blocs de forme</h3>
   <p class="stat">Deux blocs maximum par coureur.</p>
   ${rs.map(r=>`<div style="padding:6px 0;border-bottom:1px solid var(--panel2)">
@@ -1753,7 +1701,6 @@ function renderDraft(){
   <div class="pkchips">${PERIODS.map((p,i)=>`<span class="pkc ${r.p1===i||r.p2===i?"on":""}" data-r="${r.id}" data-p="${i}">${PCHIP[i]}</span>`).join("")}</div>
   </div>`).join("")}</div>`;
 
-  document.querySelectorAll("[data-open]").forEach(row=>row.onclick=()=>{d.open=+row.dataset.open;renderDraft();});
   document.querySelectorAll(".pkc").forEach(c=>c.onclick=()=>{
     const r=rid(+c.dataset.r),p=+c.dataset.p;
     if(r.p1===p)r.p1=-1;
@@ -1766,8 +1713,9 @@ function renderDraft(){
   });
   $("#dauto").onclick=()=>{autoProgram();notice("Blocs répartis sur la saison.");renderDraft();saveGame();};
   $("#dgo").onclick=()=>{
+    // aucun blocage : les jauges informent, elles n'interdisent pas
     const ko=rs.filter(r=>r.p1<0&&r.p2<0).length;
-    if(ko){notice(ko+" coureur(s) sans bloc : utilisez la répartition automatique.");return;}
+    if(ko)notice(ko+" coureur(s) sans bloc : ils resteront en forme moyenne toute l'année.");
     G.phase="run";G.tab="home";render();saveGame();};
 }
 /* --- Marché des agents libres, ouvert toute la saison --- */
