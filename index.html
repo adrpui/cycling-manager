@@ -193,7 +193,7 @@ const TEAMS=[["UAE Team Emirates XRG","UAE",0,7,55,"#ffffff","#d71920"],["Visma 
 
 // [nom, nat, naissance, PLA,MON,SPR,CHR,PUN,END,PAV,POT, id]
 // id : slug ProCyclingStats, identifiant stable et unique ; « gen-… » = coureur de complément.
-// 963 coureurs, 34 équipes. Notes dérivées des fiches PCS, calibrées sur le barème du jeu.
+// 959 coureurs, 34 équipes. Notes dérivées des fiches PCS, calibrées sur le barème du jeu.
 const ROSTERS=[
 // UAE Team Emirates XRG
 [["T. Pogačar","SLO",1998,79,95,67,85,89,93,91,85,"tadej-pogacar"],["I. Del Toro","MEX",2003,72,91,61,80,83,90,76,85,"isaac-del-toro"],["J. Almeida","POR",1998,70,88,55,80,77,86,64,76,"joao-almeida"],["B. Mcnulty","USA",1998,72,83,57,80,75,84,65,75,"brandon-mcnulty"],["B. Cosnefroy","FRA",1995,81,64,73,72,78,80,79,75,"benoit-cosnefroy"],["J. Vine","AUS",1995,75,73,58,84,72,82,67,74,"jay-vine"],["A. Yates","GBR",1992,65,89,53,74,78,85,61,74,"adam-yates"],["J. Narváez","ECU",1997,72,74,66,68,82,78,76,73,"jhonatan-narvaez"],["J. Christen","SUI",2004,75,66,66,69,75,78,74,79,"jan-christen"],["P. Sivakov","FRA",1997,68,81,53,75,72,82,61,72,"pavel-sivakov"],["F. Vermeersch","BEL",1999,83,52,73,72,69,76,86,71,"florian-vermeersch"],["A. Morgado","POR",2004,79,57,70,68,73,76,82,76,"antonio-morgado"],["K. Vermaerke","USA",2000,66,78,53,72,72,79,62,70,"kevin-vermaerke"],["T. Wellens","BEL",1991,68,74,54,73,70,78,76,70,"tim-wellens"],["N. Politt","GER",1994,81,53,70,71,68,75,85,70,"nils-politt"],["I. Arrieta","ESP",2002,61,82,50,69,73,80,57,73,"igor-arrieta-lizarraga"],["F. Großschartner","AUT",1993,65,78,51,73,70,79,59,69,"felix-grossschartner"],["M. Soler","ESP",1993,61,83,49,70,72,81,57,69,"marc-soler"],["J. S. Molano","COL",1994,78,47,85,60,63,71,75,67,"juan-sebastian-molano"],["M. Bjerg","DEN",1998,74,57,55,81,62,75,74,67,"mikkel-bjerg"],["A. Pericas","ESP",2006,61,77,47,68,68,75,58,73,"adria-pericas-capdevila"],["I. Oliveira","POR",1996,71,58,55,77,63,73,61,66,"ivo-emanuel-alves"],["R. Oliveira","POR",1996,70,59,67,61,72,70,66,66,"rui-oliveira"],["R. Herregodts","BEL",1998,70,56,54,74,62,72,60,65,"rune-herregodts"],["J. Johansen","DEN",1999,71,54,53,78,59,72,60,64,"julius-johansen"],["D. Novak","SLO",1995,60,73,45,68,64,74,54,64,"domen-novak"],["F. Baroncini","ITA",2000,72,51,62,64,63,70,68,64,"filippo-baroncini"],["P. Torres","ESP",2005,55,77,43,64,66,75,54,69,"pablo-torres-arias"],["L. Giaimi","ITA",2005,63,49,47,69,54,65,56,64,"luca-giaimi"],["V. S. Laengen","NOR",1989,57,59,40,63,55,66,49,57,"vegard-stake-laengen"]],
@@ -254,24 +254,24 @@ const ROSTERS=[
 // Euskaltel-Euskadi
 [["X. Berasategi","ESP",2000,68,63,63,62,75,71,62,67,"xabier-berasategi-garmendia"],["G. Martín","ESP",1996,67,64,62,61,75,71,65,67,"gotzon-martin"],["J. Agirre","ESP",1997,57,77,45,65,67,74,52,64,"jon-agirre"],["J. López","ESP",1998,61,70,49,65,66,73,55,64,"jordi-lopez-caravaca"],["J. Murguialday","ESP",2000,58,76,45,66,66,74,53,64,"jokin-murguialday-elorza"],["T. Juaristi","ESP",1995,61,72,45,69,64,74,54,64,"txomin-juaristi"],["A. van der Tuuk","NED",2001,69,54,54,74,58,71,58,63,"axel-van-der-tuuk"],["J. Lastra","ESP",1993,58,70,46,63,64,71,52,62,"jonathan-lastra"],["P. Hennequin","FRA",2002,71,41,80,52,54,65,60,62,"paul-hennequin"],["M. Bizkarra","ESP",1989,51,76,38,61,63,70,47,60,"mikel-bizkarra"],["X. Isasa","ESP",2001,61,57,56,56,68,65,56,60,"xabier-isasa-larranaga"],["L. Sutton","GBR",2002,59,56,55,54,67,64,54,61,"louis-sutton"],["H. Muñoz","ESP",2006,58,55,55,52,67,61,56,65,"hodei-munoz"],["I. Mintegi","ESP",2002,55,65,42,61,58,67,48,60,"iker-mintegi-claver"],["N. Alustiza","ESP",2003,57,53,52,51,64,61,51,59,"nicolas-alustiza"],["G. Ugarte","ESP",2005,54,49,49,48,61,57,51,59,"gari-ugarte"],["Y. Aguirre","ESP",2004,48,59,34,55,52,61,45,56,"yago-aguirre"],["S. Fernández","ESP",2003,48,59,34,55,52,61,42,55,"samuel-fernandez-heres"],["M. Martín","ESP",2006,49,49,46,44,59,55,48,57,"marco-martin-cuevas"],["D. Van Der Tuuk","POL",1999,54,43,38,60,46,57,44,50,"danny-van-der-tuuk"],["F. Orts","ESP",1995,48,56,34,53,50,59,41,50,"felipe-orts"],["K. Ormazabal","ESP",2006,49,44,44,43,56,52,46,55,"kepa-ormazabal"],["A. Ganzabal","ESP",2000,44,57,31,51,50,58,38,48,"ander-ganzabal-bilbao"],["A. Otegi","ESP",2006,48,43,40,45,49,52,44,53,"ander-otegi"],["A. Suarez","ESP",2003,48,43,40,45,49,52,41,49,"alain-suarez"],["U. Aznar","ESP",2002,51,38,35,57,43,53,41,48,"unai-aznar-vijuesca"]],
 // Team Flanders-Baloise
-[["T. Crabbe","BEL",2005,75,43,82,56,60,67,67,70,"tom-crabbe"],["M. Lanhove","BEL",2003,70,48,61,61,62,67,61,65,"milan-lanhove"],["W. Vanhoof","BEL",1999,72,45,65,60,61,67,66,62,"ward-vanhoof"],["H. Vandenabeele","BEL",2000,58,70,45,64,63,71,52,62,"henri-vandenabeele"],["V. van Hemelen","BEL",2000,71,48,60,62,61,67,66,62,"vincent-van-hemelen"],["S. Thonnon","BEL",2003,57,69,44,63,62,70,51,64,"senne-thonnon"],["M. Lambrecht","BEL",2003,71,45,64,59,61,66,65,64,"michiel-lambrecht"],["E. Maris","BEL",1999,61,58,57,55,70,65,58,61,"elias-maris"],["J. Hesters","BEL",1998,72,40,78,53,56,65,67,61,"jules-hesters"],["S. Deweirdt","BEL",2002,69,45,61,57,59,65,58,61,"siebe-deweirdt"],["L. van Hautegem","BEL",2003,65,44,59,54,57,62,58,60,"leander-van-hautegem"],["V. Vercouillie","BEL",2002,66,44,56,56,57,63,55,59,"victor-vercouillie"],["F. Geeraerts","BEL",2003,60,48,43,67,52,63,50,59,"ferre-geeraerts"],["D. Vandenstorme","BEL",2002,65,42,58,52,57,61,56,58,"dylan-vandenstorme"],["B. Deman","BEL",2002,65,40,56,55,55,61,54,57,"brem-deman"],["N. Vandenbranden","BEL",2002,60,43,43,65,49,61,49,56,"noah-vandenbranden"],["A. Torney","BEL",2003,53,48,50,47,60,57,48,55,"artuur-torney"],["N. Huysmans","BEL",2006,52,46,48,45,58,55,49,58,"nolan-huysmans"],["M. van den Haute","BEL",2005,60,38,52,49,52,57,53,57,"milan-van-den-haute"],["V. Claes","BEL",2007,50,45,49,42,60,51,52,58,"gen-team-flanders-baloise2"],["T. Dens","BEL",2000,61,32,52,48,49,55,49,50,"tuur-dens"],["L. Maes","BEL",2007,64,30,48,44,42,50,54,54,"gen-team-flanders-baloise1"]],
+[["T. Crabbe","BEL",2005,75,43,82,56,60,67,67,70,"tom-crabbe"],["M. Lanhove","BEL",2003,70,48,61,61,62,67,61,65,"milan-lanhove"],["W. Vanhoof","BEL",1999,72,45,65,60,61,67,66,62,"ward-vanhoof"],["H. Vandenabeele","BEL",2000,58,70,45,64,63,71,52,62,"henri-vandenabeele"],["V. van Hemelen","BEL",2000,71,48,60,62,61,67,66,62,"vincent-van-hemelen"],["S. Thonnon","BEL",2003,57,69,44,63,62,70,51,64,"senne-thonnon"],["M. Lambrecht","BEL",2003,71,45,64,59,61,66,65,64,"michiel-lambrecht"],["E. Maris","BEL",1999,61,58,57,55,70,65,58,61,"elias-maris"],["J. Hesters","BEL",1998,72,40,78,53,56,65,67,61,"jules-hesters"],["S. Deweirdt","BEL",2002,69,45,61,57,59,65,58,61,"siebe-deweirdt"],["L. van Hautegem","BEL",2003,65,44,59,54,57,62,58,60,"leander-van-hautegem"],["V. Vercouillie","BEL",2002,66,44,56,56,57,63,55,59,"victor-vercouillie"],["F. Geeraerts","BEL",2003,60,48,43,67,52,63,50,59,"ferre-geeraerts"],["D. Vandenstorme","BEL",2002,65,42,58,52,57,61,56,58,"dylan-vandenstorme"],["B. Deman","BEL",2002,65,40,56,55,55,61,54,57,"brem-deman"],["N. Vandenbranden","BEL",2002,60,43,43,65,49,61,49,56,"noah-vandenbranden"],["A. Torney","BEL",2003,53,48,50,47,60,57,48,55,"artuur-torney"],["N. Huysmans","BEL",2006,52,46,48,45,58,55,49,58,"nolan-huysmans"],["M. van den Haute","BEL",2005,60,38,52,49,52,57,53,57,"milan-van-den-haute"],["T. Dens","BEL",2000,61,32,52,48,49,55,49,50,"tuur-dens"]],
 // Team Novo Nordisk
-[["F. Ridolfo","ITA",2001,64,37,70,47,51,59,54,55,"filippo-ridolfo"],["U. Poli","ITA",1996,64,34,70,46,50,57,54,54,"umberto-poli"],["H. Armitt","GBR",2002,52,48,48,46,59,56,47,54,"hamish-armitt"],["A. Polga","ITA",1999,60,38,52,49,52,57,50,51,"antonio-polga"],["C. Wattelle","FRA",2003,61,31,67,43,45,54,50,53,"celestin-wattelle"],["B. Mcdonald","AUS",2003,50,46,45,44,58,54,45,53,"bailey-mcdonald"],["A. Peron","ITA",1988,61,30,67,43,45,54,50,50,"andrea-peron"],["S. Brand","GBR",1991,49,55,34,55,50,60,42,50,"sam-brand"],["A. Perracchione","ITA",2005,59,30,65,41,45,52,52,55,"alessandro-perracchione"],["H. Beadle","NZL",1998,59,31,65,41,46,53,49,49,"hamish-beadle"],["D. Mackie","AUS",2007,54,38,37,60,43,55,46,56,"donovan-mackie"],["D. Irvine","AUS",1999,55,38,39,59,44,55,44,48,"declan-irvine"],["D. Rinaldi","ITA",2004,54,36,65,34,43,48,51,51,"gen-team-novo-nordisk1"],["L. Dauge","FRA",1996,39,58,30,46,50,57,35,47,"lucas-dauge"],["D. Lozano","ESP",1988,44,53,32,49,47,56,37,47,"david-lozano-riba"],["L. Terrier","FRA",2006,48,43,40,45,49,52,44,53,"lucas-terrier"],["J. J. López","ESP",2006,48,43,40,45,49,52,44,53,"juan-jose-lopez-rodriguez"],["J. Colladon","ITA",2003,48,43,40,45,49,52,41,49,"jacopo-colladon"],["L. Posnic","FRA",2003,48,43,40,45,49,52,41,49,"louis-marie-posnic"],["Q. de Graeve","BEL",2000,48,40,43,42,53,50,42,46,"quinten-de-graeve"],["A. Muller","FRA",1998,47,42,42,41,54,50,41,46,"anton-muller"],["N. Smith","GBR",2000,56,30,62,38,41,50,45,46,"nathan-smith"]],
+[["F. Ridolfo","ITA",2001,64,37,70,47,51,59,54,55,"filippo-ridolfo"],["U. Poli","ITA",1996,64,34,70,46,50,57,54,54,"umberto-poli"],["H. Armitt","GBR",2002,52,48,48,46,59,56,47,54,"hamish-armitt"],["A. Polga","ITA",1999,60,38,52,49,52,57,50,51,"antonio-polga"],["C. Wattelle","FRA",2003,61,31,67,43,45,54,50,53,"celestin-wattelle"],["B. Mcdonald","AUS",2003,50,46,45,44,58,54,45,53,"bailey-mcdonald"],["A. Peron","ITA",1988,61,30,67,43,45,54,50,50,"andrea-peron"],["S. Brand","GBR",1991,49,55,34,55,50,60,42,50,"sam-brand"],["A. Perracchione","ITA",2005,59,30,65,41,45,52,52,55,"alessandro-perracchione"],["H. Beadle","NZL",1998,59,31,65,41,46,53,49,49,"hamish-beadle"],["D. Mackie","AUS",2007,54,38,37,60,43,55,46,56,"donovan-mackie"],["D. Irvine","AUS",1999,55,38,39,59,44,55,44,48,"declan-irvine"],["L. Dauge","FRA",1996,39,58,30,46,50,57,35,47,"lucas-dauge"],["D. Lozano","ESP",1988,44,53,32,49,47,56,37,47,"david-lozano-riba"],["L. Terrier","FRA",2006,48,43,40,45,49,52,44,53,"lucas-terrier"],["J. J. López","ESP",2006,48,43,40,45,49,52,44,53,"juan-jose-lopez-rodriguez"],["J. Colladon","ITA",2003,48,43,40,45,49,52,41,49,"jacopo-colladon"],["L. Posnic","FRA",2003,48,43,40,45,49,52,41,49,"louis-marie-posnic"],["Q. de Graeve","BEL",2000,48,40,43,42,53,50,42,46,"quinten-de-graeve"],["A. Muller","FRA",1998,47,42,42,41,54,50,41,46,"anton-muller"],["N. Smith","GBR",2000,56,30,62,38,41,50,45,46,"nathan-smith"]],
 // MBH Bank CSB Telecom Fort
 [["A. Fancellu","ITA",2000,64,79,51,70,71,78,58,69,"alessandro-fancellu"],["F. Masnada","ITA",1993,60,75,46,67,66,74,54,65,"fausto-masnada"],["A. Verre","ITA",2001,56,76,46,63,69,75,52,64,"alessandro-verre"],["M. Budziński","POL",1998,65,60,60,59,71,69,59,64,"marcin-budzinski"],["N. Buratti","ITA",2001,65,58,61,58,72,67,63,64,"nicolo-buratti"],["D. Persico","ITA",2001,74,44,82,55,58,67,63,63,"davide-persico"],["M. Dina","HUN",1996,60,70,46,67,63,72,53,63,"marton-dina"],["S. Zoccarato","ITA",1998,69,51,60,59,64,67,59,62,"samuele-zoccarato"],["C. Bagatin","ITA",2002,62,57,57,56,69,65,56,63,"christian-bagatin"],["B. Peák","HUN",1998,67,48,52,69,55,67,56,60,"barnabas-peak"],["C. Chesini","ITA",2004,58,56,54,53,67,63,56,62,"cesare-chesini"],["L. Masciarelli","ITA",2003,57,55,54,52,66,62,52,61,"lorenzo-masciarelli"],["F. D'aiuto","ITA",2002,66,45,59,55,60,63,56,60,"filippo-d-aiuto"],["L. Cretti","ITA",2001,64,48,56,54,61,63,55,58,"luca-cretti"],["Z. Takács","HUN",2006,65,41,58,53,57,61,58,63,"zsombor-tamas-takacs"],["L. Nespoli","ITA",2004,60,49,45,66,53,63,54,60,"lorenzo-nespoli"],["D. Bracalente","ITA",2004,55,52,51,49,64,59,53,59,"diego-bracalente"],["F. Gruszczyński","POL",2005,45,69,34,53,58,65,44,60,"filip-gruszczynski"],["M. Bozzola","ITA",2004,65,35,72,47,49,58,57,58,"mirko-bozzola"],["E. Cipollini","ITA",2005,52,47,48,46,59,56,50,57,"edoardo-cipollini"],["M. Ambrosini","ITA",2002,50,49,45,45,59,55,45,52,"matteo-ambrosini"],["M. Valent","HUN",2004,57,35,49,46,49,54,50,52,"mark-valent"],["B. Makrai","HUN",2006,56,34,48,45,48,53,49,54,"balint-makrai"]],
 // Modern Adventure Pro Cycling
-[["S. De Bod","RSA",1996,69,63,52,77,63,75,60,66,"stefan-de-bod"],["B. Oliver","NZL",1996,67,60,63,61,71,69,67,65,"ben-oliver"],["B. Munton","RSA",1998,58,76,43,68,65,74,52,64,"byron-munton"],["R. Pickrell","CAN",2001,66,55,64,57,70,66,60,63,"riley-pickrell"],["M. Stewart","GBR",1995,59,64,46,63,61,69,52,60,"mark-stewart"],["K. Haug","USA",2002,53,66,40,61,58,67,47,60,"kieran-haug"],["P. Wright","NZL",1998,60,53,55,53,65,62,54,58,"paul-wright"],["T. Stites","USA",1998,62,51,48,66,55,65,53,58,"tyler-stites"],["S. Mcgill","USA",1998,60,49,58,51,63,60,54,57,"scott-mcgill"],["S. Flórez","COL",2005,59,50,42,66,53,63,53,62,"samuel-florez-garces"],["H. Scala","USA",1997,61,46,46,65,51,62,51,55,"hugo-scala"],["I. López","USA",2003,46,68,34,54,57,65,42,57,"ian-lopez"],["S. Christian","USA",2002,55,48,52,48,60,58,49,56,"sean-christian"],["R. Carpenter","USA",1992,63,42,54,53,54,61,52,54,"robin-carpenter"],["L. Hayter","GBR",2001,51,60,37,59,54,63,44,54,"leo-hayter"],["E. Caudell","USA",2006,64,37,54,53,52,59,55,60,"ezra-caudell"],["C. Kessler","USA",2003,64,34,68,48,48,58,53,56,"cole-kessler"],["S. Boardman","USA",1995,55,41,39,60,46,56,45,50,"samuel-boardman"],["B. Mcdonald","USA",2002,59,30,66,40,44,52,48,50,"brody-mcdonald"],["H. Lasker","USA",2007,47,44,39,44,49,53,43,54,"harry-lasker"],["L. Towers","GBR",2003,45,45,41,40,55,51,40,49,"luca-towers"],["G. Boone","USA",2007,41,42,33,40,52,45,42,50,"gen-modern-adventure-pro-cycling1"]],
+[["S. De Bod","RSA",1996,69,63,52,77,63,75,60,66,"stefan-de-bod"],["B. Oliver","NZL",1996,67,60,63,61,71,69,67,65,"ben-oliver"],["B. Munton","RSA",1998,58,76,43,68,65,74,52,64,"byron-munton"],["R. Pickrell","CAN",2001,66,55,64,57,70,66,60,63,"riley-pickrell"],["M. Stewart","GBR",1995,59,64,46,63,61,69,52,60,"mark-stewart"],["K. Haug","USA",2002,53,66,40,61,58,67,47,60,"kieran-haug"],["P. Wright","NZL",1998,60,53,55,53,65,62,54,58,"paul-wright"],["T. Stites","USA",1998,62,51,48,66,55,65,53,58,"tyler-stites"],["S. Mcgill","USA",1998,60,49,58,51,63,60,54,57,"scott-mcgill"],["S. Flórez","COL",2005,59,50,42,66,53,63,53,62,"samuel-florez-garces"],["H. Scala","USA",1997,61,46,46,65,51,62,51,55,"hugo-scala"],["I. López","USA",2003,46,68,34,54,57,65,42,57,"ian-lopez"],["S. Christian","USA",2002,55,48,52,48,60,58,49,56,"sean-christian"],["R. Carpenter","USA",1992,63,42,54,53,54,61,52,54,"robin-carpenter"],["L. Hayter","GBR",2001,51,60,37,59,54,63,44,54,"leo-hayter"],["E. Caudell","USA",2006,64,37,54,53,52,59,55,60,"ezra-caudell"],["C. Kessler","USA",2003,64,34,68,48,48,58,53,56,"cole-kessler"],["S. Boardman","USA",1995,55,41,39,60,46,56,45,50,"samuel-boardman"],["B. Mcdonald","USA",2002,59,30,66,40,44,52,48,50,"brody-mcdonald"],["H. Lasker","USA",2007,47,44,39,44,49,53,43,54,"harry-lasker"],["L. Towers","GBR",2003,45,45,41,40,55,51,40,49,"luca-towers"]],
 // Solution Tech NIPPO Rali
 [["D. Rajović","SRB",1997,80,47,85,62,61,72,68,68,"dusan-rajovic"],["M. Fabbro","ITA",1995,59,81,46,67,70,77,55,67,"matteo-fabbro"],["K. Bonneu","BEL",1999,62,76,48,69,68,76,56,66,"kamiel-bonneu"],["K. Tsarenko","UKR",2000,63,72,50,68,66,75,56,66,"kyrylo-tsarenko"],["S. Umba","COL",2002,60,75,48,66,68,74,55,67,"santiago-umba"],["A. Balmer","SUI",2000,72,51,63,62,64,70,62,64,"alexandre-balmer"],["D. Pozzovivo","ITA",1982,57,75,43,65,66,73,52,63,"domenico-pozzovivo"],["V. Conti","ITA",1993,59,71,47,65,65,72,53,63,"valerio-conti"],["B. Granger","GBR",2000,70,47,62,58,62,66,60,61,"ben-granger"],["C. A. Samudio","PAN",1997,66,53,49,72,57,68,56,61,"carlos-samudio"],["T. Finkšt","SLO",1997,71,42,76,55,57,64,61,61,"tilen-finkst"],["F. Archibold","PAN",1997,66,53,49,73,57,68,56,61,"franklin-archibold"],["R. C. González","PAN",1994,65,51,50,70,57,67,55,60,"roberto-gonzalez"],["T. Nencini","ITA",2000,68,38,75,50,53,61,58,58,"tommaso-nencini"],["A. Viviani","ITA",1996,70,37,77,50,51,62,58,58,"attilio-viviani"],["Y. Arashiro","JPN",1984,65,45,56,55,58,63,55,57,"yukiya-arashiro"],["Đ. Đurić","SRB",2000,69,36,73,52,50,61,57,57,"dorde-duric"],["A. Iacchi","ITA",1999,52,63,40,58,56,65,46,56,"alessandro-iacchi"],["A. Piras","ITA",2002,56,51,53,50,63,59,51,57,"andrea-piras"],["M. Regnanti","ITA",2001,63,34,69,46,49,57,53,53,"matteo-regnanti"],["F. J. Meo","NZL",1997,54,48,50,47,60,57,48,53,"felix-james-meo"],["M. Gazzoli","ITA",1999,56,46,52,48,59,57,49,53,"michele-gazzoli"],["L. Verrando","ITA",2004,57,35,49,46,49,54,50,52,"luca-verrando"]]
 ];
 
 /* Transferts actés en cours de saison 2026 (source ProCyclingStats). Le coureur termine 2026
    avec son équipe de départ et n'endosse le maillot de sa nouvelle équipe qu'en 2027.
-   [nom, équipe de départ, nouvelle équipe, année de prise d'effet] */
+   [identifiant PCS, équipe de départ, nouvelle équipe, année de prise d'effet] */
 const TRANSFERTS=[
-["F. Jakobsen","Team Picnic PostNL","Visma Lease a Bike",2027],
-["V. Langellotti","Netcompany INEOS","XDS Astana Team",2027],
-["F. S. Kajamini","XDS Astana Team","MBH Bank CSB Telecom Fort",2027]
+["fabio-jakobsen","Team Picnic PostNL","Visma Lease a Bike",2027],
+["victor-langellotti","Netcompany INEOS","XDS Astana Team",2027],
+["florian-samuel-kajamini","XDS Astana Team","MBH Bank CSB Telecom Fort",2027]
 ];
 
 const RACES=[
@@ -316,14 +316,8 @@ const RACES=[
 ];
 
 
-/* Déduplication globale des homonymes (suffixe romain, idempotent) */
-(()=>{const seen=new Map(),ROM=["II","III","IV","V","VI","VII","VIII","IX","X"];
-ROSTERS.forEach(ros=>ros.forEach(b=>{
-  const base=b[0].replace(/ (II|III|IV|V|VI|VII|VIII|IX|X)$/,"");
-  const k=(seen.get(base)||0)+1;seen.set(base,k);
-  if(k>1)b[0]=base+" "+ROM[Math.min(k-2,ROM.length-1)];
-  else b[0]=base+(/ (II|III|IV|V|VI|VII|VIII|IX|X)$/.test(b[0])&&k===1?"":"");
-}));})();
+/* Les homonymes gardent leur nom réel : ils sont distingués par r.key (identifiant PCS),
+   plus r.id en interne. Aucun suffixe ajouté à l'affichage. */
 
 /* ================= UTILITAIRES ================= */
 const U={
@@ -469,10 +463,12 @@ function init(teamIdx,slot){
   G.riders.forEach((r,i)=>{r.id=i;r.sal=salary(r);});
   // Transferts déjà signés : contrat prolongé jusqu'à la prise d'effet, sinon le mercato
   // enverrait le coureur ailleurs avant que le transfert réel ne s'applique.
-  TRANSFERTS.forEach(([nom,from,,an])=>{
+  TRANSFERTS.forEach(([key,from,,an])=>{
     const fi=TEAMS.findIndex(t=>t[0]===from);
-    const r=G.riders.find(x=>x.n===nom&&x.t===fi);
-    if(r)r.ctr=Math.max(r.ctr,an-G.year+1);
+    const r=G.riders.find(x=>x.key===key&&x.t===fi);
+    // +2 et non +1 : endSeason décrémente ctr AVANT le mercato, donc un contrat à 2 ans
+    // expire dès la première intersaison et le coureur part avant la prise d'effet.
+    if(r)r.ctr=Math.max(r.ctr,an-G.year+2);
   });
   G.nextId=G.riders.length;reindex();
   TEAMS.forEach((t,i)=>teamPeaks(i));
@@ -752,8 +748,9 @@ function simOneDay(race,entries,playerMod,keyOf){
     if(playerMod&&playerMod.rider===r)s*=playerMod.mult;
     return {r,s};
   }).sort((a,b)=>b.s-a.s);
-  // coup d'éclat d'un outsider (rare sur les Monuments)
-  const pB=race[4]>=4?0.08:({p:0.10,c:0.16,v:0.18}[prof]||0.10);
+  // coup d'éclat d'un outsider (rare sur les Monuments).
+  // Aucun sur un contre-la-montre : chacun roule seul, il n'y a ni échappée ni peloton.
+  const pB=prof==="t"?0:(race[4]>=4?0.08:({p:0.10,s:0.10,c:0.16,v:0.18}[prof]||0.10));
   if(U.r()<pB&&rk.length>30){
     const size=1+Math.floor(Math.pow(U.r(),2)*3); // 1 à 3 coureurs
     const cands=rk.slice(8,50);
@@ -1411,31 +1408,16 @@ function resolveMarket(){
   });
   G.offers={};
 }
-function aiFill(){
-  // trié une seule fois : le vivier ne bouge que par retraits successifs
-  const pool=G.pool.filter(r=>r.t===-1).sort((a,b)=>b.moy-a.moy);
-  G.teams.forEach(t=>{
-    if(t.i===G.me)return;
-    const target=TEAMS[t.i][2]===0?26:22;
-    let need=target-teamRiders(t.i).length;
-    while(need>0){
-      const cand=pool.length?pool.shift():genNeo();
-      cand.t=t.i;cand.sal=askSalary(cand);cand.ctr=1+Math.floor(U.r()*3);
-      need--;
-    }
-  });
-  G.pool=[];
-}
 /* Transferts programmés : appliqués à l'ouverture de la saison de prise d'effet.
    Le mercato du joueur reste prioritaire — si le coureur a déjà quitté son équipe de départ
    (vendu, libéré, recruté par une autre équipe), le transfert est abandonné. */
 function applyTransferts(){
   const idx=n=>TEAMS.findIndex(t=>t[0]===n);
-  TRANSFERTS.forEach(([nom,from,to,an])=>{
+  TRANSFERTS.forEach(([key,from,to,an])=>{
     if(G.year!==an)return;
     const fi=idx(from),ti=idx(to);
     if(fi<0||ti<0)return;
-    const r=G.riders.find(x=>x.n===nom&&!x.retired&&x.t===fi);
+    const r=G.riders.find(x=>x.key===key&&!x.retired&&x.t===fi);
     if(!r)return;
     r.t=ti;r.ctr=Math.max(r.ctr||1,2);r.sal=salary(r);
     if(fi===G.me)notice(r.n+" rejoint "+to+" : transfert acté en 2026.");
@@ -1445,7 +1427,9 @@ function applyTransferts(){
 }
 function newSeason(){
   if(!G.mktResolved)resolveMarket();
-  aiFill();G.mktResolved=false;
+  // Pas de remplissage automatique : les effectifs restent ceux du mercato.
+  // Les coureurs non repris restent agents libres et alimentent le marché en saison.
+  G.pool=[];G.mktResolved=false;
   while(teamRiders(G.me).length<8){const r=genNeo();r.t=G.me;r.sal=askSalary(r);r.ctr=2;} // complément néo-pros
   G.year++;G.week=1;G.season++;
   applyTransferts();
@@ -2768,7 +2752,7 @@ window.TestAPI={
   get G(){return G},init,advance:advanceSync,formOf,baseScore,simOneDay,simStageRace,rid,reindex,
   invitedTeams,aiSelect,aiTactic,salary,masse,endSeason,newSeason,racesStarting,stageProfiles,
   initStageRace,simStage,finishStageRace,gcOf,jerseysOf,
-  askSalary,resolveMarket,aiFill,teamPeaks,standingsRows,
+  askSalary,resolveMarket,teamPeaks,standingsRows,
   aiPlanWeek,buildRoles,negoAnswer,saveGame,loadGame,hasSave,wipeSave,autoRoles,buildCtxRoles,rolesValid,
   autoSeason(){ // joue la saison entière, sélections auto pour le joueur
     let guard=0;
