@@ -476,6 +476,12 @@ function init(teamIdx,slot){
 const teamRiders=ti=>G.riders.filter(r=>r.t===ti&&!r.retired);
 const salary=r=>Math.max(100000,Math.round((25000*Math.max(0,r.moy-50)+(r.moy>72?Math.pow(r.moy-72,2.7)*1280:0))/1000)*1000);
 const masse=ti=>teamRiders(ti).reduce((s,r)=>s+(r.sal||salary(r)),0);
+/* Tailles d'effectif, calées sur les effectifs réels 2026 :
+   WorldTeams — médiane 30, moyenne 29,9 (18 équipes, de 28 à 32)
+   ProTeams   — médiane 25,5, moyenne 26,3 (16 équipes, de 20 à 33)
+   SQUAD_MIN est un plancher dur : aucune équipe ne descend en dessous. */
+const SQUAD_MIN=20;
+const squadTarget=ti=>TEAMS[ti][2]===0?30:26;
 // Plafond d'effectif : la valeur de jeu, relevée si l'effectif réel de départ la dépasse
 // (Cofidis aligne 33 coureurs sur la saison, au-dessus des 26 d'une ProTeam).
 const maxSquad=ti=>Math.max(TEAMS[ti][2]===0?30:26,(ROSTERS[ti]||[]).length);
@@ -1408,6 +1414,23 @@ function resolveMarket(){
   });
   G.offers={};
 }
+/* Recomposition des effectifs à l'intersaison. On puise d'abord dans les agents libres,
+   les meilleurs d'abord : ce sont de vrais coureurs déjà présents dans le jeu. On ne fait
+   éclore un néo-pro que si le vivier est épuisé. L'équipe du joueur n'est ramenée qu'au
+   plancher — son effectif reste sa responsabilité. */
+function restockTeams(){
+  const libres=G.riders.filter(r=>r.t===-1&&!r.retired).sort((a,b)=>b.moy-a.moy);
+  G.teams.forEach(t=>{
+    const cible=t.i===G.me?SQUAD_MIN:Math.min(squadTarget(t.i),maxSquad(t.i));
+    let need=cible-teamRiders(t.i).length;
+    while(need-->0){
+      const r=libres.length?libres.shift():genNeo();
+      r.t=t.i;r.sal=askSalary(r);r.ctr=1+Math.floor(U.r()*3);r.free=0;
+      if(r.p1<0||r.p2<0)autoPeaks(r);
+    }
+  });
+}
+
 /* Transferts programmés : appliqués à l'ouverture de la saison de prise d'effet.
    Le mercato du joueur reste prioritaire — si le coureur a déjà quitté son équipe de départ
    (vendu, libéré, recruté par une autre équipe), le transfert est abandonné. */
@@ -1427,10 +1450,7 @@ function applyTransferts(){
 }
 function newSeason(){
   if(!G.mktResolved)resolveMarket();
-  // Pas de remplissage automatique : les effectifs restent ceux du mercato.
-  // Les coureurs non repris restent agents libres et alimentent le marché en saison.
-  G.pool=[];G.mktResolved=false;
-  while(teamRiders(G.me).length<8){const r=genNeo();r.t=G.me;r.sal=askSalary(r);r.ctr=2;} // complément néo-pros
+  restockTeams();G.pool=[];G.mktResolved=false;
   G.year++;G.week=1;G.season++;
   applyTransferts();
   // agents libres : ils restent sur le marché et peuvent signer en cours de saison.
@@ -1876,12 +1896,15 @@ function freeAgentsAI(){
   const libres=freeAgents();
   if(!libres.length)return;
   G.teams.forEach(t=>{
-    if(t.i===G.me||U.r()>0.05)return;
-    if(teamRiders(t.i).length>=maxSquad(t.i))return;
-    const cap=t.budget*0.50;
-    // une équipe ne se renforce que sur un coureur qui améliore vraiment son effectif
+    if(t.i===G.me)return;
+    const n=teamRiders(t.i).length,urgence=n<SQUAD_MIN;
+    if(!urgence&&U.r()>0.05)return;
+    if(n>=maxSquad(t.i))return;
+    const cap=t.budget*(urgence?0.75:0.50);
+    // une équipe ne se renforce que sur un coureur qui améliore vraiment son effectif,
+    // sauf sous le plancher : là elle prend le meilleur coureur disponible.
     const faible=teamRiders(t.i).slice().sort((a,b)=>a.moy-b.moy)[0];
-    const mini=faible?faible.moy+2:60;
+    const mini=urgence?0:(faible?faible.moy+2:60);
     const i=libres.findIndex(r=>r.moy>=mini&&masse(t.i)+askSalary(r)<=cap);
     if(i<0)return;
     const r=libres[i],sal=askSalary(r);
@@ -2752,7 +2775,7 @@ window.TestAPI={
   get G(){return G},init,advance:advanceSync,formOf,baseScore,simOneDay,simStageRace,rid,reindex,
   invitedTeams,aiSelect,aiTactic,salary,masse,endSeason,newSeason,racesStarting,stageProfiles,
   initStageRace,simStage,finishStageRace,gcOf,jerseysOf,
-  askSalary,resolveMarket,teamPeaks,standingsRows,
+  askSalary,resolveMarket,restockTeams,teamPeaks,standingsRows,
   aiPlanWeek,buildRoles,negoAnswer,saveGame,loadGame,hasSave,wipeSave,autoRoles,buildCtxRoles,rolesValid,
   autoSeason(){ // joue la saison entière, sélections auto pour le joueur
     let guard=0;
