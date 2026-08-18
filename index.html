@@ -500,7 +500,7 @@ const BLOCS={
   pla:[[0,1],[1,5],[4,6],[5,7],[3,6],[1,2],[0,4]]
 };
 const blocList=r=>BLOCS[r.prof]||BLOCS.pla;
-function autoPeaks(r){const pg=U.pick(blocList(r));r.p1=pg[0];r.p2=pg[1];}
+function autoPeaks(r){const pg=U.pick(blocList(r));r.p1=pg[0];r.p2=pg[1];r.p3=-1;}
 /* Noyau souhaité par bloc : un pool en forme, pas tout l'effectif.
    Le reste de la course se couvre avec des coureurs en montée ou en descente. */
 function blocNeeds(){
@@ -517,8 +517,7 @@ function blocNeeds(){
 function blocCover(){
   const cov=Array(PERIODS.length).fill(0);
   teamRiders(G.me).forEach(r=>{
-    if(r.p1>=0)cov[r.p1]++;
-    if(r.p2>=0&&r.p2!==r.p1)cov[r.p2]++;
+    new Set(blocsOf(r)).forEach(p=>cov[p]++);
   });
   return cov;
 }
@@ -540,10 +539,22 @@ function assignBlocs(list){
       const s=cador?(-i*12+d*0.4-occupe*45+U.r()):(d*10-i*1.5+U.r()*2);
       if(s>bs){bs=s;best=pg;}
     });
-    r.p1=best[0];r.p2=best[1];
+    r.p1=best[0];r.p2=best[1];r.p3=-1;
     cov[best[0]]++;cov[best[1]]++;
     if(cador){ldr[best[0]]++;ldr[best[1]]++;}
   });
+  // les blocs encore dégarnis se comblent avec un troisième pic donné aux équipiers,
+  // qui y perdent un peu de sommet mais assurent la présence
+  let guard=0;
+  while(guard++<40){
+    let p=-1;
+    for(let i=0;i<PERIODS.length;i++)if(need[i]>0&&cov[i]<need[i]){p=i;break;}
+    if(p<0)break;
+    const cand=tri.filter(r=>blocsOf(r).length===2&&!blocsOf(r).includes(p)&&r.moy<82)
+      .sort((a,b)=>a.moy-b.moy)[0];
+    if(!cand)break;
+    cand.p3=p;cov[p]++;
+  }
 }
 function autoProgram(){
   teamRiders(G.me).forEach(r=>{r.p1=-1;r.p2=-1;});
@@ -579,17 +590,21 @@ function setLeader(i,r){
 /* Forme en plateau : au sommet pendant tout le bloc visé — un flandrien tient
    des Flandres à Roubaix. Montée progressive avant, chute rapide après. */
 function formOf(r,w){
-  let b=0;
-  for(const p of [r.p1,r.p2]){
+  let b=0,n=0;
+  for(const p of [r.p1,r.p2,r.p3]){
     if(p==null||p<0||!PERIODS[p])continue;
+    n++;
     const a=PERIODS[p][1],z=PERIODS[p][2];
     const v=w>=a&&w<=z?1
       :w<a?Math.exp(-((a-w)*(a-w))/26)
       :Math.exp(-((w-z)*(w-z))/9);
     if(v>b)b=v;
   }
-  return 0.94+0.14*b; // 0.94 → 1.08
+  // on ne culmine pas trois fois dans une saison : viser un troisième bloc
+  // rabote le sommet. Spécialiser ou couvrir, il faut choisir.
+  return 0.94+(n>=3?0.115:0.14)*b;
 }
+const blocsOf=r=>[r.p1,r.p2,r.p3].filter(p=>p!=null&&p>=0&&PERIODS[p]);
 const fatMult=f=>1-Math.max(0,f-30)*0.004;
 function recoverWeek(){
   G.riders.forEach(r=>{
@@ -1052,6 +1067,7 @@ function migrateTargets(){
     if(r.c1!=null)delete r.c1;
     if(r.c2!=null)delete r.c2;
     if(r.prog)delete r.prog;
+    if(r.p3==null||r.p3>=nb)r.p3=-1;
     if(r.p1==null||r.p1>=nb||r.p2==null||r.p2>=nb||(r.p1<0&&r.p2<0))autoPeaks(r);
   });
 }
@@ -1693,22 +1709,32 @@ function renderDraft(){
   <button class="btn sm" id="dgo">Lancer la saison ▸</button></div>
   ${manque.length?`<p class="stat" style="color:var(--warn);margin-top:6px">Blocs légers : ${manque.join(" · ")}</p>`:""}</div>
   <div class="card"><h3>Blocs de forme</h3>
-  <p class="stat">Deux blocs maximum par coureur.</p>
-  ${rs.map(r=>`<div style="padding:6px 0;border-bottom:1px solid var(--panel2)">
+  <p class="stat">Deux blocs pour un spécialiste, trois pour couvrir davantage — mais le sommet est alors un peu plus bas.</p>
+  ${rs.map(r=>{
+    const bs=blocsOf(r);
+    return `<div style="padding:6px 0;border-bottom:1px solid var(--panel2)">
   <div style="display:flex;gap:8px;align-items:center;min-width:0">
   <span class="nm lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
+  ${bs.length>=3?'<span class="tag" style="font-size:.6rem">sommet 82 %</span>':""}
   <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span><b class="${col(r.moy)}">${r.moy}</b></div>
-  <div class="pkchips">${PERIODS.map((p,i)=>`<span class="pkc ${r.p1===i||r.p2===i?"on":""}" data-r="${r.id}" data-p="${i}">${PCHIP[i]}</span>`).join("")}</div>
-  </div>`).join("")}</div>`;
+  <div class="pkchips">${PERIODS.map((p,i)=>`<span class="pkc ${bs.includes(i)?"on":""}" data-r="${r.id}" data-p="${i}">${PCHIP[i]}</span>`).join("")}</div>
+  </div>`}).join("")}</div>`;
 
   document.querySelectorAll(".pkc").forEach(c=>c.onclick=()=>{
     const r=rid(+c.dataset.r),p=+c.dataset.p;
-    if(r.p1===p)r.p1=-1;
-    else if(r.p2===p)r.p2=-1;
-    else if(r.p1<0)r.p1=p;
-    else if(r.p2<0)r.p2=p;
-    else{notice("Deux blocs au maximum : décochez-en un d'abord.");return;}
-    if(r.p1>=0&&r.p2>=0&&r.p1>r.p2){const t=r.p1;r.p1=r.p2;r.p2=t;}
+    const ps=[r.p1==null?-1:r.p1,r.p2==null?-1:r.p2,r.p3==null?-1:r.p3];
+    const k=ps.indexOf(p);
+    if(k>=0)ps[k]=-1;
+    else{
+      const libre=ps.indexOf(-1);
+      if(libre<0){notice("Trois blocs au maximum : décochez-en un d'abord.");return;}
+      ps[libre]=p;
+    }
+    const act=ps.filter(x=>x>=0).sort((a,b)=>a-b);
+    r.p1=act.length>0?act[0]:-1;
+    r.p2=act.length>1?act[1]:-1;
+    r.p3=act.length>2?act[2]:-1;
+    if(act.length===3)notice("Trois blocs : présent plus souvent, mais sommet plus bas.");
     renderDraft();saveGame();
   });
   $("#dauto").onclick=()=>{autoProgram();notice("Blocs répartis sur la saison.");renderDraft();saveGame();};
