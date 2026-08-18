@@ -1,0 +1,963 @@
+equipe,division,prenom,nom,nat,age,points_ranking,rang_pcs,points_carriere,specialite,slug
+alpecin-premier-tech-2026,WorldTeam,Jasper,PHILIPSEN,BE,28,1924,6,12124,Sprint,jasper-philipsen
+alpecin-premier-tech-2026,WorldTeam,Mathieu,VAN DER POEL,NL,31,1500,11,12443,Oneday,mathieu-van-der-poel
+alpecin-premier-tech-2026,WorldTeam,Tibor,DEL GROSSO,NL,23,378,157,1005,Hills,tibor-del-grosso
+alpecin-premier-tech-2026,WorldTeam,Gerben,THIJSSEN,BE,28,327,185,2645,Sprint,gerben-thijssen
+alpecin-premier-tech-2026,WorldTeam,Emiel,VERSTRYNGE,BE,24,281,235,419,Climber,emiel-verstrynge
+alpecin-premier-tech-2026,WorldTeam,Ramses,DEBRUYNE,BE,23,258,263,359,Climber,ramses-debruyne
+alpecin-premier-tech-2026,WorldTeam,Francesco,BUSATTO,IT,23,214,309,827,Hills,francesco-busatto
+alpecin-premier-tech-2026,WorldTeam,Jensen,PLOWRIGHT,AU,26,206,328,627,Sprint,jensen-plowright
+alpecin-premier-tech-2026,WorldTeam,Henri,UHLIG,DE,25,192,353,465,Hills,henri-uhlig
+alpecin-premier-tech-2026,WorldTeam,Edward,PLANCKAERT,BE,31,141,443,1044,Oneday,edward-planckaert
+alpecin-premier-tech-2026,WorldTeam,Gal,GLIVAR,SI,24,138,451,377,Hills,gal-glivar
+alpecin-premier-tech-2026,WorldTeam,Simon,DEHAIRS,BE,25,120,499,603,Sprint,simon-dehairs
+alpecin-premier-tech-2026,WorldTeam,Senna,REMIJN,NL,20,109,533,126,Oneday,senna-remijn
+alpecin-premier-tech-2026,WorldTeam,Luca,VERGALLITO,IT,28,86,621,414,GC,luca-vergallito
+alpecin-premier-tech-2026,WorldTeam,Jonas,RICKAERT,BE,32,82,638,1191,Oneday,jonas-rickaert
+alpecin-premier-tech-2026,WorldTeam,Jonas,GEENS,BE,27,81,644,207,GC,jonas-geens
+alpecin-premier-tech-2026,WorldTeam,Sente,SENTJENS,BE,20,72,686,190,Sprint,sente-sentjens
+alpecin-premier-tech-2026,WorldTeam,Silvan,DILLIER,CH,36,70,691,2939,Oneday,silvan-dillier
+alpecin-premier-tech-2026,WorldTeam,Tim,MARSMAN,NL,25,65,724,232,Sprint,tim-marsman
+alpecin-premier-tech-2026,WorldTeam,Tobias,BAYER,AT,26,65,723,510,Oneday,tobias-bayer
+alpecin-premier-tech-2026,WorldTeam,Florian,SÉNÉCHAL,FR,33,59,764,4287,Oneday,florian-senechal
+alpecin-premier-tech-2026,WorldTeam,Michael,GOGL,AT,32,58,774,1199,Oneday,michael-gogl
+alpecin-premier-tech-2026,WorldTeam,Hugo,HOULE,CA,35,42,898,2342,GC,hugo-houle
+alpecin-premier-tech-2026,WorldTeam,Johan,PRICE-PEJTERSEN,DK,27,37,960,320,TT,johan-price-pejtersen
+alpecin-premier-tech-2026,WorldTeam,Maurice,BALLERSTEDT,DE,25,23,1182,303,Oneday,maurice-ballerstedt
+alpecin-premier-tech-2026,WorldTeam,Oscar,RIESEBEEK,NL,33,20,1240,1204,Oneday,oscar-riesebeek
+alpecin-premier-tech-2026,WorldTeam,Kaden,GROVES,AU,27,14,1486,3384,Hills,kaden-groves
+alpecin-premier-tech-2026,WorldTeam,Aaron,DOCKX,BE,22,14,1499,80,Climber,aaron-dockx
+alpecin-premier-tech-2026,WorldTeam,Lennert,BELMANS,BE,24,10,1656,12,Oneday,lennert-belmans
+alpecin-premier-tech-2026,WorldTeam,Lindsay,DE VYLDER,BE,31,,,176,Oneday,lindsay-de-vylder
+bahrain-victorious-2026,WorldTeam,Lenny,MARTINEZ,FR,23,1556,9,3868,Climber,lenny-martinez
+bahrain-victorious-2026,WorldTeam,Pello,BILBAO,ES,36,665,68,9172,Climber,pello-bilbao
+bahrain-victorious-2026,WorldTeam,Afonso,EULÁLIO,PT,24,584,81,808,Climber,afonso-eulalio
+bahrain-victorious-2026,WorldTeam,Antonio,TIBERI,IT,25,539,96,2605,GC,antonio-tiberi
+bahrain-victorious-2026,WorldTeam,Santiago,BUITRAGO,CO,26,513,98,3472,Climber,santiago-buitrago-sanchez
+bahrain-victorious-2026,WorldTeam,Edoardo,ZAMBANINI,IT,25,473,114,1535,Hills,edoardo-zambanini
+bahrain-victorious-2026,WorldTeam,Alec,SEGAERT,BE,23,407,145,1404,TT,alec-segaert
+bahrain-victorious-2026,WorldTeam,Matej,MOHORIČ,SI,31,331,182,7217,Oneday,matej-mohoric
+bahrain-victorious-2026,WorldTeam,Damiano,CARUSO,IT,38,303,206,7929,GC,damiano-caruso
+bahrain-victorious-2026,WorldTeam,Pau,MIQUEL,ES,25,300,212,967,Hills,pau-miquel-delgado
+bahrain-victorious-2026,WorldTeam,Jakob,OMRZEL,SI,20,294,219,459,GC,jakob-omrzel
+bahrain-victorious-2026,WorldTeam,Phil,BAUHAUS,DE,32,178,376,3842,Sprint,phil-bauhaus
+bahrain-victorious-2026,WorldTeam,Žak,ERŽEN,SI,20,157,410,216,Oneday,zak-erzen
+bahrain-victorious-2026,WorldTeam,Matevž,GOVEKAR,SI,26,127,476,657,Hills,matevz-govekar
+bahrain-victorious-2026,WorldTeam,Attila,VALTER,HU,28,116,515,2366,Climber,attila-valter
+bahrain-victorious-2026,WorldTeam,Vlad,VAN MECHELEN,BE,22,114,523,261,Sprint,vlad-van-mechelen
+bahrain-victorious-2026,WorldTeam,Alessandro,BORGO,IT,21,100,561,143,Sprint,alessandro-borgo
+bahrain-victorious-2026,WorldTeam,Daniel,SKERL,IT,23,92,591,182,Sprint,daniel-skerl
+bahrain-victorious-2026,WorldTeam,Robert,STANNARD,AU,27,83,633,567,Hills,robert-stannard
+bahrain-victorious-2026,WorldTeam,Fran,MIHOLJEVIĆ,HR,24,65,726,354,GC,fran-miholjevic
+bahrain-victorious-2026,WorldTeam,Alberto,BRUTTOMESSO,IT,22,65,727,205,Sprint,alberto-bruttomesso
+bahrain-victorious-2026,WorldTeam,Roman,ERMAKOV,SI,21,62,749,124,Oneday,roman-ermakov
+bahrain-victorious-2026,WorldTeam,Mathijs,PAASSCHENS,NL,30,60,755,468,GC,mathijs-paasschens
+bahrain-victorious-2026,WorldTeam,Kamil,GRADEK,PL,35,55,797,1102,TT,kamil-gradek
+bahrain-victorious-2026,WorldTeam,Rainer,KEPPLINGER,AT,28,22,1209,406,GC,rainer-kepplinger
+bahrain-victorious-2026,WorldTeam,Oliver,STOCKWELL,GB,24,20,1255,69,Hills,oliver-stockwell
+bahrain-victorious-2026,WorldTeam,Nikias,ARNDT,DE,34,15,1411,3151,Hills,nikias-arndt
+bahrain-victorious-2026,WorldTeam,Max,VAN DER MEULEN,NL,22,5,2021,55,Hills,max-van-der-meulen
+decathlon-cma-cgm-team-2026,WorldTeam,Paul,SEIXAS,FR,19,2136,5,2381,Climber,paul-seixas
+decathlon-cma-cgm-team-2026,WorldTeam,Felix,GALL,AT,28,1339,16,4120,Climber,felix-gall
+decathlon-cma-cgm-team-2026,WorldTeam,Tobias Lund,ANDRESEN,DK,23,1231,20,2656,Oneday,tobias-lund-andresen
+decathlon-cma-cgm-team-2026,WorldTeam,Olav,KOOIJ,NL,24,1013,29,5538,Sprint,olav-kooij
+decathlon-cma-cgm-team-2026,WorldTeam,Matthew,RICCITELLO,US,24,893,41,1753,Climber,matthew-riccitello
+decathlon-cma-cgm-team-2026,WorldTeam,Paul,LAPEIRA,FR,26,715,63,1784,Oneday,paul-lapeira
+decathlon-cma-cgm-team-2026,WorldTeam,Léo,BISIAUX,FR,21,366,163,601,Climber,leo-bisiaux
+decathlon-cma-cgm-team-2026,WorldTeam,Noa,ISIDORE,FR,21,355,169,555,Hills,noa-isidore
+decathlon-cma-cgm-team-2026,WorldTeam,Gregor,MÜHLBERGER,AT,32,308,202,2560,GC,gregor-muhlberger
+decathlon-cma-cgm-team-2026,WorldTeam,Nicolas,PRODHOMME,FR,29,300,211,1565,GC,nicolas-prodhomme
+decathlon-cma-cgm-team-2026,WorldTeam,Pierre,GAUTHERAT,FR,23,291,225,1060,Oneday,pierre-gautherat
+decathlon-cma-cgm-team-2026,WorldTeam,Tiesj,BENOOT,BE,32,285,229,8285,Oneday,tiesj-benoot
+decathlon-cma-cgm-team-2026,WorldTeam,Antoine,L'HOTE,FR,21,282,234,387,GC,antoine-l-hote
+decathlon-cma-cgm-team-2026,WorldTeam,Stan,DEWULF,BE,28,272,246,1768,Oneday,stan-dewulf
+decathlon-cma-cgm-team-2026,WorldTeam,Aurélien,PARET-PEINTRE,FR,30,255,266,3057,GC,aurelien-paret-peintre
+decathlon-cma-cgm-team-2026,WorldTeam,Tord,GUDMESTAD,NO,25,238,281,620,Sprint,tord-gudmestad
+decathlon-cma-cgm-team-2026,WorldTeam,Daan,HOOLE,NL,27,203,335,910,TT,daan-hoole
+decathlon-cma-cgm-team-2026,WorldTeam,Cees,BOL,NL,31,185,363,2567,Sprint,cees-bol
+decathlon-cma-cgm-team-2026,WorldTeam,Oliver,NAESEN,BE,35,167,395,6452,Oneday,oliver-naesen
+decathlon-cma-cgm-team-2026,WorldTeam,Stefan,BISSEGGER,CH,27,151,420,2048,TT,stefan-bissegger
+decathlon-cma-cgm-team-2026,WorldTeam,Rasmus Søjberg,PEDERSEN,DK,24,146,433,392,Sprint,rasmus-sojbergpedersen
+decathlon-cma-cgm-team-2026,WorldTeam,Jordan,LABROSSE,FR,23,119,504,360,Hills,jordan-labrosse
+decathlon-cma-cgm-team-2026,WorldTeam,Sander,DE PESTEL,BE,27,84,629,372,Oneday,sander-de-pestel
+decathlon-cma-cgm-team-2026,WorldTeam,Oscar,CHAMBERLAIN,AU,21,78,660,109,TT,oscar-chamberlain
+decathlon-cma-cgm-team-2026,WorldTeam,Callum,SCOTSON,AU,30,77,662,671,GC,callum-scotson
+decathlon-cma-cgm-team-2026,WorldTeam,Gianluca,POLLEFLIET,BE,24,58,780,203,Sprint,gianluca-pollefliet
+decathlon-cma-cgm-team-2026,WorldTeam,Johannes,STAUNE-MITTET,NO,24,55,801,621,GC,johannes-staune-mittet
+decathlon-cma-cgm-team-2026,WorldTeam,Robbe,GHYS,BE,29,10,1626,448,Oneday,robbe-ghys
+decathlon-cma-cgm-team-2026,WorldTeam,Émilien,JACQUELIN,FR,31,,,0,,emilien-jacquelin
+ef-education-easypost-2026,WorldTeam,Richard,CARAPAZ,EC,33,1351,15,9521,Climber,richard-carapaz
+ef-education-easypost-2026,WorldTeam,Alex,BAUDIN,FR,25,739,60,1674,Climber,alex-baudin
+ef-education-easypost-2026,WorldTeam,Ben,HEALY,IE,25,468,119,3172,Climber,ben-healy
+ef-education-easypost-2026,WorldTeam,Markel,BELOKI,ES,21,397,153,436,GC,markel-beloki
+ef-education-easypost-2026,WorldTeam,Michael,VALGREN,DK,34,354,170,4997,Oneday,michael-valgren-andersen
+ef-education-easypost-2026,WorldTeam,Georg,STEINHAUSER,DE,24,313,196,995,Climber,georg-steinhauser
+ef-education-easypost-2026,WorldTeam,Mikkel Frølich,HONORÉ,DK,29,296,216,2202,Oneday,mikkel-honore
+ef-education-easypost-2026,WorldTeam,Noah,HOBBS,GB,22,279,237,443,Sprint,noah-hobbs
+ef-education-easypost-2026,WorldTeam,Luke,LAMPERTI,US,23,265,252,1241,Sprint,luke-lamperti
+ef-education-easypost-2026,WorldTeam,Madis,MIHKELS,EE,23,242,274,1191,Oneday,madis-mihkels
+ef-education-easypost-2026,WorldTeam,Lukas,NERURKAR,GB,22,238,282,729,Hills,lukas-nerurkar
+ef-education-easypost-2026,WorldTeam,Sean,QUINN,US,26,213,311,670,GC,sean-quinn
+ef-education-easypost-2026,WorldTeam,Jefferson Alexander,CEPEDA,EC,28,189,355,1216,GC,jefferson-alexander-cepeda
+ef-education-easypost-2026,WorldTeam,Marijn,VAN DEN BERG,NL,27,186,359,2179,Hills,marijn-van-den-berg
+ef-education-easypost-2026,WorldTeam,Harry,SWEENY,AU,28,182,372,777,GC,harry-sweeny
+ef-education-easypost-2026,WorldTeam,Neilson,POWLESS,US,29,177,378,4945,Oneday,neilson-powless
+ef-education-easypost-2026,WorldTeam,Vincenzo,ALBANESE,IT,29,168,394,2515,Hills,vincenzo-albanese
+ef-education-easypost-2026,WorldTeam,Michael,LEONARD,CA,22,122,492,228,TT,michael-leonard1
+ef-education-easypost-2026,WorldTeam,James,SHAW,GB,30,118,508,991,GC,james-shaw
+ef-education-easypost-2026,WorldTeam,Jardi Christiaan,VAN DER LEE,NL,25,115,520,196,GC,jardi-christiaan-van-der-lee
+ef-education-easypost-2026,WorldTeam,Kasper,ASGREEN,DK,31,105,540,4182,TT,kasper-asgreen
+ef-education-easypost-2026,WorldTeam,Max,WALKER,GB,25,67,709,289,TT,max-walker
+ef-education-easypost-2026,WorldTeam,Darren,RAFFERTY,IE,23,63,743,362,TT,darren-rafferty
+ef-education-easypost-2026,WorldTeam,Juan Felipe,RODRIGUEZ,CO,22,59,772,98,GC,juan-felipe-rodriguez
+ef-education-easypost-2026,WorldTeam,Archie,RYAN,IE,24,47,858,773,Climber,archie-ryan
+ef-education-easypost-2026,WorldTeam,Colby,SIMMONS,US,22,45,876,150,Sprint,colby-simmons
+ef-education-easypost-2026,WorldTeam,Alastair,MACKELLAR,AU,24,42,901,120,TT,alastair-mackellar
+ef-education-easypost-2026,WorldTeam,Matthias,SCHWARZBACHER,SK,20,28,1096,142,TT,matthias-schwarzbacher
+ef-education-easypost-2026,WorldTeam,Samuele,BATTISTELLA,IT,27,19,1286,1423,Hills,samuele-battistella
+ef-education-easypost-2026,WorldTeam,Filippo,AGOSTINACCHIO,IT,23,13,1527,36,Hills,filippo-agostinacchio
+ef-education-easypost-2026,WorldTeam,Mattia,AGOSTINACCHIO,IT,18,,,0,,mattia-agostinacchio
+groupama-fdj-united-2026,WorldTeam,Romain,GRÉGOIRE,FR,23,1174,22,3626,Oneday,romain-gregoire
+groupama-fdj-united-2026,WorldTeam,Paul,PENHOËT,FR,24,468,120,1984,Oneday,paul-penhoet
+groupama-fdj-united-2026,WorldTeam,Thibaud,GRUEL,FR,22,454,125,961,Hills,thibaud-gruel
+groupama-fdj-united-2026,WorldTeam,Ewen,COSTIOU,FR,23,417,140,1147,GC,ewen-costiou
+groupama-fdj-united-2026,WorldTeam,Axel,HUENS,FR,24,309,200,484,Oneday,axel-huens
+groupama-fdj-united-2026,WorldTeam,Clément,BRAZ AFONSO,FR,26,304,205,577,Climber,clement-braz-afonso
+groupama-fdj-united-2026,WorldTeam,Guillaume,MARTIN,FR,33,276,242,7844,Climber,guillaume-martin
+groupama-fdj-united-2026,WorldTeam,Rémi,CAVAGNA,FR,31,219,302,2841,TT,remi-cavagna
+groupama-fdj-united-2026,WorldTeam,Valentin,MADOUAS,FR,30,215,306,5140,Oneday,valentin-madouas
+groupama-fdj-united-2026,WorldTeam,Rudy,MOLARD,FR,36,210,318,3787,Climber,rudy-molard
+groupama-fdj-united-2026,WorldTeam,Clément,BERTHET,FR,29,207,326,1548,Climber,clement-berthet
+groupama-fdj-united-2026,WorldTeam,David,GAUDU,FR,29,206,327,6428,Climber,david-gaudu
+groupama-fdj-united-2026,WorldTeam,Clément,RUSSO,FR,31,195,347,1134,Oneday,clement-russo
+groupama-fdj-united-2026,WorldTeam,Brieuc,ROLLAND,FR,23,182,375,385,Climber,brieuc-rolland
+groupama-fdj-united-2026,WorldTeam,Maxime,DECOMBLE,FR,21,173,387,227,TT,maxime-decomble
+groupama-fdj-united-2026,WorldTeam,Lorenzo,GERMANI,IT,24,123,486,371,GC,lorenzo-germani
+groupama-fdj-united-2026,WorldTeam,Johan,JACOBS,CH,29,119,502,475,Oneday,johan-jacobs
+groupama-fdj-united-2026,WorldTeam,Josh,KENCH,NZ,25,100,560,244,GC,josh-kench
+groupama-fdj-united-2026,WorldTeam,Cyril,BARTHE,FR,30,100,559,769,Hills,cyril-barthe
+groupama-fdj-united-2026,WorldTeam,Bastien,TRONCHON,FR,24,99,563,855,Oneday,bastien-tronchon
+groupama-fdj-united-2026,WorldTeam,Tom,DONNENWIRTH,FR,28,98,564,373,Hills,tom-donnenwirth
+groupama-fdj-united-2026,WorldTeam,Quentin,PACHER,FR,34,97,565,2605,Hills,quentin-pacher
+groupama-fdj-united-2026,WorldTeam,Rémy,ROCHAS,FR,30,86,620,1250,GC,remy-rochas
+groupama-fdj-united-2026,WorldTeam,Kevin,GENIETS,LU,29,63,740,1210,Oneday,kevin-geniets
+groupama-fdj-united-2026,WorldTeam,Enzo,PALENI,FR,24,59,769,292,GC,enzo-paleni
+groupama-fdj-united-2026,WorldTeam,Lewis,BOWER,NZ,21,38,952,98,Sprint,lewis-bower
+groupama-fdj-united-2026,WorldTeam,Matteo,MILAN,IT,23,33,1007,64,Sprint,matteo-milan
+groupama-fdj-united-2026,WorldTeam,Olivier,LE GAC,FR,32,6,1911,1180,Oneday,olivier-le-gac
+groupama-fdj-united-2026,WorldTeam,Titouan,FONTAINE,FR,21,,,0,TT,titouan-fontaine
+lidl-trek-2026,WorldTeam,Mattias,SKJELMOSE,DK,25,1546,10,6230,Climber,mattias-skjelmose-jensen
+lidl-trek-2026,WorldTeam,Mads,PEDERSEN,DK,30,1242,19,11406,Oneday,mads-pedersen
+lidl-trek-2026,WorldTeam,Juan,AYUSO,ES,23,1220,21,5535,Climber,juan-ayuso-pesquera
+lidl-trek-2026,WorldTeam,Giulio,CICCONE,IT,31,1008,31,6373,Climber,giulio-ciccone
+lidl-trek-2026,WorldTeam,Jonathan,MILAN,IT,25,828,52,4080,Sprint,jonathan-milan
+lidl-trek-2026,WorldTeam,Quinn,SIMMONS,US,25,630,70,1996,Hills,quinn-simmons
+lidl-trek-2026,WorldTeam,Derek,GEE-WEST,CA,29,597,73,2515,Climber,derek-gee
+lidl-trek-2026,WorldTeam,Toms,SKUJIŅŠ,LV,35,461,122,4896,Oneday,toms-skujins
+lidl-trek-2026,WorldTeam,Mathias,VACEK,CZ,24,430,134,1918,TT,mathias-vacek
+lidl-trek-2026,WorldTeam,Jakob,SÖDERQVIST,SE,23,389,154,797,TT,jakob-soderqvist
+lidl-trek-2026,WorldTeam,Albert,WITHEN PHILIPSEN,DK,19,349,174,595,Oneday,albert-withen-philipsen
+lidl-trek-2026,WorldTeam,Matteo,SOBRERO,IT,29,310,197,1756,TT,matteo-sobrero
+lidl-trek-2026,WorldTeam,Andrea,BAGIOLI,IT,27,287,227,2762,Oneday,andrea-bagioli
+lidl-trek-2026,WorldTeam,Søren,KRAGH ANDERSEN,DK,32,275,244,4630,TT,soren-kragh-andersen
+lidl-trek-2026,WorldTeam,Max,WALSCHEID,DE,33,266,251,3429,Sprint,max-walscheid
+lidl-trek-2026,WorldTeam,Carlos,VERONA,ES,33,241,276,2687,GC,carlos-verona
+lidl-trek-2026,WorldTeam,Bauke,MOLLEMA,NL,39,239,279,14560,Climber,bauke-mollema
+lidl-trek-2026,WorldTeam,Tim Torn,TEUTENBERG,DE,24,226,292,780,Sprint,tim-torn-teutenberg
+lidl-trek-2026,WorldTeam,Julien,BERNARD,FR,34,151,419,1293,GC,julien-bernard
+lidl-trek-2026,WorldTeam,Amanuel,GHEBREIGZABHIER,ER,32,119,501,1554,GC,amanuel-ghebreigzabhier
+lidl-trek-2026,WorldTeam,Tao,GEOGHEGAN HART,GB,31,89,603,4131,GC,tao-geoghegan-hart
+lidl-trek-2026,WorldTeam,Sam,OOMEN,NL,31,84,625,2909,GC,sam-oomen
+lidl-trek-2026,WorldTeam,Edward,THEUNS,BE,35,84,626,4705,Oneday,edward-theuns
+lidl-trek-2026,WorldTeam,Jacopo,MOSCA,IT,32,83,630,1169,Hills,jacopo-mosca
+lidl-trek-2026,WorldTeam,Patrick,KONRAD,AT,34,60,752,5062,Climber,patrick-konrad
+lidl-trek-2026,WorldTeam,Simone,CONSONNI,IT,31,51,828,2982,Oneday,simone-consonni
+lidl-trek-2026,WorldTeam,Thibau,NYS,BE,23,49,843,1567,Hills,thibau-nys
+lidl-trek-2026,WorldTeam,Lennard,KÄMNA,DE,29,44,880,2643,Climber,lennard-kamna
+lidl-trek-2026,WorldTeam,Mathias,SUNEKÆR NORSGAARD,DK,29,40,926,662,TT,mathias-norsgaard
+lidl-trek-2026,WorldTeam,Otto,VERGAERDE,BE,32,30,1036,419,Oneday,otto-vergaerde
+lotto-intermarche-2026,WorldTeam,Arnaud,DE LIE,BE,24,1486,12,6561,Oneday,arnaud-de-lie
+lotto-intermarche-2026,WorldTeam,Steffen,DE SCHUYTENEER,BE,21,529,97,762,Sprint,steffen-de-schuyteneer
+lotto-intermarche-2026,WorldTeam,Jenno,BERCKMOES,BE,25,467,121,1596,Oneday,jenno-berckmoes
+lotto-intermarche-2026,WorldTeam,Lennert,VAN EETVELT,BE,25,403,149,2284,Climber,lennert-van-eetvelt
+lotto-intermarche-2026,WorldTeam,Georg,ZIMMERMANN,DE,28,332,181,2310,Oneday,georg-zimmermann
+lotto-intermarche-2026,WorldTeam,Huub,ARTZ,NL,24,321,190,594,Hills,huub-artz
+lotto-intermarche-2026,WorldTeam,Matys,GRISEL,FR,21,293,221,307,Sprint,matys-grisel
+lotto-intermarche-2026,WorldTeam,Milan,MENTEN,BE,29,278,238,2501,Oneday,milan-menten
+lotto-intermarche-2026,WorldTeam,Liam,SLOCK,BE,25,252,269,519,GC,liam-slock
+lotto-intermarche-2026,WorldTeam,Simone,GUALDI,IT,21,245,271,352,Oneday,simone-gualdi
+lotto-intermarche-2026,WorldTeam,Toon,AERTS,BE,32,202,336,568,Hills,toon-aerts
+lotto-intermarche-2026,WorldTeam,Jarno,WIDAR,BE,20,187,357,506,Climber,jarno-widar
+lotto-intermarche-2026,WorldTeam,Vito,BRAET,BE,25,164,400,761,Oneday,vito-braet
+lotto-intermarche-2026,WorldTeam,Luca,VAN BOVEN,BE,26,142,439,587,Oneday,luca-van-boven
+lotto-intermarche-2026,WorldTeam,Matthew,FOX,AU,23,131,466,166,GC,matthew-fox2
+lotto-intermarche-2026,WorldTeam,Lars,CRAPS,BE,24,130,469,254,GC,lars-craps
+lotto-intermarche-2026,WorldTeam,Baptiste,VEISTROFFER,FR,26,121,496,175,Hills,baptiste-veistroffer
+lotto-intermarche-2026,WorldTeam,Mathieu,KOCKELMANN,LU,22,113,528,125,Hills,mathieu-kockelmann
+lotto-intermarche-2026,WorldTeam,Jonas,RUTSCH,DE,28,83,632,924,Oneday,jonas-rutsch
+lotto-intermarche-2026,WorldTeam,Lorenzo,ROTA,IT,31,81,640,2980,Oneday,lorenzo-rota
+lotto-intermarche-2026,WorldTeam,Cedric,BEULLENS,BE,29,71,689,789,Oneday,cedric-beullens
+lotto-intermarche-2026,WorldTeam,Joshua,GIDDINGS,GB,23,54,808,100,Sprint,joshua-giddings
+lotto-intermarche-2026,WorldTeam,Sébastien,GRIGNARD,BE,27,52,822,296,Oneday,sebastien-grignard
+lotto-intermarche-2026,WorldTeam,Reuben,THOMPSON,NZ,25,41,913,377,GC,reuben-thompson
+lotto-intermarche-2026,WorldTeam,Jasper,DE BUYST,BE,32,30,1038,2781,Oneday,jasper-de-buyst
+lotto-intermarche-2026,WorldTeam,Roel,VAN SINTMAARTENSDIJK,NL,25,30,1047,247,GC,roel-van-sintmaartensdijk
+lotto-intermarche-2026,WorldTeam,Felix,ØRN-KRISTOFF,NO,20,25,1149,56,GC,felix-orn-kristoff
+lotto-intermarche-2026,WorldTeam,Lionel,TAMINIAUX,BE,30,24,1159,1426,Oneday,lionel-taminiaux
+lotto-intermarche-2026,WorldTeam,Maxence,PLACE,BE,22,19,1294,27,GC,maxence-place
+lotto-intermarche-2026,WorldTeam,Robin,ORINS,BE,24,10,1647,54,Sprint,robin-orins
+lotto-intermarche-2026,WorldTeam,Taco,VAN DER HOORN,NL,32,10,1615,1850,Oneday,taco-van-der-hoorn
+movistar-team-2026,WorldTeam,Natnael,TESFATSION,ER,27,702,65,2262,Hills,natnael-tesfatsion
+movistar-team-2026,WorldTeam,Iván,ROMEO,ES,23,643,69,1342,GC,ivan-romeo
+movistar-team-2026,WorldTeam,Cian,UIJTDEBROEKS,BE,23,595,75,1928,GC,cian-uijtdebroeks
+movistar-team-2026,WorldTeam,Carlos,CANAL,ES,25,436,131,1348,Hills,carlos-canal
+movistar-team-2026,WorldTeam,Jon,BARRENETXEA,ES,26,422,138,1037,Oneday,jon-barrenetxea-golzarri
+movistar-team-2026,WorldTeam,Orluis,AULAR,VE,29,408,144,2448,Hills,orluis-aular
+movistar-team-2026,WorldTeam,Raúl,GARCÍA PIERNA,ES,25,363,167,1004,Climber,raul-garcia-pierna
+movistar-team-2026,WorldTeam,Pablo,CASTRILLO,ES,25,323,188,1256,Climber,pablo-castrillo-zapater
+movistar-team-2026,WorldTeam,Javier,ROMO,ES,27,318,193,1321,GC,javier-romo
+movistar-team-2026,WorldTeam,Nairo,QUINTANA,CO,36,292,222,14446,GC,nairo-quintana
+movistar-team-2026,WorldTeam,Enric,MAS,ES,31,284,231,8406,Climber,enric-mas
+movistar-team-2026,WorldTeam,Jefferson Alveiro,CEPEDA,EC,30,277,240,1473,GC,jefferson-cepeda-hernandez
+movistar-team-2026,WorldTeam,Lorenzo,MILESI,IT,24,243,272,638,TT,lorenzo-milesi
+movistar-team-2026,WorldTeam,Iván,GARCÍA CORTINA,ES,30,230,289,3156,Oneday,ivan-garcia-cortina
+movistar-team-2026,WorldTeam,Diego,PESCADOR,CO,21,227,291,322,Climber,diego-pescador
+movistar-team-2026,WorldTeam,Roger,ADRIÀ,ES,28,209,320,1824,Oneday,roger-adria
+movistar-team-2026,WorldTeam,Einer,RUBIO,CO,28,118,509,2402,Climber,einer-rubio
+movistar-team-2026,WorldTeam,Michel,HESSMANN,DE,25,96,572,254,Hills,michel-hessmann
+movistar-team-2026,WorldTeam,Nelson,OLIVEIRA,PT,37,96,570,3656,TT,nelson-oliveira
+movistar-team-2026,WorldTeam,Filip,MACIEJUK,PL,26,80,646,515,TT,filip-maciejuk
+movistar-team-2026,WorldTeam,Juan Pedro,LÓPEZ,ES,29,66,716,1348,GC,juan-pedro-lopez
+movistar-team-2026,WorldTeam,Pavel,NOVÁK,CZ,21,41,915,171,GC,pavel-novak
+movistar-team-2026,WorldTeam,Manlio,MORO,IT,24,40,931,105,Oneday,manlio-moro
+movistar-team-2026,WorldTeam,Gonzalo,SERRANO,ES,32,37,958,1484,Hills,gonzalo-serrano
+movistar-team-2026,WorldTeam,Davide,FORMOLO,IT,33,26,1111,4922,Climber,davide-formolo
+movistar-team-2026,WorldTeam,Jorge,ARCAS,ES,34,20,1242,526,GC,jorge-arcas
+movistar-team-2026,WorldTeam,Pelayo,SÁNCHEZ,ES,26,13,1523,661,Climber,pelayo-sanchez-mayo
+movistar-team-2026,WorldTeam,Albert,TORRES,ES,36,10,1606,456,GC,albert-torres
+netcompany-ineos-2026,WorldTeam,Dorian,GODON,FR,30,1072,27,3509,Hills,dorian-godon
+netcompany-ineos-2026,WorldTeam,Egan,BERNAL,CO,29,1006,32,8420,GC,egan-bernal
+netcompany-ineos-2026,WorldTeam,Thymen,ARENSMAN,NL,26,834,50,3930,GC,thymen-arensman
+netcompany-ineos-2026,WorldTeam,Filippo,GANNA,IT,30,729,62,6392,TT,filippo-ganna
+netcompany-ineos-2026,WorldTeam,Kévin,VAUQUELIN,FR,25,590,78,3651,GC,kevin-vauquelin
+netcompany-ineos-2026,WorldTeam,Oscar,ONLEY,GB,23,498,104,3420,GC,oscar-onley
+netcompany-ineos-2026,WorldTeam,Andrew,AUGUST,US,20,452,126,573,GC,andrew-august
+netcompany-ineos-2026,WorldTeam,Axel,LAURANCE,FR,25,406,147,1679,Hills,axel-laurance
+netcompany-ineos-2026,WorldTeam,Ben,TURNER,GB,27,387,156,1410,Hills,ben-turner
+netcompany-ineos-2026,WorldTeam,Samuel,WATSON,GB,24,327,186,1420,Hills,samuel-watson
+netcompany-ineos-2026,WorldTeam,Magnus,SHEFFIELD,US,24,309,201,2587,TT,magnus-sheffield
+netcompany-ineos-2026,WorldTeam,Tobias,FOSS,NO,29,283,232,2009,TT,tobias-foss
+netcompany-ineos-2026,WorldTeam,Carlos,RODRÍGUEZ,ES,25,282,233,4061,GC,carlos-rodriguez-cano
+netcompany-ineos-2026,WorldTeam,Joshua,TARLING,GB,22,276,243,1503,TT,joshua-tarling
+netcompany-ineos-2026,WorldTeam,Artem,SHMIDT,US,22,272,247,359,Oneday,artem-shmidt
+netcompany-ineos-2026,WorldTeam,Kim,HEIDUK,DE,26,263,254,633,Hills,kim-heiduk
+netcompany-ineos-2026,WorldTeam,Sam,WELSFORD,AU,30,260,259,1732,Sprint,sam-welsford
+netcompany-ineos-2026,WorldTeam,Embret,SVESTAD-BÅRDSENG,NO,23,259,261,533,GC,embret-svestad-bardseng
+netcompany-ineos-2026,WorldTeam,Michał,KWIATKOWSKI,PL,36,230,288,11633,Oneday,michal-kwiatkowski
+netcompany-ineos-2026,WorldTeam,Brandon Smith,RIVERA,CO,30,146,432,876,GC,brandon-smith-rivera-vargas
+netcompany-ineos-2026,WorldTeam,Jack,HAIG,AU,32,90,598,4375,GC,jack-haig
+netcompany-ineos-2026,WorldTeam,Connor,SWIFT,GB,30,89,605,1514,Oneday,connor-swift
+netcompany-ineos-2026,WorldTeam,Ben,SWIFT,GB,38,80,645,4896,Sprint,ben-swift
+netcompany-ineos-2026,WorldTeam,Victor,LANGELLOTTI,MC,31,74,674,807,GC,victor-langellotti
+netcompany-ineos-2026,WorldTeam,Peter,ØXENBERG,DK,20,58,785,86,TT,peter-oxenberg-hansen
+netcompany-ineos-2026,WorldTeam,Bob,JUNGELS,LU,33,53,810,5674,TT,bob-jungels
+netcompany-ineos-2026,WorldTeam,Lucas,HAMILTON,AU,30,40,922,1972,GC,lucas-hamilton
+netcompany-ineos-2026,WorldTeam,Laurens,DE PLUS,BE,30,37,957,2319,GC,laurens-de-plus
+netcompany-ineos-2026,WorldTeam,Óscar,RODRÍGUEZ,ES,31,16,1371,1285,GC,oscar-rodriguez
+nsn-cycling-team-2026,WorldTeam,Biniam,GIRMAY,ER,26,865,43,5610,Oneday,biniam-girmay
+nsn-cycling-team-2026,WorldTeam,Ethan,VERNON,GB,25,586,79,1783,Sprint,ethan-vernon
+nsn-cycling-team-2026,WorldTeam,Corbin,STRONG,NZ,26,577,82,3416,Hills,corbin-strong
+nsn-cycling-team-2026,WorldTeam,Riley,SHEEHAN,US,26,571,86,1270,Oneday,riley-sheehan
+nsn-cycling-team-2026,WorldTeam,Alessandro,PINARELLO,IT,23,446,128,768,GC,alessandro-pinarello
+nsn-cycling-team-2026,WorldTeam,Lewis,ASKEY,GB,25,426,135,1630,Oneday,lewis-askey
+nsn-cycling-team-2026,WorldTeam,Brady,GILMORE,AU,25,306,203,853,Hills,brady-gilmore
+nsn-cycling-team-2026,WorldTeam,Marco,FRIGO,IT,26,299,215,864,Climber,marco-frigo
+nsn-cycling-team-2026,WorldTeam,Oded,KOGUT,IL,25,256,265,595,Sprint,oded-kogut
+nsn-cycling-team-2026,WorldTeam,Jan,HIRT,CZ,35,239,278,2732,GC,jan-hirt
+nsn-cycling-team-2026,WorldTeam,Hugo,HOFSTETTER,FR,32,224,296,4183,Oneday,hugo-hofstetter
+nsn-cycling-team-2026,WorldTeam,George,BENNETT,NZ,36,182,370,5377,GC,george-bennett
+nsn-cycling-team-2026,WorldTeam,Pau,MARTÍ,ES,21,177,379,285,Oneday,pau-marti-soriano
+nsn-cycling-team-2026,WorldTeam,Krists,NEILANDS,LV,32,174,381,1999,Oneday,krists-neilands
+nsn-cycling-team-2026,WorldTeam,Floris,VAN TRICHT,BE,25,142,440,171,Oneday,floris-van-tricht
+nsn-cycling-team-2026,WorldTeam,Pier-André,CÔTÉ,CA,29,137,453,952,Oneday,pier-andre-cote
+nsn-cycling-team-2026,WorldTeam,Moritz,KRETSCHY,DE,24,117,512,287,GC,moritz-kretschy
+nsn-cycling-team-2026,WorldTeam,Itamar,EINHORN,IL,28,101,557,993,Sprint,itamar-einhorn
+nsn-cycling-team-2026,WorldTeam,Tom,VAN ASBROECK,BE,36,92,589,4563,Oneday,tom-van-asbroeck
+nsn-cycling-team-2026,WorldTeam,Matis,LOUVEL,FR,27,85,623,1402,Oneday,matis-louvel
+nsn-cycling-team-2026,WorldTeam,Ryan,MULLEN,IE,32,82,639,1197,TT,ryan-mullen
+nsn-cycling-team-2026,WorldTeam,Nadav,RAISBERG,IL,25,79,653,205,Hills,nadav-raisberg
+nsn-cycling-team-2026,WorldTeam,Jake,STEWART,GB,26,74,676,1432,Hills,jake-stewart
+nsn-cycling-team-2026,WorldTeam,Dion,SMITH,NZ,33,70,692,2463,Hills,dion-smith
+nsn-cycling-team-2026,WorldTeam,Nick,SCHULTZ,AU,31,69,698,1662,Climber,nick-schultz
+nsn-cycling-team-2026,WorldTeam,Alexey,LUTSENKO,KZ,33,60,753,7524,GC,aleksey-lutsenko
+nsn-cycling-team-2026,WorldTeam,Guillaume,BOIVIN,CA,37,50,832,2247,Oneday,guillaume-boivin
+nsn-cycling-team-2026,WorldTeam,Joseph,BLACKMORE,GB,23,42,909,959,GC,joseph-blackmore
+nsn-cycling-team-2026,WorldTeam,Simon,CLARKE,AU,40,22,1192,5093,Oneday,simon-clarke
+nsn-cycling-team-2026,WorldTeam,Rotem,TENE,IL,25,14,1490,91,Sprint,rotem-tene
+nsn-cycling-team-2026,WorldTeam,Stephen,WILLIAMS,GB,30,,,1658,GC,stephen-williams
+red-bull-bora-hansgrohe-2026,WorldTeam,Remco,EVENEPOEL,BE,26,3381,2,15917,Climber,remco-evenepoel
+red-bull-bora-hansgrohe-2026,WorldTeam,Giulio,PELLIZZARI,IT,22,1304,18,2306,Climber,giulio-pellizzari
+red-bull-bora-hansgrohe-2026,WorldTeam,Florian,LIPOWITZ,DE,25,1154,24,3279,GC,florian-lipowitz
+red-bull-bora-hansgrohe-2026,WorldTeam,Jai,HINDLEY,AU,30,1123,25,6006,Climber,jai-hindley
+red-bull-bora-hansgrohe-2026,WorldTeam,Laurence,PITHIE,NZ,24,1010,30,2455,Oneday,laurence-pithie
+red-bull-bora-hansgrohe-2026,WorldTeam,Jordi,MEEUS,BE,28,929,35,4115,Oneday,jordi-meeus
+red-bull-bora-hansgrohe-2026,WorldTeam,Primož,ROGLIČ,SI,36,564,90,18589,Climber,primoz-roglic
+red-bull-bora-hansgrohe-2026,WorldTeam,Aleksandr,VLASOV,RU,30,480,107,7092,Climber,aleksandr-vlasov
+red-bull-bora-hansgrohe-2026,WorldTeam,Finn,FISHER-BLACK,NZ,24,449,127,1775,GC,finn-fisher-black
+red-bull-bora-hansgrohe-2026,WorldTeam,Luke,TUCKWELL,AU,22,350,173,383,GC,luke-tuckwell
+red-bull-bora-hansgrohe-2026,WorldTeam,Daniel Felipe,MARTÍNEZ,CO,30,342,175,5251,GC,daniel-felipe-martinez
+red-bull-bora-hansgrohe-2026,WorldTeam,Tim,VAN DIJKE,NL,26,340,178,963,Oneday,tim-van-dijke
+red-bull-bora-hansgrohe-2026,WorldTeam,Danny,VAN POPPEL,NL,33,340,177,7159,Sprint,danny-van-poppel
+red-bull-bora-hansgrohe-2026,WorldTeam,Arne,MARIT,BE,27,330,183,1420,Oneday,arne-marit
+red-bull-bora-hansgrohe-2026,WorldTeam,Gianni,VERMEERSCH,BE,33,325,187,2729,Oneday,gianni-vermeersch
+red-bull-bora-hansgrohe-2026,WorldTeam,Maxim,VAN GILS,BE,26,299,214,2983,Oneday,maxim-van-gils
+red-bull-bora-hansgrohe-2026,WorldTeam,Mick,VAN DIJKE,NL,26,197,343,910,Oneday,mick-van-dijke
+red-bull-bora-hansgrohe-2026,WorldTeam,Nico,DENZ,DE,32,192,352,1581,Hills,nico-denz
+red-bull-bora-hansgrohe-2026,WorldTeam,Mattia,CATTANEO,IT,35,172,388,3373,TT,mattia-cattaneo
+red-bull-bora-hansgrohe-2026,WorldTeam,Haimar,ETXEBERRIA,ES,22,149,425,368,Oneday,haimar-etxeberria
+red-bull-bora-hansgrohe-2026,WorldTeam,Ben,ZWIEHOFF,DE,32,144,437,983,GC,ben-zwiehoff
+red-bull-bora-hansgrohe-2026,WorldTeam,Adrien,BOICHIS,FR,23,142,442,186,Hills,adrien-boichis
+red-bull-bora-hansgrohe-2026,WorldTeam,Giovanni,ALEOTTI,IT,27,139,445,1769,GC,giovanni-aleotti
+red-bull-bora-hansgrohe-2026,WorldTeam,Jan,TRATNIK,SI,36,95,576,3104,TT,jan-tratnik
+red-bull-bora-hansgrohe-2026,WorldTeam,Callum,THORNLEY,GB,23,83,635,148,TT,callum-thornley
+red-bull-bora-hansgrohe-2026,WorldTeam,Gianni,MOSCON,IT,32,75,669,3668,Oneday,gianni-moscon
+red-bull-bora-hansgrohe-2026,WorldTeam,Emil,HERZOG,DE,21,60,760,223,Hills,emil-herzog
+red-bull-bora-hansgrohe-2026,WorldTeam,Alexander,HAJEK,AT,23,50,838,380,GC,alexander-hajek
+red-bull-bora-hansgrohe-2026,WorldTeam,Jarrad,DRIZNERS,AU,27,30,1042,230,GC,jarrad-drizners
+red-bull-bora-hansgrohe-2026,WorldTeam,Frederik,WANDAHL,DK,25,15,1435,644,Oneday,frederik-wandahl
+soudal-quick-step-2026,WorldTeam,Paul,MAGNIER,FR,22,1691,8,3080,Oneday,paul-magnier
+soudal-quick-step-2026,WorldTeam,Tim,MERLIER,BE,33,1015,28,7888,Sprint,tim-merlier
+soudal-quick-step-2026,WorldTeam,Jasper,STUYVEN,BE,34,706,64,8567,Oneday,jasper-stuyven
+soudal-quick-step-2026,WorldTeam,Filippo,ZANA,IT,27,570,87,2548,GC,filippo-zana
+soudal-quick-step-2026,WorldTeam,Ilan,VAN WILDER,BE,26,473,113,3040,GC,ilan-van-wilder
+soudal-quick-step-2026,WorldTeam,Valentin,PARET-PEINTRE,FR,25,431,133,1383,Climber,valentin-paret-peintre
+soudal-quick-step-2026,WorldTeam,Junior,LECERF,BE,23,367,161,1197,GC,junior-lecerf
+soudal-quick-step-2026,WorldTeam,Andrea,RACCAGNI NOVIERO,IT,22,335,179,410,Hills,andrea-raccagni-noviero
+soudal-quick-step-2026,WorldTeam,Mauri,VANSEVENANT,BE,27,293,220,2086,Climber,mauri-vansevenant
+soudal-quick-step-2026,WorldTeam,Gianmarco,GAROFOLI,IT,23,275,245,539,Climber,gianmarco-garofoli
+soudal-quick-step-2026,WorldTeam,Laurenz,REX,BE,26,185,365,1137,Oneday,laurenz-rex
+soudal-quick-step-2026,WorldTeam,Mikel,LANDA,ES,36,173,385,10437,Climber,mikel-landa
+soudal-quick-step-2026,WorldTeam,Ethan,HAYTER,GB,27,152,418,3555,TT,ethan-hayter
+soudal-quick-step-2026,WorldTeam,Louis,VERVAEKE,BE,32,146,430,1224,GC,louis-vervaeke
+soudal-quick-step-2026,WorldTeam,Alberto,DAINESE,IT,28,137,454,2395,Sprint,alberto-dainese
+soudal-quick-step-2026,WorldTeam,Dylan,VAN BAARLE,NL,34,130,467,4865,Oneday,dylan-van-baarle
+soudal-quick-step-2026,WorldTeam,Pascal,EENKHOORN,NL,29,125,478,1557,Oneday,pascal-eenkhoorn
+soudal-quick-step-2026,WorldTeam,Maximilian,SCHACHMANN,DE,32,118,507,5281,GC,maximilian-schachmann
+soudal-quick-step-2026,WorldTeam,Dries,VAN GESTEL,BE,31,116,514,2055,Oneday,dries-van-gestel
+soudal-quick-step-2026,WorldTeam,Steff,CRAS,BE,30,91,594,1533,GC,steff-cras
+soudal-quick-step-2026,WorldTeam,Fabio,VAN DEN BOSSCHE,BE,25,90,600,437,GC,fabio-van-den-bossche
+soudal-quick-step-2026,WorldTeam,Pepijn,REINDERINK,NL,24,90,602,206,Oneday,pepijn-reinderink
+soudal-quick-step-2026,WorldTeam,Yves,LAMPAERT,BE,35,87,612,6675,Oneday,yves-lampaert
+soudal-quick-step-2026,WorldTeam,Casper,PEDERSEN,DK,30,84,627,1375,Oneday,casper-pedersen
+soudal-quick-step-2026,WorldTeam,Jonathan,VERVENNE,BE,23,56,793,122,TT,jonathan-vervenne
+soudal-quick-step-2026,WorldTeam,Martin,SVRČEK,SK,23,45,872,209,Oneday,martin-svrcek
+soudal-quick-step-2026,WorldTeam,Ayco,BASTIAENS,BE,30,40,923,95,GC,ayco-bastiaens
+soudal-quick-step-2026,WorldTeam,Gil,GELDERS,BE,23,36,967,255,GC,gil-gelders
+soudal-quick-step-2026,WorldTeam,Bert,VAN LERBERGHE,BE,33,24,1157,1566,Oneday,bert-van-lerberghe
+soudal-quick-step-2026,WorldTeam,Warre,VANGHELUWE,BE,25,10,1641,194,Sprint,warre-vangheluwe
+team-jayco-alula-2026,WorldTeam,Mauro,SCHMID,CH,26,1444,14,3803,Hills,mauro-schmid
+team-jayco-alula-2026,WorldTeam,Luke,PLAPP,AU,25,685,67,2061,GC,luke-plapp
+team-jayco-alula-2026,WorldTeam,Paul,DOUBLE,GB,30,570,88,1291,GC,paul-double
+team-jayco-alula-2026,WorldTeam,Anders,FOLDAGER,DK,25,479,110,1161,Hills,anders-foldager
+team-jayco-alula-2026,WorldTeam,Michael,MATTHEWS,AU,35,469,116,14548,Oneday,michael-matthews
+team-jayco-alula-2026,WorldTeam,Andrea,VENDRAME,IT,32,468,118,3596,Hills,andrea-vendrame
+team-jayco-alula-2026,WorldTeam,Ben,O'CONNOR,AU,30,403,148,6237,GC,ben-o-connor
+team-jayco-alula-2026,WorldTeam,Felix,ENGELHARDT,DE,25,328,184,1099,Oneday,felix-engelhardt
+team-jayco-alula-2026,WorldTeam,Robert,DONALDSON,GB,24,237,283,401,Sprint,robert-donaldson
+team-jayco-alula-2026,WorldTeam,Pascal,ACKERMANN,DE,32,217,303,7229,Sprint,pascal-ackermann
+team-jayco-alula-2026,WorldTeam,Dries,DE BONDT,BE,35,213,310,2480,Oneday,dries-de-bondt
+team-jayco-alula-2026,WorldTeam,Alan,HATHERLY,ZA,30,195,348,316,GC,alan-hatherly
+team-jayco-alula-2026,WorldTeam,Finlay,PICKERING,GB,23,137,455,253,Climber,finlay-pickering
+team-jayco-alula-2026,WorldTeam,Oliver,BLEDDYN,AU,24,123,487,152,TT,oliver-bleddyn
+team-jayco-alula-2026,WorldTeam,Alessandro,COVI,IT,27,108,536,1816,Oneday,alessandro-covi
+team-jayco-alula-2026,WorldTeam,Davide,DE PRETTO,IT,24,105,542,692,Hills,davide-de-pretto
+team-jayco-alula-2026,WorldTeam,Jasha,SÜTTERLIN,DE,33,96,569,1490,TT,jasha-sutterlin
+team-jayco-alula-2026,WorldTeam,Dries,DE POOTER,BE,23,93,587,241,Hills,dries-de-pooter
+team-jayco-alula-2026,WorldTeam,Christopher,JUUL-JENSEN,DK,37,90,597,2192,GC,christopher-juul-jensen
+team-jayco-alula-2026,WorldTeam,Kelland,O'BRIEN,AU,28,74,677,481,Oneday,kelland-brien
+team-jayco-alula-2026,WorldTeam,Amaury,CAPIOT,BE,33,65,720,2892,Oneday,amaury-capiot
+team-jayco-alula-2026,WorldTeam,Koen,BOUWMAN,NL,32,62,745,1735,GC,koen-bouwman
+team-jayco-alula-2026,WorldTeam,Luke,DURBRIDGE,AU,35,60,754,3646,TT,luke-durbridge
+team-jayco-alula-2026,WorldTeam,Jelte,KRIJNSEN,NL,25,53,816,558,GC,jelte-krijnsen
+team-jayco-alula-2026,WorldTeam,Luka,MEZGEC,SI,38,41,910,4538,Hills,luka-mezgec
+team-jayco-alula-2026,WorldTeam,Asbjørn,HELLEMOSE,DK,27,40,928,234,GC,asbjorn-hellemose
+team-jayco-alula-2026,WorldTeam,Rudy,PORTER,AU,25,40,929,209,GC,rudy-porter
+team-jayco-alula-2026,WorldTeam,Patrick,GAMPER,AT,29,40,925,512,Oneday,patrick-gamper
+team-jayco-alula-2026,WorldTeam,Hamish,MCKENZIE,AU,21,14,1494,92,Hills,hamish-mckenzie
+team-jayco-alula-2026,WorldTeam,Filippo,CONCA,IT,27,10,1630,198,Climber,filippo-conca
+team-picnic-postnl-2026,WorldTeam,Pavel,BITTNER,CZ,23,754,58,1718,Sprint,pavel-bittner
+team-picnic-postnl-2026,WorldTeam,Frits,BIESTERBOS,NL,24,261,258,304,Oneday,frits-biesterbos
+team-picnic-postnl-2026,WorldTeam,Frank,VAN DEN BROEK,NL,25,171,390,959,GC,frank-van-den-broek
+team-picnic-postnl-2026,WorldTeam,Bjorn,KOERDT,GB,22,170,391,276,Hills,bjoern-koerdt
+team-picnic-postnl-2026,WorldTeam,Chris,HAMILTON,AU,31,120,497,1490,GC,chris-hamilton
+team-picnic-postnl-2026,WorldTeam,Robbe,DHONDT,BE,22,116,517,127,GC,robbe-dhondt
+team-picnic-postnl-2026,WorldTeam,John,DEGENKOLB,DE,37,103,548,12021,Oneday,john-degenkolb
+team-picnic-postnl-2026,WorldTeam,Mattia,GAFFURI,IT,27,101,558,138,Climber,mattia-gaffuri
+team-picnic-postnl-2026,WorldTeam,Nils,EEKHOFF,NL,28,90,599,1326,Sprint,nils-eekhoff
+team-picnic-postnl-2026,WorldTeam,Julius,VAN DEN BERG,NL,29,89,604,642,Sprint,julius-van-den-berg
+team-picnic-postnl-2026,WorldTeam,Gijs,LEEMREIZE,NL,26,81,643,632,Climber,gijs-leemreize
+team-picnic-postnl-2026,WorldTeam,Casper,VAN UDEN,NL,25,80,647,1018,Sprint,casper-van-uden
+team-picnic-postnl-2026,WorldTeam,Henri-François,RENARD-HAQUIN,FR,23,80,648,102,Hills,henri-francois-renard-haquin
+team-picnic-postnl-2026,WorldTeam,Roy,HOOGENDOORN,NL,25,76,667,105,Sprint,roy-hoogendoorn
+team-picnic-postnl-2026,WorldTeam,Juan Guillermo,MARTINEZ,CO,21,72,687,224,GC,guillermo-juan-martinez
+team-picnic-postnl-2026,WorldTeam,Niklas,MÄRKL,DE,27,65,722,415,Sprint,niklas-markl
+team-picnic-postnl-2026,WorldTeam,Warren,BARGUIL,FR,34,63,739,7179,Climber,warren-barguil
+team-picnic-postnl-2026,WorldTeam,Matthew,DINHAM,AU,26,62,748,468,Oneday,matthew-dinham
+team-picnic-postnl-2026,WorldTeam,Tim,NABERMAN,NL,27,55,799,140,GC,tim-naberman
+team-picnic-postnl-2026,WorldTeam,Timo,DE JONG,NL,27,50,835,184,Sprint,timo-de-jong
+team-picnic-postnl-2026,WorldTeam,Sean,FLYNN,GB,26,45,869,497,GC,sean-flynn
+team-picnic-postnl-2026,WorldTeam,Bert,BOLLE,BE,22,41,917,41,Hills,bert-bolle
+team-picnic-postnl-2026,WorldTeam,Alexy,FAURE PROST,FR,22,35,985,136,GC,alexy-faure-prost
+team-picnic-postnl-2026,WorldTeam,Timo,ROOSEN,NL,33,25,1131,1669,Oneday,timo-roosen
+team-picnic-postnl-2026,WorldTeam,Oliver,PEACE,GB,21,25,1143,49,Hills,oliver-peace
+team-picnic-postnl-2026,WorldTeam,James,KNOX,GB,30,20,1245,1632,GC,james-knox
+team-picnic-postnl-2026,WorldTeam,Fabio,JAKOBSEN,NL,29,10,1621,4319,Sprint,fabio-jakobsen
+team-picnic-postnl-2026,WorldTeam,Dillon,CORKERY,IE,27,7,1819,124,Sprint,dillon-corkery
+team-picnic-postnl-2026,WorldTeam,Bram,WELTEN,NL,29,,,1202,Oneday,bram-welten
+team-picnic-postnl-2026,WorldTeam,Max,POOLE,GB,23,,,1449,GC,max-poole
+team-visma-lease-a-bike-2026,WorldTeam,Jonas,VINGEGAARD,DK,29,2762,4,12605,GC,jonas-vingegaard
+team-visma-lease-a-bike-2026,WorldTeam,Wout,VAN AERT,BE,31,1167,23,15556,Oneday,wout-van-aert
+team-visma-lease-a-bike-2026,WorldTeam,Matteo,JORGENSON,US,27,997,33,5057,GC,matteo-jorgenson
+team-visma-lease-a-bike-2026,WorldTeam,Christophe,LAPORTE,FR,33,914,37,7833,Oneday,christophe-laporte
+team-visma-lease-a-bike-2026,WorldTeam,Sepp,KUSS,US,31,910,38,5046,Climber,sepp-kuss
+team-visma-lease-a-bike-2026,WorldTeam,Davide,PIGANZOLI,IT,24,862,45,1961,GC,davide-piganzoli
+team-visma-lease-a-bike-2026,WorldTeam,Matthew,BRENNAN,GB,21,844,46,1732,Hills,matthew-brennan
+team-visma-lease-a-bike-2026,WorldTeam,Ben,TULETT,GB,24,700,66,2221,Oneday,ben-tulett
+team-visma-lease-a-bike-2026,WorldTeam,Jørgen,NORDHAGEN,NO,21,560,93,849,GC,jorgen-nordhagen
+team-visma-lease-a-bike-2026,WorldTeam,Bart,LEMMEN,NL,30,435,132,1214,GC,bart-lemmen
+team-visma-lease-a-bike-2026,WorldTeam,Louis,BARRÉ,FR,26,422,136,1296,Oneday,louis-barre
+team-visma-lease-a-bike-2026,WorldTeam,Per Strand,HAGENES,NO,23,411,142,1257,Oneday,per-strand-hagenes
+team-visma-lease-a-bike-2026,WorldTeam,Bruno,ARMIRAIL,FR,32,410,143,1638,TT,bruno-armirail
+team-visma-lease-a-bike-2026,WorldTeam,Filippo,FIORELLI,IT,31,225,295,1464,Hills,filippo-fiorelli
+team-visma-lease-a-bike-2026,WorldTeam,Wilco,KELDERMAN,NL,35,204,332,9507,GC,wilco-kelderman
+team-visma-lease-a-bike-2026,WorldTeam,Victor,CAMPENAERTS,BE,34,197,342,3829,TT,victor-campenaerts
+team-visma-lease-a-bike-2026,WorldTeam,Axel,ZINGLE,FR,27,184,367,2939,Oneday,axel-zingle
+team-visma-lease-a-bike-2026,WorldTeam,Anton,SCHIFFER,DE,26,157,411,331,GC,anton-schiffer
+team-visma-lease-a-bike-2026,WorldTeam,Tijmen,GRAAT,NL,23,125,479,335,GC,tijmen-graat
+team-visma-lease-a-bike-2026,WorldTeam,Timo,KIELICH,BE,27,115,518,943,Oneday,timo-kielich
+team-visma-lease-a-bike-2026,WorldTeam,Edoardo,AFFINI,IT,30,103,549,1676,TT,edoardo-affini
+team-visma-lease-a-bike-2026,WorldTeam,Tim,REX,BE,22,65,733,67,GC,tim-rex
+team-visma-lease-a-bike-2026,WorldTeam,Owain,DOULL,GB,33,55,795,1610,Oneday,owain-doull
+team-visma-lease-a-bike-2026,WorldTeam,Menno,HUISING,NL,22,52,824,139,Oneday,menno-huising
+team-visma-lease-a-bike-2026,WorldTeam,Loe,VAN BELLE,NL,24,48,851,168,Oneday,loe-van-belle
+team-visma-lease-a-bike-2026,WorldTeam,Pietro,MATTIO,IT,22,45,874,68,Hills,pietro-mattio
+team-visma-lease-a-bike-2026,WorldTeam,Steven,KRUIJSWIJK,NL,39,30,1037,6283,GC,steven-kruijswijk
+team-visma-lease-a-bike-2026,WorldTeam,Niklas,BEHRENS,DE,22,20,1273,183,Sprint,niklas-behrens
+team-visma-lease-a-bike-2026,WorldTeam,Fabio,JAKOBSEN,NL,29,10,1621,4319,Sprint,fabio-jakobsen
+team-visma-lease-a-bike-2026,WorldTeam,Simon,YATES,GB,34,,,10548,Climber,simon-yates
+uae-team-emirates-xrg-2026,WorldTeam,Tadej,POGAČAR,SI,27,4606,1,26899,Climber,tadej-pogacar
+uae-team-emirates-xrg-2026,WorldTeam,Isaac,DEL TORO,MX,22,3114,3,5635,Climber,isaac-del-toro
+uae-team-emirates-xrg-2026,WorldTeam,Jay,VINE,AU,30,1100,26,3247,TT,jay-vine
+uae-team-emirates-xrg-2026,WorldTeam,Brandon,MCNULTY,US,28,922,36,6097,GC,brandon-mcnulty
+uae-team-emirates-xrg-2026,WorldTeam,Jan,CHRISTEN,CH,22,863,44,2067,Oneday,jan-christen
+uae-team-emirates-xrg-2026,WorldTeam,Benoît,COSNEFROY,FR,30,843,47,6049,Oneday,benoit-cosnefroy
+uae-team-emirates-xrg-2026,WorldTeam,Adam,YATES,GB,34,838,48,13257,Climber,adam-yates
+uae-team-emirates-xrg-2026,WorldTeam,João,ALMEIDA,PT,28,833,51,8934,GC,joao-almeida
+uae-team-emirates-xrg-2026,WorldTeam,Jhonatan,NARVÁEZ,EC,29,782,55,4098,Hills,jhonatan-narvaez
+uae-team-emirates-xrg-2026,WorldTeam,Florian,VERMEERSCH,BE,27,571,85,2659,Oneday,florian-vermeersch
+uae-team-emirates-xrg-2026,WorldTeam,António,MORGADO,PT,22,570,89,1666,Oneday,antonio-morgado
+uae-team-emirates-xrg-2026,WorldTeam,Igor,ARRIETA,ES,23,554,94,1091,Climber,igor-arrieta-lizarraga
+uae-team-emirates-xrg-2026,WorldTeam,Pavel,SIVAKOV,FR,29,473,112,4726,GC,pavel-sivakov
+uae-team-emirates-xrg-2026,WorldTeam,Kevin,VERMAERKE,US,25,441,129,1746,GC,kevin-vermaerke
+uae-team-emirates-xrg-2026,WorldTeam,Tim,WELLENS,BE,35,440,130,10666,GC,tim-wellens
+uae-team-emirates-xrg-2026,WorldTeam,Felix,GROßSCHARTNER,AT,32,401,151,4670,GC,felix-grossschartner
+uae-team-emirates-xrg-2026,WorldTeam,Marc,SOLER,ES,32,367,160,4653,Climber,marc-soler
+uae-team-emirates-xrg-2026,WorldTeam,Adrià,PERICAS,ES,20,310,198,399,GC,adria-pericas-capdevila
+uae-team-emirates-xrg-2026,WorldTeam,Nils,POLITT,DE,32,303,207,4135,Oneday,nils-politt
+uae-team-emirates-xrg-2026,WorldTeam,Ivo,OLIVEIRA,PT,29,215,307,818,TT,ivo-emanuel-alves
+uae-team-emirates-xrg-2026,WorldTeam,Juan Sebastián,MOLANO,CO,31,212,313,3131,Sprint,juan-sebastian-molano
+uae-team-emirates-xrg-2026,WorldTeam,Julius,JOHANSEN,DK,26,174,382,546,TT,julius-johansen
+uae-team-emirates-xrg-2026,WorldTeam,Mikkel,BJERG,DK,27,167,397,2046,TT,mikkel-bjerg
+uae-team-emirates-xrg-2026,WorldTeam,Rui,OLIVEIRA,PT,29,167,396,1113,Hills,rui-oliveira
+uae-team-emirates-xrg-2026,WorldTeam,Rune,HERREGODTS,BE,28,122,489,965,TT,rune-herregodts
+uae-team-emirates-xrg-2026,WorldTeam,Pablo,TORRES,ES,20,88,611,259,Climber,pablo-torres-arias
+uae-team-emirates-xrg-2026,WorldTeam,Domen,NOVAK,SI,31,81,642,756,GC,domen-novak
+uae-team-emirates-xrg-2026,WorldTeam,Filippo,BARONCINI,IT,25,39,943,1038,Oneday,filippo-baroncini
+uae-team-emirates-xrg-2026,WorldTeam,Luca,GIAIMI,IT,21,37,964,72,TT,luca-giaimi
+uae-team-emirates-xrg-2026,WorldTeam,Vegard Stake,LAENGEN,NO,37,20,1241,1511,GC,vegard-stake-laengen
+uno-x-mobility-2026,WorldTeam,Tobias Halland,JOHANNESSEN,NO,26,1306,17,4041,Climber,tobias-halland-johannessen
+uno-x-mobility-2026,WorldTeam,Søren,WÆRENSKJOLD,NO,26,896,39,2983,Oneday,soren-waerenskjold
+uno-x-mobility-2026,WorldTeam,Andreas,LEKNESSUND,NO,27,564,91,2311,GC,andreas-leknessund
+uno-x-mobility-2026,WorldTeam,Jonas,ABRAHAMSEN,NO,30,479,109,1781,Oneday,jonas-abrahamsen
+uno-x-mobility-2026,WorldTeam,Johannes,KULSET,NO,22,418,139,974,GC,johannes-kulset
+uno-x-mobility-2026,WorldTeam,Andreas,KRON,DK,28,321,189,2092,Hills,andreas-kron
+uno-x-mobility-2026,WorldTeam,Anthon,CHARMIG,DK,28,319,192,1206,GC,anthon-charmig
+uno-x-mobility-2026,WorldTeam,Erlend,BLIKRA,NO,29,309,199,1034,Sprint,erlend-blikra
+uno-x-mobility-2026,WorldTeam,Torstein,TRÆEN,NO,31,295,217,1297,GC,torstein-traeen
+uno-x-mobility-2026,WorldTeam,Anders Halland,JOHANNESSEN,NO,26,267,250,830,GC,anders-halland-johannessen
+uno-x-mobility-2026,WorldTeam,Fredrik,DVERSNES LAVIK,NO,29,261,257,1308,Oneday,fredrik-dversnes
+uno-x-mobility-2026,WorldTeam,Rasmus,TILLER,NO,30,258,262,2580,Oneday,rasmus-tiller
+uno-x-mobility-2026,WorldTeam,Sakarias Koller,LØLAND,NO,24,241,277,415,Hills,sakarias-koller-loland
+uno-x-mobility-2026,WorldTeam,Alexander,KAMP,DK,32,210,317,1954,Hills,alexander-kamp
+uno-x-mobility-2026,WorldTeam,Magnus,CORT,DK,33,184,366,5848,Hills,magnus-cort-nielsen
+uno-x-mobility-2026,WorldTeam,Markus,HOELGAARD,NO,31,183,368,2024,Oneday,markus-hoelgaard
+uno-x-mobility-2026,WorldTeam,Martin,TJØTTA,NO,25,151,422,318,GC,martin-tjotta
+uno-x-mobility-2026,WorldTeam,Henrik,PEDERSEN,DK,21,151,423,244,Sprint,henrik-pedersen
+uno-x-mobility-2026,WorldTeam,Carl-Frederik,BÉVORT,DK,22,122,490,239,Oneday,carl-frederik-bevort
+uno-x-mobility-2026,WorldTeam,Ådne,HOLTER,NO,26,116,516,600,GC,adne-holter
+uno-x-mobility-2026,WorldTeam,Anders,SKAARSETH,NO,31,102,552,608,Oneday,anders-skaarseth
+uno-x-mobility-2026,WorldTeam,William,BLUME LEVY,DK,25,97,567,246,Oneday,william-blume-levy
+uno-x-mobility-2026,WorldTeam,Storm,INGEBRIGTSEN,NO,21,65,731,106,Sprint,storm-ingebrigtsen
+uno-x-mobility-2026,WorldTeam,Toralf Rydningen,MARTINSEN,NO,23,55,802,60,GC,toralf-rydningen-martinsen
+uno-x-mobility-2026,WorldTeam,Simon,DALBY,DK,23,49,844,236,GC,simon-dalby
+uno-x-mobility-2026,WorldTeam,Erik Nordsæter,RESELL,NO,29,44,883,357,Oneday,erik-nordsaeter-resell
+uno-x-mobility-2026,WorldTeam,Stian,EDVARDSEN-FREDHEIM,NO,23,43,893,593,Sprint,stian-fredheim
+uno-x-mobility-2026,WorldTeam,Jonas Hem,HVIDEBERG,NO,27,30,1045,232,Oneday,jonas-hem-hvideberg
+uno-x-mobility-2026,WorldTeam,Sven Erik,BYSTRØM,NO,34,29,1067,1877,Oneday,sven-erik-bystrom
+uno-x-mobility-2026,WorldTeam,Martin,URIANSTAD BUGGE,NO,27,25,1135,213,Oneday,martin-urianstad
+uno-x-mobility-2026,WorldTeam,Tobias,SVARRE,DK,22,20,1262,58,Hills,tobias-svarre
+uno-x-mobility-2026,WorldTeam,Håkon Eiksund,ØKSNES,NO,19,,,0,,hakon-eiksund-oksnes
+xds-astana-team-2026,WorldTeam,Christian,SCARONI,IT,28,1471,13,3377,Oneday,christian-scaroni
+xds-astana-team-2026,WorldTeam,Guillermo Thomas,SILVA,UY,24,893,40,1843,Hills,guillermo-thomas-silva-coussan
+xds-astana-team-2026,WorldTeam,Max,KANTER,DE,28,760,57,2619,Sprint,max-kanter
+xds-astana-team-2026,WorldTeam,Harold,TEJADA,CO,29,743,59,1905,Climber,harold-tejada
+xds-astana-team-2026,WorldTeam,Matteo,MALUCELLI,IT,32,560,92,1824,Sprint,matteo-malucelli
+xds-astana-team-2026,WorldTeam,Henok,MULUBRHAN,ER,26,510,99,2802,GC,henok-mulubrhan
+xds-astana-team-2026,WorldTeam,Alberto,BETTIOL,IT,32,483,106,4910,Oneday,alberto-bettiol
+xds-astana-team-2026,WorldTeam,Mike,TEUNISSEN,NL,33,478,111,5144,Oneday,mike-teunissen
+xds-astana-team-2026,WorldTeam,Nicolas,VINOKUROV,KZ,24,473,115,658,GC,nicolas-vinokurov
+xds-astana-team-2026,WorldTeam,Diego,ULISSI,IT,37,468,117,14359,Oneday,diego-ulissi
+xds-astana-team-2026,WorldTeam,Yevgeniy,FEDOROV,KZ,26,422,137,1695,Oneday,yevgeniy-fedorov
+xds-astana-team-2026,WorldTeam,Sergio,HIGUITA,CO,29,406,146,4823,Climber,sergio-higuita
+xds-astana-team-2026,WorldTeam,Clément,CHAMPOUSSIN,FR,28,398,152,2939,Climber,clement-champoussin
+xds-astana-team-2026,WorldTeam,Cristián,RODRÍGUEZ,ES,31,305,204,2430,GC,cristian-rodriguez
+xds-astana-team-2026,WorldTeam,Simone,VELASCO,IT,30,303,208,3089,Oneday,simone-velasco
+xds-astana-team-2026,WorldTeam,Lorenzo,FORTUNATO,IT,30,300,210,2860,Climber,lorenzo-fortunato
+xds-astana-team-2026,WorldTeam,Davide,BALLERINI,IT,31,294,218,3196,Oneday,davide-ballerini
+xds-astana-team-2026,WorldTeam,Aaron,GATE,NZ,35,225,293,2259,GC,aaron-gate
+xds-astana-team-2026,WorldTeam,Nikiforos,ARVANITOU,GR,23,194,350,338,Sprint,nikiforos-arvanitou
+xds-astana-team-2026,WorldTeam,Davide,TONEATTI,IT,25,149,426,318,Oneday,davide-toneatti
+xds-astana-team-2026,WorldTeam,Haoyu,SU,CN,25,142,441,205,Oneday,haoyu-su
+xds-astana-team-2026,WorldTeam,Nicola,CONCI,IT,29,121,493,1228,GC,nicola-conci
+xds-astana-team-2026,WorldTeam,Harold Martín,LÓPEZ,EC,25,117,511,1141,GC,harold-martin-lopez
+xds-astana-team-2026,WorldTeam,Alessandro,ROMELE,IT,22,113,527,367,Oneday,alessandro-romele
+xds-astana-team-2026,WorldTeam,Marco,SCHRETTL,AT,22,83,634,159,Oneday,marco-schrettl
+xds-astana-team-2026,WorldTeam,Victor,LANGELLOTTI,MC,31,74,674,807,GC,victor-langellotti
+xds-astana-team-2026,WorldTeam,Gleb,SYRITSA,RU,26,73,680,687,Sprint,gleb-syritsa
+xds-astana-team-2026,WorldTeam,Arjen,LIVYNS,BE,31,62,746,867,Oneday,arjen-livyns
+xds-astana-team-2026,WorldTeam,Darren,VAN BEKKUM,NL,24,45,873,148,GC,darren-van-bekkum
+xds-astana-team-2026,WorldTeam,Florian Samuel,KAJAMINI,IT,23,31,1026,136,Hills,florian-samuel-kajamini
+xds-astana-team-2026,WorldTeam,Lev,GONOV,RU,26,28,1084,163,Sprint,lev-gonov
+xds-astana-team-2026,WorldTeam,Anton,KUZMIN,KZ,29,19,1285,348,GC,anton-kuzmin
+bardiani-csf-7-saber-2026,ProTeam,Alex,TOLIO,IT,26,224,297,485,GC,alex-tolio
+bardiani-csf-7-saber-2026,ProTeam,Luca,COVILI,IT,29,220,300,775,GC,luca-covili
+bardiani-csf-7-saber-2026,ProTeam,Enrico,ZANONCELLO,IT,29,205,330,901,Sprint,enrico-zanoncello
+bardiani-csf-7-saber-2026,ProTeam,Martin,MARCELLUSI,IT,26,196,345,717,Hills,martin-marcellusi
+bardiani-csf-7-saber-2026,ProTeam,Filippo,MAGLI,IT,27,185,364,604,Hills,filippo-magli2
+bardiani-csf-7-saber-2026,ProTeam,Filippo,TURCONI,IT,20,174,384,277,Hills,filippo-turconi
+bardiani-csf-7-saber-2026,ProTeam,Luca,PALETTI,IT,22,140,444,203,Climber,luca-paletti
+bardiani-csf-7-saber-2026,ProTeam,Nikita,TSVETKOV,UZ,21,136,458,288,Sprint,nikita-tsvetkov
+bardiani-csf-7-saber-2026,ProTeam,Luca,COLNAGHI,IT,27,102,554,478,Sprint,luca-colnaghi
+bardiani-csf-7-saber-2026,ProTeam,Marco,MANENTI,IT,23,95,581,95,Hills,marco-manenti1
+bardiani-csf-7-saber-2026,ProTeam,Martin Santiago,HERREÑO,CO,19,74,678,74,GC,martin-santiago-herreno
+bardiani-csf-7-saber-2026,ProTeam,Vicente,ROJAS,CL,24,65,730,223,Oneday,vicente-rojas
+bardiani-csf-7-saber-2026,ProTeam,Alessio,MARTINELLI,IT,25,58,778,253,Climber,alessio-martinelli
+bardiani-csf-7-saber-2026,ProTeam,Diyor,TAKHIROV,UZ,20,36,972,48,Oneday,diyor-takhirov
+bardiani-csf-7-saber-2026,ProTeam,Lorenzo,CONFORTI,IT,22,35,986,186,Sprint,lorenzo-conforti
+bardiani-csf-7-saber-2026,ProTeam,Manuele,TAROZZI,IT,28,30,1044,336,GC,manuele-tarozzi
+bardiani-csf-7-saber-2026,ProTeam,Edward,CRUZ,CO,20,24,1174,24,Hills,edward-martinez-cruz
+bardiani-csf-7-saber-2026,ProTeam,Filippo,CETTOLIN,IT,20,22,1215,22,Sprint,filippo-cettolin
+bardiani-csf-7-saber-2026,ProTeam,Sergey,ROSTOVTSEV,UZ,29,20,1246,174,Sprint,sergey-rostovtsev
+bardiani-csf-7-saber-2026,ProTeam,Samandar,JANIKULOV,UZ,21,11,1594,20,Oneday,samandar-janikulov
+bardiani-csf-7-saber-2026,ProTeam,Santiago,FERRARO,IT,19,10,1691,12,GC,santiago-ferraro
+bardiani-csf-7-saber-2026,ProTeam,Mattia,PINAZZI,IT,25,6,1923,84,Sprint,mattia-pinazzi
+bardiani-csf-7-saber-2026,ProTeam,Abdurahmon,NEMATOV,UZ,21,4,2151,5,TT,abdurahmon-nematov
+bardiani-csf-7-saber-2026,ProTeam,Andrea,MONTAGNER,IT,20,,,0,Hills,andrea-montagner
+bardiani-csf-7-saber-2026,ProTeam,Mattia,STENICO,IT,19,,,0,Hills,mattia-stenico
+bardiani-csf-7-saber-2026,ProTeam,Matteo,TURCONI,IT,19,,,0,,matteo-turconi
+burgos-burpellet-bh-2026,ProTeam,Eric Antonio,FAGÚNDEZ,UY,27,412,141,1338,Oneday,eric-antonio-fagundez
+burgos-burpellet-bh-2026,ProTeam,Daniel,CAVIA,ES,24,252,270,318,Hills,daniel-cavia-sanz
+burgos-burpellet-bh-2026,ProTeam,José Manuel,DÍAZ,ES,31,220,299,1350,GC,jose-manuel-diaz-gallego
+burgos-burpellet-bh-2026,ProTeam,Josh,BURNETT,NZ,25,204,333,385,GC,josh-burnett
+burgos-burpellet-bh-2026,ProTeam,César,MACÍAS,MX,22,201,338,287,Sprint,cesar-macias-estrada
+burgos-burpellet-bh-2026,ProTeam,Merhawi,KUDUS,ER,32,195,346,2858,GC,merhawi-kudus
+burgos-burpellet-bh-2026,ProTeam,Lorenzo,QUARTUCCI,IT,27,191,354,661,GC,lorenzo-quartucci
+burgos-burpellet-bh-2026,ProTeam,Jesús,HERRADA,ES,36,185,362,5913,GC,jesus-herrada-lopez
+burgos-burpellet-bh-2026,ProTeam,Alexandre,MAYER,MU,28,175,380,635,TT,alexandre-mayer
+burgos-burpellet-bh-2026,ProTeam,Clément,ALLENO,FR,25,169,392,368,Hills,clement-alleno
+burgos-burpellet-bh-2026,ProTeam,Sergio Geovani,CHUMIL,GT,25,155,415,497,Climber,sergio-geovani-chumil-gonzalez
+burgos-burpellet-bh-2026,ProTeam,Hugo,DE LA CALLE,ES,22,139,449,227,Climber,hugo-de-la-calle-arango
+burgos-burpellet-bh-2026,ProTeam,Mario,APARICIO,ES,26,90,601,473,GC,mario-aparicio-munoz
+burgos-burpellet-bh-2026,ProTeam,José Luis,FAURA,ES,25,72,684,100,GC,jose-luis-faura-asensio
+burgos-burpellet-bh-2026,ProTeam,Jambaljamts,SAINBAYAR,MN,29,70,695,1378,Oneday,jambaljamts-sainbayar
+burgos-burpellet-bh-2026,ProTeam,Carlos,GARCÍA PIERNA,ES,27,62,747,110,GC,carlos-garcia-pierna
+burgos-burpellet-bh-2026,ProTeam,Georgios,BOUGLAS,GR,35,51,825,605,Sprint,georgios-bouglas
+burgos-burpellet-bh-2026,ProTeam,Rodrigo,ÁLVAREZ,ES,26,47,860,77,Sprint,rodrigo-alvarez-rogriguez
+burgos-burpellet-bh-2026,ProTeam,Ander,OKAMIKA,ES,33,35,984,404,GC,ander-okamika
+burgos-burpellet-bh-2026,ProTeam,Sinuhé,FERNÁNDEZ,ES,26,12,1554,32,GC,sinuhe-fernandez-rodriguez
+burgos-burpellet-bh-2026,ProTeam,Vojtěch,KMÍNEK,CZ,25,5,1996,17,Sprint,vojtech-kminek
+burgos-burpellet-bh-2026,ProTeam,Maksym,BILYI,UA,25,4,2081,35,Climber,maksym-bilyi
+burgos-burpellet-bh-2026,ProTeam,Martín,REY,ES,23,,,0,Hills,martin-rey-vazquez
+burgos-burpellet-bh-2026,ProTeam,Tomoya,KOYAMA,JP,28,,,0,Sprint,tomoya-koyama
+burgos-burpellet-bh-2026,ProTeam,Adrián,FAJARDO,ES,22,,,0,Climber,adrian-fajardo
+caja-rural-seguros-rga-2026,ProTeam,Sebastian,BERWICK,AU,26,500,103,1033,GC,sebastian-berwick
+caja-rural-seguros-rga-2026,ProTeam,Jan,CASTELLON,ES,23,302,209,493,GC,jan-castellon
+caja-rural-seguros-rga-2026,ProTeam,Fernando,GAVIRIA,CO,31,271,248,6322,Sprint,fernando-gaviria
+caja-rural-seguros-rga-2026,ProTeam,Alex,MOLENAAR,NL,27,242,273,839,Hills,alex-molenaar
+caja-rural-seguros-rga-2026,ProTeam,Abel,BALDERSTONE,ES,26,212,314,475,GC,abel-balderstone-roumens
+caja-rural-seguros-rga-2026,ProTeam,Fernando,BARCELÓ,ES,30,194,349,1328,Hills,fernando-barcelo
+caja-rural-seguros-rga-2026,ProTeam,Iúri,LEITÃO,PT,28,193,351,654,Sprint,iuri-leitao
+caja-rural-seguros-rga-2026,ProTeam,Stefano,OLDANI,IT,28,182,373,1535,Hills,stefano-oldani
+caja-rural-seguros-rga-2026,ProTeam,José Félix,PARRA,ES,29,178,377,849,GC,jose-felix-parra
+caja-rural-seguros-rga-2026,ProTeam,Joel,NICOLAU,ES,28,171,389,604,Hills,joel-nicolau
+caja-rural-seguros-rga-2026,ProTeam,Eduard,PRADES,ES,39,134,461,3121,Hills,eduard-prades
+caja-rural-seguros-rga-2026,ProTeam,Samuel,FERNÁNDEZ,ES,23,128,474,183,GC,samuel-fernandez-garcia
+caja-rural-seguros-rga-2026,ProTeam,Jaume,GUARDEÑO,ES,23,120,500,208,GC,jaume-guardeno
+caja-rural-seguros-rga-2026,ProTeam,Sergi,DARDER,ES,23,119,506,178,Hills,sergi-darder
+caja-rural-seguros-rga-2026,ProTeam,Joan,BOU,ES,29,113,526,627,GC,joan-bou
+caja-rural-seguros-rga-2026,ProTeam,Gorka,SORARRAIN,ES,30,85,624,225,Hills,gorka-sorarrain
+caja-rural-seguros-rga-2026,ProTeam,Jakub,OTRUBA,CZ,28,78,656,796,GC,jakub-otruba
+caja-rural-seguros-rga-2026,ProTeam,Francisco Joel,PEÑUELA,VE,25,60,759,221,Hills,francisco-penuela
+caja-rural-seguros-rga-2026,ProTeam,Julen,ARRIOLABENGOA,ES,25,36,966,52,Climber,julen-arriola-bengoa-beitia
+caja-rural-seguros-rga-2026,ProTeam,Joseba,LÓPEZ,ES,26,10,1659,49,Hills,joseba-lopez-cuesta
+caja-rural-seguros-rga-2026,ProTeam,Alex,DÍAZ,ES,25,10,1650,14,GC,alex-diaz-alvarez
+caja-rural-seguros-rga-2026,ProTeam,Iker,VILLAR,ES,19,2,2372,2,Sprint,iker-villar
+caja-rural-seguros-rga-2026,ProTeam,Marc,RUBIROLA,ES,21,,,0,Hills,marc-rubirola
+caja-rural-seguros-rga-2026,ProTeam,Pablo,LOSPITAO,ES,21,,,0,Hills,pablo-lospitao
+caja-rural-seguros-rga-2026,ProTeam,Javier,IBÁÑEZ,ES,24,,,5,Hills,javier-ibanez-beltran-de-salazar
+caja-rural-seguros-rga-2026,ProTeam,Nil,AGUILERA,ES,22,,,0,Climber,nil-aguilera
+caja-rural-seguros-rga-2026,ProTeam,Estanislao,CALABUIG,ES,21,,,0,Hills,estanislao-calabuig
+caja-rural-seguros-rga-2026,ProTeam,Gorka,CORRES,ES,21,,,0,Hills,gorka-corres-ibanez-de-opakua
+caja-rural-seguros-rga-2026,ProTeam,Ellande,LARRONDE,FR,19,,,0,Hills,ellande-larronde
+cofidis-2026,ProTeam,Ion,IZAGIRRE,ES,37,932,34,10483,GC,ion-izagirre
+cofidis-2026,ProTeam,Alex,ARANBURU,ES,30,765,56,5217,Oneday,alex-aranburu
+cofidis-2026,ProTeam,Milan,FRETIN,BE,25,590,77,1873,Oneday,milan-fretin
+cofidis-2026,ProTeam,Stanisław,ANIOŁKOWSKI,PL,29,585,80,2219,Sprint,stanislaw-aniolkowski
+cofidis-2026,ProTeam,Alexis,RENARD,FR,27,364,165,1474,Oneday,alexis-renard
+cofidis-2026,ProTeam,Bryan,COQUARD,FR,34,363,166,8228,Sprint,bryan-coquard
+cofidis-2026,ProTeam,Jenthe,BIERMANS,BE,30,291,224,2051,Oneday,jenthe-biermans
+cofidis-2026,ProTeam,Benjamin,THOMAS,FR,30,262,255,2143,TT,benjamin-thomas-2
+cofidis-2026,ProTeam,Clément,IZQUIERDO,FR,24,216,305,337,GC,clement-izquierdo
+cofidis-2026,ProTeam,Hugo,PAGE,FR,25,209,321,1160,Oneday,hugo-page
+cofidis-2026,ProTeam,Jamie,MEEHAN,IE,22,200,340,232,GC,jamie-meehan
+cofidis-2026,ProTeam,Dylan,TEUNS,BE,34,159,405,6574,GC,dylan-teuns
+cofidis-2026,ProTeam,Sam,MAISONOBE,FR,22,148,428,241,GC,sam-maisonobe
+cofidis-2026,ProTeam,Sylvain,MONIQUET,BE,28,131,464,1182,GC,sylvain-moniquet
+cofidis-2026,ProTeam,Louis,ROULAND,FR,23,124,482,244,GC,louis-rouland
+cofidis-2026,ProTeam,Emanuel,BUCHMANN,DE,33,82,636,4863,GC,emanuel-buchmann
+cofidis-2026,ProTeam,Valentin,FERRON,FR,28,77,663,1014,Oneday,valentin-ferron
+cofidis-2026,ProTeam,Simon,CARR,GB,27,76,666,876,Climber,simon-carr
+cofidis-2026,ProTeam,Alex,KIRSCH,LU,34,64,734,1473,TT,alex-kirsch
+cofidis-2026,ProTeam,Sergio,SAMITIER,ES,30,43,890,532,GC,sergio-samitier
+cofidis-2026,ProTeam,Piet,ALLEGAERT,BE,31,35,978,1774,Oneday,piet-allegaert
+cofidis-2026,ProTeam,Jan,MAAS,NL,30,30,1039,410,GC,jan-maas
+cofidis-2026,ProTeam,Edoardo,ZAMPERINI,IT,23,29,1073,85,Oneday,edoardo-zamperini
+cofidis-2026,ProTeam,Joseph,BROOKES,GB,21,23,1189,23,Oneday,joseph-brookes
+cofidis-2026,ProTeam,Oliver,KNIGHT,GB,25,20,1254,183,TT,oliver-knight
+cofidis-2026,ProTeam,Paul,OURSELIN,FR,32,20,1243,494,GC,paul-ourselin
+cofidis-2026,ProTeam,Yaël,JOALLAND,FR,25,19,1290,101,Climber,yael-joalland
+cofidis-2026,ProTeam,Damien,TOUZÉ,FR,30,9,1718,1205,Oneday,damien-touze
+cofidis-2026,ProTeam,Lorenzo,DE LONGHI,IT,20,7,1868,7,Sprint,lorenzo-de-longhi
+cofidis-2026,ProTeam,Ludovic,ROBEET,BE,32,5,1974,426,Oneday,ludovic-robeet
+cofidis-2026,ProTeam,Camille,CHARRET,FR,20,5,2035,5,Oneday,camille-charret
+cofidis-2026,ProTeam,Nicolas,DEBEAUMARCHÉ,FR,28,5,1984,114,Oneday,nicolas-debeaumarche
+cofidis-2026,ProTeam,Luis Alberto,LAJARIN,ES,19,,,0,,luis-alberto-lajarin
+equipo-kern-pharma-2026,ProTeam,Ibon,RUIZ,ES,27,341,176,567,GC,ibon-ruiz
+equipo-kern-pharma-2026,ProTeam,Iván,COBO,ES,26,334,180,600,Hills,ivan-cobo-cayon
+equipo-kern-pharma-2026,ProTeam,Iván Ramiro,SOSA,CO,28,277,241,2629,GC,ivan-ramiro-sosa
+equipo-kern-pharma-2026,ProTeam,Urko,BERRADE,ES,28,257,264,941,GC,urko-berrade-fernandez
+equipo-kern-pharma-2026,ProTeam,Mats,WENZEL,LU,23,205,331,362,GC,mats-wenzel
+equipo-kern-pharma-2026,ProTeam,Marc,BRUSTENGA,ES,26,146,431,264,Sprint,marc-brustenga-masague
+equipo-kern-pharma-2026,ProTeam,Jorge,GUTIÉRREZ,ES,23,117,513,270,GC,jorge-gutierrez-gonzalez
+equipo-kern-pharma-2026,ProTeam,Unai,IRIBAR,ES,27,89,607,412,GC,unai-iribar-jauregi
+equipo-kern-pharma-2026,ProTeam,Nil,GIMENO,ES,22,58,784,58,Hills,nil-gimeno
+equipo-kern-pharma-2026,ProTeam,Diego,URIARTE,ES,24,38,950,106,GC,diego-uriarte-belzunegi
+equipo-kern-pharma-2026,ProTeam,César,PÉREZ,ES,21,31,1030,31,Oneday,cesar-perez-lopez
+equipo-kern-pharma-2026,ProTeam,Sergio,ROMEO,ES,21,28,1095,28,GC,sergio-romeo
+equipo-kern-pharma-2026,ProTeam,Mikel,RETEGI,ES,25,18,1309,58,Hills,mikel-retegi
+equipo-kern-pharma-2026,ProTeam,Hugo,AZNAR,ES,22,12,1560,18,Hills,hugo-aznar
+equipo-kern-pharma-2026,ProTeam,Pablo,CARRASCOSA,ES,23,8,1768,8,Climber,pablo-carrascosa
+equipo-kern-pharma-2026,ProTeam,Yen Yi,HO,TW,24,7,1834,16,TT,yen-yi-ho
+equipo-kern-pharma-2026,ProTeam,Unai,RAMOS,ES,20,5,2025,5,Climber,unai-ramos
+equipo-kern-pharma-2026,ProTeam,Emilio,GARCIA,ES,19,,,0,,emilio-garcia1
+equipo-kern-pharma-2026,ProTeam,Antonio Jesús,SOTO,ES,31,,,448,Hills,antonio-soto
+equipo-kern-pharma-2026,ProTeam,Unax,ERRASTI,ES,21,,,0,,unax-errasti
+equipo-kern-pharma-2026,ProTeam,Iker,GÓMEZ,ES,20,,,0,TT,iker-gomez-lopez-de-goicoechea
+equipo-kern-pharma-2026,ProTeam,Hugo,TAPIZ,FR,20,,,0,,hugo-tapiz
+equipo-kern-pharma-2026,ProTeam,Ibai,AZANZA,ES,22,,,8,GC,ibai-azanza
+equipo-kern-pharma-2026,ProTeam,José María,MARTÍN,ES,25,,,0,Hills,jose-maria-martin-munoz
+equipo-kern-pharma-2026,ProTeam,Iñigo,ELOSEGUI,ES,28,,,115,GC,inigo-elosegui
+euskaltel-euskadi-2026,ProTeam,Xabier,BERASATEGI,ES,26,362,168,659,Hills,xabier-berasategi-garmendia
+euskaltel-euskadi-2026,ProTeam,Gotzon,MARTÍN,ES,30,232,287,837,Hills,gotzon-martin
+euskaltel-euskadi-2026,ProTeam,Jon,AGIRRE,ES,28,163,402,451,GC,jon-agirre
+euskaltel-euskadi-2026,ProTeam,Jordi,LÓPEZ,ES,28,118,510,520,GC,jordi-lopez-caravaca
+euskaltel-euskadi-2026,ProTeam,Jokin,MURGUIALDAY,ES,26,108,537,306,GC,jokin-murguialday-elorza
+euskaltel-euskadi-2026,ProTeam,Txomin,JUARISTI,ES,31,105,541,606,GC,txomin-juaristi
+euskaltel-euskadi-2026,ProTeam,Mikel,BIZKARRA,ES,36,105,539,1512,GC,mikel-bizkarra
+euskaltel-euskadi-2026,ProTeam,Axel,VAN DER TUUK,NL,25,95,580,273,TT,axel-van-der-tuuk
+euskaltel-euskadi-2026,ProTeam,Jonathan,LASTRA,ES,33,65,721,1509,GC,jonathan-lastra
+euskaltel-euskadi-2026,ProTeam,Louis,SUTTON,GB,24,58,782,75,Hills,louis-sutton
+euskaltel-euskadi-2026,ProTeam,Xabier,ISASA,ES,24,54,807,121,Hills,xabier-isasa-larranaga
+euskaltel-euskadi-2026,ProTeam,Hodei,MUÑOZ,ES,20,51,831,56,Hills,hodei-munoz
+euskaltel-euskadi-2026,ProTeam,Paul,HENNEQUIN,FR,23,45,871,230,Sprint,paul-hennequin
+euskaltel-euskadi-2026,ProTeam,Iker,MINTEGI,ES,23,29,1072,119,GC,iker-mintegi-claver
+euskaltel-euskadi-2026,ProTeam,Nicolás,ALUSTIZA,ES,23,22,1208,43,Hills,nicolas-alustiza
+euskaltel-euskadi-2026,ProTeam,Gari,UGARTE,ES,21,9,1736,9,Hills,gari-ugarte
+euskaltel-euskadi-2026,ProTeam,Yago,AGUIRRE,ES,21,5,2016,5,GC,yago-aguirre
+euskaltel-euskadi-2026,ProTeam,Samuel,FERNÁNDEZ,ES,23,5,2020,5,GC,samuel-fernandez-heres
+euskaltel-euskadi-2026,ProTeam,Marco,MARTÍN,ES,19,3,2232,3,Hills,marco-martin-cuevas
+euskaltel-euskadi-2026,ProTeam,Kepa,ORMAZABAL,ES,20,1,2550,1,Hills,kepa-ormazabal
+euskaltel-euskadi-2026,ProTeam,Alain,SUAREZ,ES,23,,,0,,alain-suarez
+euskaltel-euskadi-2026,ProTeam,Unai,AZNAR,ES,24,,,0,TT,unai-aznar-vijuesca
+euskaltel-euskadi-2026,ProTeam,Ander,GANZABAL,ES,26,,,6,GC,ander-ganzabal-bilbao
+euskaltel-euskadi-2026,ProTeam,Danny,VAN DER TUUK,PL,26,,,18,TT,danny-van-der-tuuk
+euskaltel-euskadi-2026,ProTeam,Ander,OTEGI,ES,20,,,0,,ander-otegi
+euskaltel-euskadi-2026,ProTeam,Felipe,ORTS,ES,31,,,19,GC,felipe-orts
+mbh-bank-csb-telecom-fort-2026,ProTeam,Alessandro,FANCELLU,IT,26,621,72,790,GC,alessandro-fancellu
+mbh-bank-csb-telecom-fort-2026,ProTeam,Alessandro,VERRE,IT,24,164,401,528,Climber,alessandro-verre
+mbh-bank-csb-telecom-fort-2026,ProTeam,Marcin,BUDZIŃSKI,PL,28,112,529,734,Hills,marcin-budzinski
+mbh-bank-csb-telecom-fort-2026,ProTeam,Fausto,MASNADA,IT,32,108,534,2853,GC,fausto-masnada
+mbh-bank-csb-telecom-fort-2026,ProTeam,Davide,PERSICO,IT,25,95,579,322,Sprint,davide-persico
+mbh-bank-csb-telecom-fort-2026,ProTeam,Nicolò,BURATTI,IT,25,89,608,315,Hills,nicolo-buratti
+mbh-bank-csb-telecom-fort-2026,ProTeam,Christian,BAGATIN,IT,24,75,672,91,Hills,christian-bagatin
+mbh-bank-csb-telecom-fort-2026,ProTeam,Samuele,ZOCCARATO,IT,28,48,850,310,Oneday,samuele-zoccarato
+mbh-bank-csb-telecom-fort-2026,ProTeam,Cesare,CHESINI,IT,22,46,867,85,Hills,cesare-chesini
+mbh-bank-csb-telecom-fort-2026,ProTeam,Márton,DINA,HU,30,46,864,592,GC,marton-dina
+mbh-bank-csb-telecom-fort-2026,ProTeam,Lorenzo,MASCIARELLI,IT,22,40,934,61,Hills,lorenzo-masciarelli
+mbh-bank-csb-telecom-fort-2026,ProTeam,Filippo,D'AIUTO,IT,24,38,951,88,Oneday,filippo-d-aiuto
+mbh-bank-csb-telecom-fort-2026,ProTeam,Luca,CRETTI,IT,25,34,991,84,Oneday,luca-cretti
+mbh-bank-csb-telecom-fort-2026,ProTeam,Florian Samuel,KAJAMINI,IT,23,31,1026,136,Hills,florian-samuel-kajamini
+mbh-bank-csb-telecom-fort-2026,ProTeam,Zsombor,TAKÁCS,HU,20,21,1235,33,Oneday,zsombor-tamas-takacs
+mbh-bank-csb-telecom-fort-2026,ProTeam,Lorenzo,NESPOLI,IT,21,20,1269,36,TT,lorenzo-nespoli
+mbh-bank-csb-telecom-fort-2026,ProTeam,Barnabás,PEÁK,HU,27,17,1331,460,TT,barnabas-peak
+mbh-bank-csb-telecom-fort-2026,ProTeam,Mirko,BOZZOLA,IT,22,17,1350,18,Sprint,mirko-bozzola
+mbh-bank-csb-telecom-fort-2026,ProTeam,Diego,BRACALENTE,IT,21,12,1564,38,Hills,diego-bracalente
+mbh-bank-csb-telecom-fort-2026,ProTeam,Filip,GRUSZCZYŃSKI,PL,21,10,1681,16,Climber,filip-gruszczynski
+mbh-bank-csb-telecom-fort-2026,ProTeam,Edoardo,CIPOLLINI,IT,21,4,2129,8,Hills,edoardo-cipollini
+mbh-bank-csb-telecom-fort-2026,ProTeam,Márk,VALENT,HU,22,,,5,Oneday,mark-valent
+mbh-bank-csb-telecom-fort-2026,ProTeam,Matteo,AMBROSINI,IT,24,,,29,Hills,matteo-ambrosini
+mbh-bank-csb-telecom-fort-2026,ProTeam,Bálint,MAKRAI,HU,19,,,2,Oneday,balint-makrai
+modern-adventure-pro-cycling-2026,ProTeam,Ben,OLIVER,NZ,29,292,223,355,Hills,ben-oliver
+modern-adventure-pro-cycling-2026,ProTeam,Byron,MUNTON,ZA,27,230,290,344,GC,byron-munton
+modern-adventure-pro-cycling-2026,ProTeam,Stefan,DE BOD,ZA,29,155,413,1183,TT,stefan-de-bod
+modern-adventure-pro-cycling-2026,ProTeam,Riley,PICKRELL,CA,25,72,683,318,Hills,riley-pickrell
+modern-adventure-pro-cycling-2026,ProTeam,Kieran,HAUG,US,23,30,1056,70,GC,kieran-haug
+modern-adventure-pro-cycling-2026,ProTeam,Paul,WRIGHT,NZ,28,28,1083,126,Hills,paul-wright
+modern-adventure-pro-cycling-2026,ProTeam,Samuel,FLÓREZ,CO,21,21,1234,30,TT,samuel-florez-garces
+modern-adventure-pro-cycling-2026,ProTeam,Mark,STEWART,GB,30,19,1284,473,GC,mark-stewart
+modern-adventure-pro-cycling-2026,ProTeam,Hugo,SCALA,US,28,13,1522,42,TT,hugo-scala
+modern-adventure-pro-cycling-2026,ProTeam,Tyler,STITES,US,28,12,1541,337,TT,tyler-stites
+modern-adventure-pro-cycling-2026,ProTeam,Cole,KESSLER,US,23,12,1563,13,Sprint,cole-kessler
+modern-adventure-pro-cycling-2026,ProTeam,Ezra,CAUDELL,US,19,10,1704,10,Oneday,ezra-caudell
+modern-adventure-pro-cycling-2026,ProTeam,Scott,MCGILL,US,27,9,1719,219,Hills,scott-mcgill
+modern-adventure-pro-cycling-2026,ProTeam,Ian,LÓPEZ,US,22,7,1864,27,Climber,ian-lopez
+modern-adventure-pro-cycling-2026,ProTeam,Sean,CHRISTIAN,US,24,5,2017,30,Hills,sean-christian
+modern-adventure-pro-cycling-2026,ProTeam,Robin,CARPENTER,US,34,5,1963,794,Oneday,robin-carpenter
+modern-adventure-pro-cycling-2026,ProTeam,Leo,HAYTER,GB,25,1,2469,207,GC,leo-hayter
+modern-adventure-pro-cycling-2026,ProTeam,Brody,MCDONALD,US,23,,,8,Sprint,brody-mcdonald
+modern-adventure-pro-cycling-2026,ProTeam,Lucas,TOWERS,GB,22,,,0,Hills,luca-towers
+modern-adventure-pro-cycling-2026,ProTeam,Samuel,BOARDMAN,US,30,,,13,TT,samuel-boardman
+modern-adventure-pro-cycling-2026,ProTeam,Harry,LASKER,US,19,,,0,,harry-lasker
+pinarello-q365-pro-cycling-team-2026,ProTeam,Tom,PIDCOCK,GB,27,1921,7,6843,Oneday,tom-pidcock
+pinarello-q365-pro-cycling-team-2026,ProTeam,Quinten,HERMANS,BE,31,495,105,2601,Hills,quinten-hermans
+pinarello-q365-pro-cycling-team-2026,ProTeam,Fred,WRIGHT,GB,27,460,123,2235,Hills,alfred-wright
+pinarello-q365-pro-cycling-team-2026,ProTeam,Matteo,MOSCHETTI,IT,30,320,191,2410,Sprint,matteo-moschetti
+pinarello-q365-pro-cycling-team-2026,ProTeam,Aimé,DE GENDT,BE,32,299,213,2034,Oneday,aime-de-gendt
+pinarello-q365-pro-cycling-team-2026,ProTeam,Chris,HARPER,AU,31,289,226,2231,GC,chris-harper
+pinarello-q365-pro-cycling-team-2026,ProTeam,Mark,DONOVAN,GB,27,262,256,1251,GC,mark-donovan
+pinarello-q365-pro-cycling-team-2026,ProTeam,Marcel,CAMPRUBÍ,ES,24,237,284,363,Oneday,marcel-camprubi
+pinarello-q365-pro-cycling-team-2026,ProTeam,Brent,VAN MOER,BE,28,210,319,1411,Oneday,brent-van-moer
+pinarello-q365-pro-cycling-team-2026,ProTeam,Fabio,CHRISTEN,CH,24,206,329,1098,Oneday,fabio-christen
+pinarello-q365-pro-cycling-team-2026,ProTeam,Thomas,GLOAG,GB,24,174,383,595,GC,thomas-gloag
+pinarello-q365-pro-cycling-team-2026,ProTeam,Xandro,MEURISSE,BE,34,164,399,3242,GC,xandro-meurisse
+pinarello-q365-pro-cycling-team-2026,ProTeam,David,DE LA CRUZ,ES,37,157,407,4100,GC,david-de-la-cruz
+pinarello-q365-pro-cycling-team-2026,ProTeam,David,GONZÁLEZ,ES,30,151,421,413,Hills,david-gonzalez-lopez
+pinarello-q365-pro-cycling-team-2026,ProTeam,Walter,CALZONI,IT,25,131,465,455,GC,walter-calzoni
+pinarello-q365-pro-cycling-team-2026,ProTeam,Eddie,DUNBAR,IE,29,123,483,2456,GC,edward-irl-dunbar
+pinarello-q365-pro-cycling-team-2026,ProTeam,Nickolas,ZUKOWSKY,CA,28,120,498,542,Oneday,nickolas-zukowsky
+pinarello-q365-pro-cycling-team-2026,ProTeam,Damien,HOWSON,AU,34,93,583,2681,GC,damien-howson
+pinarello-q365-pro-cycling-team-2026,ProTeam,Emīls,LIEPIŅŠ,LV,33,90,595,1562,Sprint,emils-liepins
+pinarello-q365-pro-cycling-team-2026,ProTeam,Xabier Mikel,AZPARREN,ES,27,86,622,310,TT,xabier-mikel-azparren-irurzun
+pinarello-q365-pro-cycling-team-2026,ProTeam,Kamil,MAŁECKI,PL,30,63,741,664,GC,kamil-malecki
+pinarello-q365-pro-cycling-team-2026,ProTeam,Milan,VADER,NL,30,53,813,542,GC,milan-vader
+pinarello-q365-pro-cycling-team-2026,ProTeam,Joseph,PIDCOCK,GB,24,53,817,65,Hills,joseph-pidcock
+pinarello-q365-pro-cycling-team-2026,ProTeam,Sjoerd,BAX,NL,30,48,849,794,TT,sjoerd-bax
+pinarello-q365-pro-cycling-team-2026,ProTeam,Mathis,AVONDTS,BE,23,45,878,65,Sprint,mathis-avondts
+pinarello-q365-pro-cycling-team-2026,ProTeam,Frederik,FRISON,BE,34,35,976,671,Oneday,frederik-frison
+pinarello-q365-pro-cycling-team-2026,ProTeam,Emmanuel,HOUCOU,FR,23,34,995,79,Sprint,emmanuel-houcou
+pinarello-q365-pro-cycling-team-2026,ProTeam,Nicolo',PARISINI,IT,26,29,1069,337,Hills,nicolo-parisini
+pinarello-q365-pro-cycling-team-2026,ProTeam,Harm,VANHOUCKE,BE,29,26,1116,1392,GC,harm-vanhoucke
+pinarello-q365-pro-cycling-team-2026,ProTeam,Sam,BENNETT,IE,35,17,1324,8267,Sprint,sam-bennett
+pinarello-q365-pro-cycling-team-2026,ProTeam,Oliver,SIMS,AU,20,8,1785,8,Climber,oliver-sims
+pinarello-q365-pro-cycling-team-2026,ProTeam,Matteo,BADILATTI,CH,34,,,910,GC,matteo-badilatti
+solution-tech-nippo-rali-2026,ProTeam,Domenico,POZZOVIVO,IT,43,371,159,11419,GC,domenico-pozzovivo
+solution-tech-nippo-rali-2026,ProTeam,Dušan,RAJOVIĆ,RS,28,366,162,1215,Sprint,dusan-rajovic
+solution-tech-nippo-rali-2026,ProTeam,Kamiel,BONNEU,BE,27,253,268,796,GC,kamiel-bonneu
+solution-tech-nippo-rali-2026,ProTeam,Santiago,UMBA,CO,23,242,275,492,GC,santiago-umba
+solution-tech-nippo-rali-2026,ProTeam,Kyrylo,TSARENKO,UA,25,220,301,572,GC,kyrylo-tsarenko
+solution-tech-nippo-rali-2026,ProTeam,Matteo,FABBRO,IT,31,183,369,1165,GC,matteo-fabbro
+solution-tech-nippo-rali-2026,ProTeam,Alexandre,BALMER,CH,26,121,495,367,Oneday,alexandre-balmer
+solution-tech-nippo-rali-2026,ProTeam,Yukiya,ARASHIRO,JP,41,77,661,3483,Oneday,yukiya-arashiro
+solution-tech-nippo-rali-2026,ProTeam,Ben,GRANGER,GB,26,72,685,111,Oneday,ben-granger
+solution-tech-nippo-rali-2026,ProTeam,Carlos Ariel,SAMUDIO,PA,28,60,757,140,TT,carlos-samudio
+solution-tech-nippo-rali-2026,ProTeam,Roberto Carlos,GONZÁLEZ,PA,32,48,848,185,TT,roberto-gonzalez
+solution-tech-nippo-rali-2026,ProTeam,Tilen,FINKŠT,SI,29,44,882,257,Sprint,tilen-finkst
+solution-tech-nippo-rali-2026,ProTeam,Tommaso,NENCINI,IT,25,42,900,69,Sprint,tommaso-nencini
+solution-tech-nippo-rali-2026,ProTeam,Franklin,ARCHIBOLD,PA,28,24,1160,560,TT,franklin-archibold
+solution-tech-nippo-rali-2026,ProTeam,Đorđe,ĐURIĆ,RS,26,22,1201,109,Sprint,dorde-duric
+solution-tech-nippo-rali-2026,ProTeam,Andrea,PIRAS,IT,24,21,1230,21,Hills,andrea-piras
+solution-tech-nippo-rali-2026,ProTeam,Attilio,VIVIANI,IT,29,14,1483,407,Sprint,attilio-viviani
+solution-tech-nippo-rali-2026,ProTeam,Alessandro,IACCHI,IT,27,10,1634,75,GC,alessandro-iacchi
+solution-tech-nippo-rali-2026,ProTeam,Matteo,REGNANTI,IT,25,10,1643,11,Sprint,matteo-regnanti
+solution-tech-nippo-rali-2026,ProTeam,Felix James,MEO,NZ,29,5,1980,18,Hills,felix-james-meo
+solution-tech-nippo-rali-2026,ProTeam,Valerio,CONTI,IT,33,,,1949,GC,valerio-conti
+solution-tech-nippo-rali-2026,ProTeam,Luca,VERRANDO,IT,22,,,5,Oneday,luca-verrando
+solution-tech-nippo-rali-2026,ProTeam,Michele,GAZZOLI,IT,27,,,231,Hills,michele-gazzoli
+team-flanders-baloise-2026,ProTeam,Tom,CRABBE,BE,21,278,239,307,Sprint,tom-crabbe
+team-flanders-baloise-2026,ProTeam,Milan,LANHOVE,BE,22,96,574,142,Oneday,milan-lanhove
+team-flanders-baloise-2026,ProTeam,Senne,THONNON,BE,23,78,659,78,GC,senne-thonnon
+team-flanders-baloise-2026,ProTeam,Michiel,LAMBRECHT,BE,23,68,705,140,Oneday,michiel-lambrecht
+team-flanders-baloise-2026,ProTeam,Ward,VANHOOF,BE,27,67,708,247,Oneday,ward-vanhoof
+team-flanders-baloise-2026,ProTeam,Henri,VANDENABEELE,BE,26,59,768,268,GC,henri-vandenabeele
+team-flanders-baloise-2026,ProTeam,Vincent,VAN HEMELEN,BE,25,56,790,275,Oneday,vincent-van-hemelen
+team-flanders-baloise-2026,ProTeam,Siebe,DEWEIRDT,BE,24,56,792,87,Oneday,siebe-deweirdt
+team-flanders-baloise-2026,ProTeam,Elias,MARIS,BE,26,53,815,169,Hills,elias-maris
+team-flanders-baloise-2026,ProTeam,Jules,HESTERS,BE,27,39,940,290,Sprint,jules-hesters
+team-flanders-baloise-2026,ProTeam,Leander,VAN HAUTEGEM,BE,23,23,1183,70,Oneday,leander-van-hautegem
+team-flanders-baloise-2026,ProTeam,Victor,VERCOUILLIE,BE,23,20,1257,90,Oneday,victor-vercouillie
+team-flanders-baloise-2026,ProTeam,Ferre,GEERAERTS,BE,23,20,1260,24,TT,ferre-geeraerts
+team-flanders-baloise-2026,ProTeam,Brem,DEMAN,BE,24,15,1441,36,Oneday,brem-deman
+team-flanders-baloise-2026,ProTeam,Dylan,VANDENSTORME,BE,24,11,1586,95,Oneday,dylan-vandenstorme
+team-flanders-baloise-2026,ProTeam,Artuur,TORNEY,BE,22,8,1775,8,Hills,artuur-torney
+team-flanders-baloise-2026,ProTeam,Noah,VANDENBRANDEN,BE,24,5,2006,29,TT,noah-vandenbranden
+team-flanders-baloise-2026,ProTeam,Milan,VAN DEN HAUTE,BE,20,5,2024,5,Oneday,milan-van-den-haute
+team-flanders-baloise-2026,ProTeam,Nolan,HUYSMANS,BE,20,4,2146,4,Hills,nolan-huysmans
+team-flanders-baloise-2026,ProTeam,Tuur,DENS,BE,26,,,15,Oneday,tuur-dens
+team-novo-nordisk-2026,ProTeam,Filippo,RIDOLFO,IT,24,11,1585,39,Sprint,filippo-ridolfo
+team-novo-nordisk-2026,ProTeam,Andrea,PERON,IT,37,6,1910,353,Sprint,andrea-peron
+team-novo-nordisk-2026,ProTeam,Hamish,ARMITT,GB,24,5,2043,5,Hills,hamish-armitt
+team-novo-nordisk-2026,ProTeam,Umberto,POLI,IT,29,5,1976,42,Sprint,umberto-poli
+team-novo-nordisk-2026,ProTeam,Sam,BRAND,GB,35,5,1987,65,GC,sam-brand
+team-novo-nordisk-2026,ProTeam,Antonio,POLGA,IT,27,5,1995,5,Oneday,antonio-polga
+team-novo-nordisk-2026,ProTeam,Célestin,WATTELLE,FR,23,1,2494,13,Sprint,celestin-wattelle
+team-novo-nordisk-2026,ProTeam,Donovan,MACKIE,AU,18,1,2565,1,TT,donovan-mackie
+team-novo-nordisk-2026,ProTeam,Lucas,DAUGE,FR,29,,,0,Climber,lucas-dauge
+team-novo-nordisk-2026,ProTeam,Hamish,BEADLE,NZ,28,,,14,Sprint,hamish-beadle
+team-novo-nordisk-2026,ProTeam,Declan,IRVINE,AU,27,,,6,TT,declan-irvine
+team-novo-nordisk-2026,ProTeam,Bailey,MCDONALD,AU,23,,,12,Hills,bailey-mcdonald
+team-novo-nordisk-2026,ProTeam,Jacopo,COLLADON,IT,23,,,0,,jacopo-colladon
+team-novo-nordisk-2026,ProTeam,Alessandro,PERRACCHIONE,IT,21,,,9,Sprint,alessandro-perracchione
+team-novo-nordisk-2026,ProTeam,Quinten,DE GRAEVE,BE,25,,,0,Hills,quinten-de-graeve
+team-novo-nordisk-2026,ProTeam,Lucas,TERRIER,FR,20,,,0,,lucas-terrier
+team-novo-nordisk-2026,ProTeam,Anton,MULLER,FR,28,,,0,Hills,anton-muller
+team-novo-nordisk-2026,ProTeam,Juan José,LÓPEZ,ES,19,,,0,,juan-jose-lopez-rodriguez
+team-novo-nordisk-2026,ProTeam,Nathan,SMITH,GB,25,,,0,Sprint,nathan-smith
+team-novo-nordisk-2026,ProTeam,Louis-Marie,POSNIC,FR,22,,,0,,louis-marie-posnic
+team-novo-nordisk-2026,ProTeam,David,LOZANO,ES,37,,,267,GC,david-lozano-riba
+team-polti-visitmalta-2026,ProTeam,Giovanni,LONARDI,IT,29,480,108,1500,Sprint,giovanni-lonardi
+team-polti-visitmalta-2026,ProTeam,Ludovico,CRESCIOLI,IT,22,350,172,528,Oneday,ludovico-crescioli
+team-polti-visitmalta-2026,ProTeam,Thomas,PESENTI,IT,26,238,280,614,Hills,thomas-pesenti
+team-polti-visitmalta-2026,ProTeam,Manuel,PEÑALVER,ES,27,202,337,732,Sprint,manuel-penalver
+team-polti-visitmalta-2026,ProTeam,Fernando,TERCERO,ES,24,186,361,378,GC,fernando-tercero-lopez
+team-polti-visitmalta-2026,ProTeam,Mirco,MAESTRI,IT,34,144,435,974,Hills,mirco-maestri
+team-polti-visitmalta-2026,ProTeam,Francisco,MUÑOZ,ES,25,139,448,190,GC,francisco-munoz-llana
+team-polti-visitmalta-2026,ProTeam,Diego Pablo,SEVILLA,ES,30,126,477,273,Hills,diego-pablo-sevilla
+team-polti-visitmalta-2026,ProTeam,Andrea,MIFSUD,MT,27,119,503,136,Hills,andrea-mifsud
+team-polti-visitmalta-2026,ProTeam,Fabrizio,CROZZOLO,AR,21,104,547,104,GC,fabrizio-crozzolo
+team-polti-visitmalta-2026,ProTeam,Dario Igor,BELLETTA,IT,22,102,555,159,Hills,dario-igor-belletta
+team-polti-visitmalta-2026,ProTeam,Mattia,BAIS,IT,29,95,578,611,GC,mattia-bais
+team-polti-visitmalta-2026,ProTeam,Davide,BAIS,IT,28,89,606,462,GC,davide-bais
+team-polti-visitmalta-2026,ProTeam,Gabriele,BESSEGA,IT,22,87,616,88,Hills,gabriele-bessega
+team-polti-visitmalta-2026,ProTeam,Tommaso,BESSEGA,IT,22,60,761,62,Sprint,tommaso-bessega
+team-polti-visitmalta-2026,ProTeam,Javier,SERRANO,ES,25,57,787,157,Hills,javier-serrano
+team-polti-visitmalta-2026,ProTeam,Dario,GIULIANO,FR,21,39,944,39,Oneday,dario-giuliano
+team-polti-visitmalta-2026,ProTeam,Germán Darío,GÓMEZ,CO,25,38,949,200,GC,german-dario-gomez
+team-polti-visitmalta-2026,ProTeam,Alessandro,TONELLI,IT,34,31,1022,729,GC,alessandro-tonelli
+team-polti-visitmalta-2026,ProTeam,Adrián,BENITO,ES,22,23,1185,23,Climber,adrian-benito-gonzalez
+team-polti-visitmalta-2026,ProTeam,Andrea,PIETROBON,IT,27,18,1304,129,Hills,andrea-pietrobon
+team-polti-visitmalta-2026,ProTeam,Aidan,BUTTIGIEG,MT,29,17,1346,57,TT,aidan-buttigieg
+team-polti-visitmalta-2026,ProTeam,Gabriele,RACCAGNI,IT,23,14,1498,14,Sprint,gabriele-raccagni
+team-polti-visitmalta-2026,ProTeam,Pablo,GARCÍA,ES,25,1,2479,1,TT,pablo-garcia-frances
+team-polti-visitmalta-2026,ProTeam,Santiago,BASSO,IT,20,,,0,,santiago-basso
+totalenergies-2026,ProTeam,Emilien,JEANNIÈRE,FR,27,734,61,2169,Oneday,emilien-jeanniere
+totalenergies-2026,ProTeam,Jordan,JEGAT,FR,27,596,74,1762,Climber,jordan-jegat
+totalenergies-2026,ProTeam,Alexandre,DELETTRE,FR,28,594,76,1618,Oneday,alexandre-delettre
+totalenergies-2026,ProTeam,Anthony,TURGIS,FR,32,501,102,4201,Oneday,anthony-turgis
+totalenergies-2026,ProTeam,Sandy,DUJARDIN,FR,29,402,150,1523,Oneday,sandy-dujardin
+totalenergies-2026,ProTeam,Joris,DELBOVE,FR,26,352,171,671,GC,joris-delbove
+totalenergies-2026,ProTeam,Jason,TESSON,FR,28,314,195,1497,Sprint,jason-tesson
+totalenergies-2026,ProTeam,Nicolas,BREUILLARD,FR,26,286,228,492,GC,nicolas-breuillard
+totalenergies-2026,ProTeam,Mattéo,VERCHER,FR,25,213,312,650,Hills,matheo-vercher
+totalenergies-2026,ProTeam,Thomas,BONNET,FR,27,162,403,271,GC,thomas-bonnet
+totalenergies-2026,ProTeam,Samuel,LEROUX,FR,31,143,438,493,GC,samuel-leroux
+totalenergies-2026,ProTeam,Thibault,GUERNALEC,FR,29,108,535,783,TT,thibault-guernalec
+totalenergies-2026,ProTeam,Mathis,LE BERRE,FR,25,107,538,434,Hills,mathis-le-berre
+totalenergies-2026,ProTeam,Baptiste,VADIC,FR,24,103,550,140,TT,baptiste-vadic
+totalenergies-2026,ProTeam,Florian,DAUPHIN,FR,27,97,566,324,Sprint,florian-dauphin
+totalenergies-2026,ProTeam,Pierre,THIERRY,FR,23,96,573,217,Oneday,pierre-thierry
+totalenergies-2026,ProTeam,Mathieu,BURGAUDEAU,FR,27,93,585,1750,Hills,mathieu-burgaudeau
+totalenergies-2026,ProTeam,Rayan,BOULAHOITE,FR,22,80,649,113,Sprint,rayan-boulahoite
+totalenergies-2026,ProTeam,Thomas,GACHIGNARD,FR,26,73,681,522,GC,thomas-gachignard
+totalenergies-2026,ProTeam,Geoffrey,BOUCHARD,FR,34,54,805,1235,Climber,geoffrey-bouchard
+totalenergies-2026,ProTeam,Théo,HÉBERT,FR,22,53,820,53,GC,theo-hebert
+totalenergies-2026,ProTeam,Alexys,BRUNEL,FR,27,30,1041,312,TT,alexys-brunel
+totalenergies-2026,ProTeam,Fabien,DOUBEY,FR,32,22,1196,753,GC,fabien-doubey
+totalenergies-2026,ProTeam,Alan,JOUSSEAUME,FR,28,21,1227,189,Oneday,alan-jousseaume
+totalenergies-2026,ProTeam,Lorrenzo,MANZIN,FR,32,21,1222,1740,Sprint,lorrenzo-manzin
+totalenergies-2026,ProTeam,Valentin,RETAILLEAU,FR,26,16,1374,212,Hills,valentin-retailleau
+totalenergies-2026,ProTeam,Nicola,MARCEROU,FR,23,15,1442,20,Oneday,nicola-marcerou
+totalenergies-2026,ProTeam,Fabien,GRELLIER,FR,31,5,1972,473,Oneday,fabien-grellier
+totalenergies-2026,ProTeam,Théo,LÉVÊQUE,FR,22,3,2217,3,Hills,theo-leveque
+totalenergies-2026,ProTeam,Paul,CONOR,FR,22,2,2333,2,Climber,paul-conor
+totalenergies-2026,ProTeam,Evan,PAVIS,FR,21,2,2359,2,Hills,evan-pavis
+tudor-pro-cycling-team-2026,ProTeam,Mathys,RONDEL,FR,22,838,49,1173,GC,mathys-rondel
+tudor-pro-cycling-team-2026,ProTeam,Michael,STORER,AU,29,815,53,4131,Climber,michael-storer
+tudor-pro-cycling-team-2026,ProTeam,Marco,BRENNER,DE,23,572,84,1254,GC,marco-brenner
+tudor-pro-cycling-team-2026,ProTeam,Yannis,VOISARD,CH,28,572,83,1332,GC,yannis-voisard
+tudor-pro-cycling-team-2026,ProTeam,Matteo,TRENTIN,IT,37,551,95,10065,Oneday,matteo-trentin
+tudor-pro-cycling-team-2026,ProTeam,Marc,HIRSCHI,CH,27,504,100,7720,Oneday,marc-hirschi
+tudor-pro-cycling-team-2026,ProTeam,Julian,ALAPHILIPPE,FR,34,502,101,13797,Oneday,julian-alaphilippe
+tudor-pro-cycling-team-2026,ProTeam,Luca,MOZZATO,IT,28,455,124,2913,Oneday,luca-mozzato
+tudor-pro-cycling-team-2026,ProTeam,Rick,PLUIMERS,NL,25,365,164,1108,Hills,rick-pluimers
+tudor-pro-cycling-team-2026,ProTeam,Arvid,DE KLEIJN,NL,32,235,285,2415,Sprint,arvid-de-kleijn
+tudor-pro-cycling-team-2026,ProTeam,Stefan,KÜNG,CH,32,223,298,8038,TT,stefan-kung
+tudor-pro-cycling-team-2026,ProTeam,Florian,STORK,DE,29,182,374,758,Climber,florian-stork
+tudor-pro-cycling-team-2026,ProTeam,Marius,MAYRHOFER,DE,25,167,398,939,Hills,marius-mayrhofer
+tudor-pro-cycling-team-2026,ProTeam,Marco,HALLER,AT,35,159,406,2529,Oneday,marco-haller
+tudor-pro-cycling-team-2026,ProTeam,Lennart,JASCH,DE,25,123,488,156,Climber,lennart-jasch
+tudor-pro-cycling-team-2026,ProTeam,Robin,FROIDEVAUX,CH,27,121,494,348,Hills,robin-froidevaux
+tudor-pro-cycling-team-2026,ProTeam,Larry,WARBASSE,US,36,99,562,1472,GC,lawrence-warbasse
+tudor-pro-cycling-team-2026,ProTeam,Arthur,KLUCKERS,LU,26,79,651,330,TT,arthur-kluckers
+tudor-pro-cycling-team-2026,ProTeam,Aivaras,MIKUTIS,LT,23,79,654,257,TT,aivaras-mikutis
+tudor-pro-cycling-team-2026,ProTeam,Will,BARTA,US,30,74,675,913,TT,william-barta
+tudor-pro-cycling-team-2026,ProTeam,Maikel,ZIJLAARD,NL,27,69,699,574,TT,maikel-zijlaard
+tudor-pro-cycling-team-2026,ProTeam,Robin,DONZÉ,CH,22,53,818,60,Oneday,robin-donze
+tudor-pro-cycling-team-2026,ProTeam,Sebastian,KOLZE CHANGIZI,DK,25,50,836,160,Sprint,sebastian-kolze-changizi
+tudor-pro-cycling-team-2026,ProTeam,Fabian,WEISS,CH,24,48,852,127,TT,fabian-weiss
+tudor-pro-cycling-team-2026,ProTeam,Hannes,WILKSCH,DE,24,42,902,185,GC,hannes-wilksch
+tudor-pro-cycling-team-2026,ProTeam,Petr,KELEMEN,CZ,25,39,942,195,TT,petr-kelemen
+tudor-pro-cycling-team-2026,ProTeam,Fabian,LIENHARD,CH,32,27,1097,1121,Oneday,fabian-lienhard
+tudor-pro-cycling-team-2026,ProTeam,Jacob,ERIKSSON,SE,26,20,1249,211,Oneday,jacob-eriksson
+tudor-pro-cycling-team-2026,ProTeam,Roland,THALMANN,CH,33,20,1239,608,GC,roland-thalmann
+tudor-pro-cycling-team-2026,ProTeam,Luc,WIRTGEN,LU,28,17,1332,346,Hills,luc-wirtgen
+tudor-pro-cycling-team-2026,ProTeam,Joel,SUTER,CH,27,12,1542,301,TT,joel-suter
+unibet-rose-rockets-2026,ProTeam,Dylan,GROENEWEGEN,NL,33,877,42,9647,Sprint,dylan-groenewegen
+unibet-rose-rockets-2026,ProTeam,Lukáš,KUBIŠ,SK,26,809,54,1799,Oneday,lukas-kubis
+unibet-rose-rockets-2026,ProTeam,Clément,VENTURINI,FR,32,629,71,3731,Oneday,clement-venturini
+unibet-rose-rockets-2026,ProTeam,Matyáš,KOPECKÝ,CZ,23,285,230,790,Oneday,matyas-kopecky
+unibet-rose-rockets-2026,ProTeam,Wout,POELS,NL,38,280,236,8635,Climber,wout-poels
+unibet-rose-rockets-2026,ProTeam,Lander,LOOCKX,BE,29,263,253,657,Oneday,lander-loockx
+unibet-rose-rockets-2026,ProTeam,Victor,LAFAY,FR,30,225,294,1642,GC,victor-lafay
+unibet-rose-rockets-2026,ProTeam,Cedrik Bakke,CHRISTOPHERSEN,NO,24,187,356,364,GC,cedrik-bakke-christophersen
+unibet-rose-rockets-2026,ProTeam,Jelle,JOHANNINK,NL,29,182,371,329,Oneday,jelle-johannink
+unibet-rose-rockets-2026,ProTeam,Tobias,MÜLLER,DE,22,173,386,197,Sprint,tobias-muller1
+unibet-rose-rockets-2026,ProTeam,Niklas,LARSEN,DK,29,160,404,985,TT,niklas-larsen
+unibet-rose-rockets-2026,ProTeam,Tomáš,KOPECKÝ,CZ,26,139,446,361,GC,tomas-kopecky
+unibet-rose-rockets-2026,ProTeam,Joren,BLOEM,NL,26,132,463,399,Sprint,joren-bloem2
+unibet-rose-rockets-2026,ProTeam,Odd Christian,EIKING,NO,31,113,524,2467,GC,odd-christian-eiking
+unibet-rose-rockets-2026,ProTeam,Elmar,REINDERS,NL,34,96,568,909,Oneday,elmar-reinders
+unibet-rose-rockets-2026,ProTeam,Hartthijs,DE VRIES,NL,30,73,679,507,Sprint,hartthijs-de-vries
+unibet-rose-rockets-2026,ProTeam,Ronan,AUGÉ,FR,22,65,729,97,Sprint,ronan-auge
+unibet-rose-rockets-2026,ProTeam,Adrien,MAIRE,FR,25,54,806,375,Climber,adrien-maire
+unibet-rose-rockets-2026,ProTeam,Rory,TOWNSEND,IE,31,50,834,1104,Oneday,rory-townsend
+unibet-rose-rockets-2026,ProTeam,Karsten Larsen,FELDMANN,NO,23,49,845,79,Hills,karsten-larsen-feldmann
+unibet-rose-rockets-2026,ProTeam,Sergio,MERIS,IT,25,42,903,137,Hills,sergio-meris
+unibet-rose-rockets-2026,ProTeam,Wessel,MOURIS,NL,23,42,905,131,TT,wessel-mouris
+unibet-rose-rockets-2026,ProTeam,Jannis,PETER,DE,25,38,948,158,GC,jannis-peter
+unibet-rose-rockets-2026,ProTeam,Killian,VERSCHUREN,FR,23,36,968,104,GC,killian-verschuren
+unibet-rose-rockets-2026,ProTeam,Martijn,RASENBERG,NL,24,17,1338,123,Sprint,martijn-rasenberg
+unibet-rose-rockets-2026,ProTeam,Owen,GELEIJN,NL,25,14,1489,56,Hills,owen-geleijn
+unibet-rose-rockets-2026,ProTeam,Eivind Broholt,FOUGNER,NO,23,8,1780,53,Climber,eivind-broholt-fougner
+unibet-rose-rockets-2026,ProTeam,Abram,STOCKMAN,BE,30,5,1979,117,Sprint,abram-stockman
+unibet-rose-rockets-2026,ProTeam,Adam,ŤOUPALÍK,CZ,30,5,1975,634,Hills,adam-toupalik
+unibet-rose-rockets-2026,ProTeam,Colin,SAVIOZ,FR,22,,,4,Climber,colin-savioz
