@@ -107,7 +107,8 @@ select{background:var(--panel2);border:1px solid var(--line);color:var(--txt);pa
 .tag.warn{background:#4a1f1c;color:#ffb0a8}
 .ldr{color:#ffd97a!important;font-weight:800}.lt{color:#cdd8ea!important;font-weight:700}.tag.fla{background:#4a2418;color:#ff9a70}
 .tag.rou{background:#143d33;color:#7fe0c3}.tag.chrt{background:#2a3550;color:#aab8e8}
-.stars{color:#ffd97a;font-size:.72rem;letter-spacing:1px;white-space:nowrap}.stars .off,.stars ☆{opacity:.3}
+.stars{color:#ffd97a;font-size:.72rem;letter-spacing:1px;white-space:nowrap}
+.stars .off{color:#39445c}
 .pill{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.72rem;background:var(--panel2);color:var(--dim);margin-right:6px}
 /* Overlays */
 #veil{position:fixed;inset:0;background:#0a0f18e6;display:none;align-items:center;justify-content:center;z-index:50;flex-direction:column;gap:14px}
@@ -138,7 +139,17 @@ select{background:var(--panel2);border:1px solid var(--line);color:var(--txt);pa
 .sqtab th.srt.on{color:var(--acc)}
 .seltab .bar{width:28px}
 .seltab .tag{font-size:.6rem;padding:1px 4px}
-.seltab td.selnm{max-width:27vw;overflow:hidden;text-overflow:ellipsis}
+.seltab td.selnm{overflow:hidden;text-overflow:ellipsis}
+/* tout doit tenir sans défilement latéral : largeurs fixes, le nom prend le reste */
+.seltab{table-layout:fixed}
+.seltab th:nth-child(1),.seltab td:nth-child(1){width:20px}
+.seltab th:nth-child(3),.seltab td:nth-child(3){width:34px}
+.seltab th:nth-child(4),.seltab td:nth-child(4){width:30px}
+.seltab th:nth-child(5),.seltab td:nth-child(5){width:38px}
+.seltab th:nth-child(6),.seltab td:nth-child(6){width:34px}
+.seltab th:nth-child(7),.seltab td:nth-child(7){width:22px}
+.seltab th:nth-child(8),.seltab td:nth-child(8){width:38px}
+.seltab .bar{width:26px}
 .seltab tr.son td{background:#1d2f1c}
 .seltab tr.sdis{opacity:.4}
 .caltab{width:100%;table-layout:fixed;font-size:.74rem}
@@ -434,9 +445,9 @@ function newRider(base,ti){
 const GTP=[3,5,6]; // blocs contenant un grand tour
 
 const TIER0=TEAMS.map(t=>[t[2],t[3]]);
-function init(teamIdx){
+function init(teamIdx,slot){
   TEAMS.forEach((t,i)=>{t[2]=TIER0[i][0];t[3]=TIER0[i][1];});
-  G={me:teamIdx,year:2026,week:1,phase:"peaks",tab:"home",
+  G={me:teamIdx,slot:slot||0,year:2026,week:1,phase:"peaks",tab:"home",
     riders:[],teams:TEAMS.map((t,i)=>({i,pts:0,cash:t[4]*1e6*0.25,budget:t[4]*1e6,wins:0})),
     log:[],season:1,history:[],pending:[],selBuf:null,lastRes:[],progInit:false};
   ROSTERS.forEach((ros,ti)=>ros.forEach(b=>{
@@ -546,6 +557,14 @@ function teamPeaks(ti){
 /* Leader d'une course : celui que le joueur a désigné, sinon le meilleur
    coureur en forme sur ce bloc. */
 function autoLeader(i){
+  const rc=RACES[i],p=weekPeriod(rc[1]);
+  // on ne mène qu'un seul grand tour dans une saison
+  const pris=rc[2]==="gt"?new Set(RACES.map((x,j)=>x[2]==="gt"&&j<i?j:-1).filter(j=>j>=0)
+    .map(j=>{const l=teamRiders(G.me).find(r=>(r.lead||[]).includes(j))||autoLeaderRaw(j);return l?l.id:-1;})):new Set();
+  return teamRiders(G.me).filter(r=>(r.p1===p||r.p2===p)&&!pris.has(r.id))
+    .sort((a,b)=>baseScore(b,rc[3])-baseScore(a,rc[3]))[0]||autoLeaderRaw(i);
+}
+function autoLeaderRaw(i){
   const rc=RACES[i],p=weekPeriod(rc[1]);
   return teamRiders(G.me).filter(r=>r.p1===p||r.p2===p)
     .sort((a,b)=>baseScore(b,rc[3])-baseScore(a,rc[3]))[0]||null;
@@ -981,7 +1000,12 @@ function applyResults(race,res){
 }
 
 /* ================= SAUVEGARDE ================= */
+/* Trois emplacements de sauvegarde. Le premier garde la clé historique :
+   une partie commencée avant cette version se retrouve donc intacte. */
 const SAVE_KEY="cm_save_v1";
+const SLOTS=3;
+const slotKey=i=>i?SAVE_KEY+"_"+i:SAVE_KEY;
+const curSlot=()=>(G&&G.slot)||0;
 function saveGame(){
   if(!G||G.me==null||G.live||G.oneDay)return;
   try{
@@ -990,7 +1014,8 @@ function saveGame(){
       teams:G.teams,riders:G.riders,history:G.history,promo:G.promo||null,
       renew:G.renew||[],poolIds:(G.pool||[]).map(r=>r.id),agreed:G.agreed||{},nego:G.nego||{},
       mktResolved:!!G.mktResolved,mktRes:G.mktRes||null,progInit:!!G.progInit,progLog:G.progLog||[],potV2:!!G.potV2,logC:G.logC||[]};
-    localStorage.setItem(SAVE_KEY,JSON.stringify(s));
+    s.slot=curSlot();
+    localStorage.setItem(slotKey(curSlot()),JSON.stringify(s));
   }catch(e){}
 }
 function migratePot(){
@@ -1001,12 +1026,12 @@ function migratePot(){
   });
   G.potV2=true;
 }
-function loadGame(str){
+function loadGame(str,slot){
   try{
-    const s=JSON.parse(str||localStorage.getItem(SAVE_KEY)||"null");
+    const s=JSON.parse(str||localStorage.getItem(slotKey(slot||0))||"null");
     if(!s||s.v!==1||!Array.isArray(s.riders)||s.riders.length<100||s.me==null||!Array.isArray(s.teams)||s.teams.length!==TEAMS.length)return false;
     s.tiers.forEach((t,i)=>{if(TEAMS[i]){TEAMS[i][2]=t;TEAMS[i][3]=s.gts[i];}});
-    G={me:s.me,year:s.year,week:s.week,season:s.season,phase:s.phase,tab:"home",
+    G={me:s.me,slot:slot!=null?slot:(s.slot||0),year:s.year,week:s.week,season:s.season,phase:s.phase,tab:"home",
       riders:s.riders,teams:s.teams,history:s.history||[],promo:s.promo,
       renew:s.renew||[],pool:(s.poolIds||[]).map(i=>s.riders.find(r=>r.id===i)).filter(Boolean),
       agreed:s.agreed||{},nego:s.nego||{},offers:{},
@@ -1031,9 +1056,12 @@ function migrateTargets(){
   });
 }
 const _loadGame=loadGame;loadGame=function(str){const ok=_loadGame(str);if(ok){migratePot();migrateTargets();}return ok;};
-function hasSave(){try{return !!localStorage.getItem(SAVE_KEY)}catch(e){return false}}
-function wipeSave(){try{localStorage.removeItem(SAVE_KEY)}catch(e){}}
-function saveInfo(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY));return s?{team:TEAMS[s.me][0],year:s.year,week:Math.min(s.week,42)}:null}catch(e){return null}}
+function hasSave(i){try{return !!localStorage.getItem(slotKey(i||0))}catch(e){return false}}
+function wipeSave(i){try{localStorage.removeItem(slotKey(i||0))}catch(e){}}
+function saveInfo(i){try{
+  const s=JSON.parse(localStorage.getItem(slotKey(i||0)));
+  return s?{team:TEAMS[s.me][0],year:s.year,week:Math.min(s.week,42),me:s.me}:null;
+}catch(e){return null}}
 /* ================= BOUCLE SAISON ================= */
 function showVeil(txt){document.getElementById("veiltxt").textContent=txt||"Simulation…";document.getElementById("veil").classList.add("on");}
 function hideVeil(){document.getElementById("veil").classList.remove("on");}
@@ -1341,14 +1369,14 @@ function resolveMarket(){
   G.offers={};
 }
 function aiFill(){
-  const pool=G.pool.filter(r=>r.t===-1);
+  // trié une seule fois : le vivier ne bouge que par retraits successifs
+  const pool=G.pool.filter(r=>r.t===-1).sort((a,b)=>b.moy-a.moy);
   G.teams.forEach(t=>{
     if(t.i===G.me)return;
     const target=TEAMS[t.i][2]===0?26:22;
     let need=target-teamRiders(t.i).length;
     while(need>0){
-      const cand=pool.length?pool.sort((a,b)=>b.moy-a.moy)[0]:genNeo();
-      if(pool.includes(cand))pool.splice(pool.indexOf(cand),1);
+      const cand=pool.length?pool.shift():genNeo();
       cand.t=t.i;cand.sal=askSalary(cand);cand.ctr=1+Math.floor(U.r()*3);
       need--;
     }
@@ -1410,7 +1438,7 @@ const PROFTAG={mon:"mon",spr:"spr",pun:"gc",chr:"chrt",pla:"rou",fla:"fla"};
 const TABR=["UAD","TVL","RBH","LTK","INE","SOQ","APT","DCC","EFE","GFC","LTI","MOV","NSN","JAY","TPP","TBV","UNO","XAT","TUD","Q36","COF","TEN","URR","PTV","BCF","CJR","BBH","EKP","EUS","FLB","TNN","MBH","MAP","STN"];
 const pavOf=r=>U.cl(Math.round((0.50*r.pla+0.25*r.pun+0.15*r.spr+0.10*r.chr)*(r.prof==="fla"?1.08:1)),30,99);
 const NSTARS=p=>p>=86?4:p>=79?3:p>=72?2:1;
-const starsHtml=n=>`<span class="stars">${"★".repeat(n)}${"☆".repeat(4-n)}</span>`;
+const starsHtml=n=>`<span class="stars">${"★".repeat(n)}${n<4?`<span class="off">${"★".repeat(4-n)}</span>`:""}</span>`;
 const potTag=r=>starsHtml(NSTARS(r.pot||r.moy));
 
 const PROFA={mon:"GRI",spr:"SPR",pun:"PUN",chr:"CHR",pla:"ROU",fla:"FLA"};
@@ -1515,7 +1543,7 @@ function openSettings(){
   d.querySelector("#svexp").onclick=()=>{
     saveGame();
     try{
-      const blob=new Blob([localStorage.getItem(SAVE_KEY)||"{}"],{type:"application/json"});
+      const blob=new Blob([localStorage.getItem(slotKey(curSlot()))||"{}"],{type:"application/json"});
       const a=document.createElement("a");a.href=URL.createObjectURL(blob);
       a.download="cycling-manager-save.json";a.click();URL.revokeObjectURL(a.href);
     }catch(e){notice("Export impossible.");}
@@ -1576,23 +1604,49 @@ function render(){
 
 /* --- Choix d'équipe --- */
 function renderPick(){
-  const sv=saveInfo();
+  const infos=Array.from({length:SLOTS},(_,i)=>saveInfo(i));
+  const occupes=infos.filter(Boolean).length;
+  if(G_NEWSLOT==null&&occupes)G_NEWSLOT=infos.findIndex(s=>!s);
   app().innerHTML=`<div class="home"><h1>Cycling Manager 2026</h1>
-  ${sv?`<div class="card" style="text-align:left"><h3>Partie en cours</h3>
-  <div class="evt">${U.esc(sv.team)} · saison ${sv.year} · S${sv.week}</div>
-  <button class="btn" id="resume" style="margin-top:8px">Reprendre ▸</button></div>
-  <p class="stat">Ou démarrez une nouvelle partie (écrase la sauvegarde) :</p>`
+  ${occupes?`<div class="card" style="text-align:left"><h3>Vos parties</h3>
+  ${infos.map((s,i)=>`<div class="selrow one" style="gap:10px">
+  <span class="stat" style="width:24px;flex:none">${i+1}</span>
+  <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${
+    s?`${jer(s.me)}<b>${U.esc(s.team)}</b> <span class="stat">${s.year} · S${s.week}</span>`
+     :'<span class="stat">Emplacement libre</span>'}</span>
+  ${s?`<button class="btn sm" data-res="${i}">Reprendre</button>
+      <button class="btn sec sm" data-del="${i}" style="color:var(--warn)">Effacer</button>`
+     :`<button class="btn sec sm" data-new="${i}">Nouvelle partie</button>`}
+  </div>`).join("")}</div>
+  <p class="stat">${G_NEWSLOT!=null&&G_NEWSLOT>=0?`Nouvelle partie dans l'emplacement <b>${G_NEWSLOT+1}</b> — choisissez une équipe :`
+    :"Tous les emplacements sont occupés : effacez-en un pour commencer une nouvelle partie."}</p>`
   :`<p>Choisissez votre équipe : gérez sélections, pics de forme, tactiques et budget sur toute la saison World Tour.</p>`}
   <div class="tlist">${TEAMS.map((t,i)=>{
     const rs=ROSTERS[i];const top=Math.round(rs.map(x=>(x[3]+x[4]+x[5]+x[6]+x[7]+x[8])/6).sort((a,b)=>b-a).slice(0,8).reduce((s,v)=>s+v,0)/8);
     return `<div class="tpick" data-i="${i}">${jer(i)}<b>${t[0]}</b>
     <span class="stat">${t[2]?'<span class="tag mon">PRO</span>':'<span class="tag spr">WT</span>'} Budget ${t[4]} M€ · Niveau <span class="${col(top)}">${top}</span></span></div>`}).join("")}</div></div>`;
-  const rz=$("#resume");if(rz)rz.onclick=()=>{if(loadGame())render();else notice("Sauvegarde illisible.");};
+  document.querySelectorAll("[data-res]").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.res;
+    if(loadGame(null,i))render();else notice("Sauvegarde illisible.");
+  });
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.del;
+    if(G_DELSLOT!==i){G_DELSLOT=i;notice("Touchez à nouveau Effacer pour supprimer cette partie.");return;}
+    G_DELSLOT=null;wipeSave(i);
+    if(G_NEWSLOT==null||G_NEWSLOT<0)G_NEWSLOT=i;
+    renderPick();
+  });
+  document.querySelectorAll("[data-new]").forEach(b=>b.onclick=()=>{
+    G_NEWSLOT=+b.dataset.new;G_DELSLOT=null;renderPick();
+    notice("Choisissez une équipe pour l'emplacement "+(G_NEWSLOT+1)+".");
+  });
   document.querySelectorAll(".tpick").forEach(d=>d.onclick=()=>{
-    if(hasSave()&&!G_CONFIRM_NEW){G_CONFIRM_NEW=true;notice("Une sauvegarde existe : touchez à nouveau l'équipe pour la remplacer.");return;}
-    G_CONFIRM_NEW=false;wipeSave();init(+d.dataset.i);render();saveGame();});
+    const slot=G_NEWSLOT!=null&&G_NEWSLOT>=0?G_NEWSLOT:0;
+    if(hasSave(slot)){notice("Emplacement occupé : effacez-le ou choisissez-en un autre.");return;}
+    G_NEWSLOT=null;G_DELSLOT=null;
+    init(+d.dataset.i,slot);render();saveGame();});
 }
-let G_CONFIRM_NEW=false;
+let G_NEWSLOT=null,G_DELSLOT=null;
 
 /* --- Draft de saison : objectifs par course --- */
 function draftState(){
@@ -1814,6 +1868,7 @@ function rolesHtml(sel,roles,oneday,dead){
     <div style="display:flex;gap:5px;align-items:center;min-width:0">
     <span class="lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem">${U.esc(r.n)}${ab?" ✕":""}</span>
     <span class="tag ${PROFTAG[r.prof]}" style="font-size:.58rem">${PROFA[r.prof]}</span>
+    <b class="${col(r.moy)}" style="font-size:.72rem;flex:none">${r.moy}</b>
     ${ab?"":list.map(k=>`<span class="rchip ${st.ro===k?"on":""}" data-ro="${r.id}|${k}">${ROLN[k]}</span>`).join("")}
     </div>
     ${oris?`<div style="display:flex;gap:5px;margin-top:4px;padding-left:4px">${oris.map(o=>`<span class="ochip ${st.or===o?"on":""}" data-or="${r.id}|${o}">${ORIN[o]}</span>`).join("")}</div>`:""}
@@ -1903,7 +1958,7 @@ function renderSelect(){
   <button class="btn sec sm" id="autoF">Auto forme</button>
   <button class="btn sec sm" id="clr">Vider</button>
   <span class="pill">Sélection : <b>${buf.ids.size}</b>/${n}</span></div>
-  <div class="scroll"><table class="seltab"><thead><tr><th>✓</th>${(()=>{const ar=k=>buf.sort===k?(buf.sdir>0?" ▼":" ▲"):"";const th=(k,l)=>`<th class="srt ${buf.sort===k?"on":""}" data-st="${k}">${l}${ar(k)}</th>`;return th("nom","Coureur")+th("spec","Spé")+th("adeq","ADQ")+th("forme","Forme")+th("fatigue","Fat")+th("jours","J")+th("pic","Pic");})()}</tr></thead><tbody>
+  <div><table class="seltab"><thead><tr><th>✓</th>${(()=>{const ar=k=>buf.sort===k?(buf.sdir>0?" ▼":" ▲"):"";const th=(k,l)=>`<th class="srt ${buf.sort===k?"on":""}" data-st="${k}">${l}${ar(k)}</th>`;return th("nom","Coureur")+th("spec","Spé")+th("adeq","ADQ")+th("forme","Forme")+th("fatigue","Fat")+th("jours","J")+th("pic","Pic");})()}</tr></thead><tbody>
   ${(()=>{return rs.map(r=>{
     const dis=!elig(r);
     const on=buf.ids.has(r.id);
@@ -1937,7 +1992,9 @@ function renderSelect(){
   $("#clr").onclick=()=>{buf.ids.clear();renderSelect();};
   document.querySelectorAll("input[data-c]").forEach(c=>c.onchange=()=>{
     const id=+c.dataset.c;
-    if(c.checked){if(buf.ids.size>=n){c.checked=false;return;}buf.ids.add(id);}
+    if(c.checked){
+      if(buf.ids.size>=n){c.checked=false;notice("Sélection complète ("+n+" coureurs) : décochez-en un d'abord.");return;}
+      buf.ids.add(id);}
     else{buf.ids.delete(id);}
     renderSelect();
   });
@@ -1949,7 +2006,12 @@ function renderSelect(){
     p.stage="roles";
     renderSelect();
   };
-  const sk=$("#skip");if(sk)sk.onclick=()=>{p.decided=true;p.entry=null;G.selBuf=null;renderSelect();};
+  const sk=$("#skip");
+  if(sk)sk.onclick=()=>{
+    // renoncer à une course est sans retour : on demande confirmation
+    if(!buf.skipOk){buf.skipOk=true;sk.textContent="Confirmer l'impasse";sk.classList.add("warn");
+      notice("Vous ne prendrez pas le départ de "+race[0]+". Touchez à nouveau pour confirmer.");return;}
+    p.decided=true;p.entry=null;G.selBuf=null;renderSelect();};
 }
 /* --- Écran Rôles pré-course --- */
 function renderRolesPre(p){
@@ -1987,7 +2049,7 @@ function renderOneDay(){
   <div>${rolesHtml(myE.sel,myE.roles,true,null)}</div></div>
   <div class="card"><h3>L'Effort</h3>
   <p class="stat">Figez l'aiguille au centre : bonus de forme du jour pour le coureur ciblé.</p>
-  <div style="display:flex;gap:5px;flex-wrap:wrap;margin:6px 0">${elig.map(r=>`<span class="rchip ${od.effT===r.id?"on":""}" data-eff="${r.id}">${U.esc(r.n)}</span>`).join("")}</div>
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin:6px 0">${elig.map(r=>`<span class="rchip ${od.effT===r.id?"on":""}" data-eff="${r.id}">${U.esc(r.n)} <span class="tag ${PROFTAG[r.prof]}" style="font-size:.55rem">${PROFA[r.prof]}</span> <b class="${col(r.moy)}">${r.moy}</b></span>`).join("")}</div>
   <canvas id="mgc" width="320" height="64" style="width:100%;max-width:360px;background:var(--panel2);border-radius:10px;touch-action:manipulation;margin-top:6px"></canvas>
   <div style="margin-top:8px;display:flex;gap:8px">
   <button class="btn" id="mgstop">Stop !</button>
@@ -2069,7 +2131,7 @@ function renderLive(){
   </div></div>
   <div class="card"><h3>L'Effort</h3>
   <p class="stat">Figez l'aiguille au centre : bonus de forme du jour pour le coureur ciblé. Zone réduite par la fatigue, la montagne et la 3ᵉ semaine.</p>
-  <div style="display:flex;gap:5px;flex-wrap:wrap;margin:6px 0">${elig.map(r=>`<span class="rchip ${rs.effT===r.id?"on":""}" data-eff="${r.id}">${U.esc(r.n)}</span>`).join("")||'<span class="stat">Aucun coureur éligible (L, SPR ou EL).</span>'}</div>
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin:6px 0">${elig.map(r=>`<span class="rchip ${rs.effT===r.id?"on":""}" data-eff="${r.id}">${U.esc(r.n)} <span class="tag ${PROFTAG[r.prof]}" style="font-size:.55rem">${PROFA[r.prof]}</span> <b class="${col(r.moy)}">${r.moy}</b></span>`).join("")||'<span class="stat">Aucun coureur éligible (L, SPR ou EL).</span>'}</div>
   <canvas id="mgc" width="320" height="64" style="width:100%;max-width:360px;background:var(--panel2);border-radius:10px;touch-action:manipulation;margin-top:6px"></canvas>
   <div style="margin-top:8px;display:flex;gap:8px">
   <button class="btn" id="mgstop">Stop !</button>
