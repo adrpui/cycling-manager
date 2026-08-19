@@ -113,8 +113,8 @@ select{background:var(--panel2);border:1px solid var(--line);color:var(--txt);pa
 /* Overlays */
 #veil{position:fixed;inset:0;background:#0a0f18e6;display:none;align-items:center;justify-content:center;z-index:50;flex-direction:column;gap:14px}
 #veil.on{display:flex}
-.pkchips{display:flex;gap:5px;margin-top:6px}
-.pkc{flex:1;text-align:center;padding:7px 0;border-radius:8px;border:1px solid var(--panel2);color:var(--dim);font-size:.75rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.pkchips{display:flex;gap:3px;margin-top:0;flex:none}
+.pkc{flex:none;width:25px;text-align:center;padding:5px 0;font-size:.62rem;border-radius:6px;border:1px solid var(--panel2);color:var(--dim);font-size:.75rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
 .pkc.on{background:#1d4a30;border-color:#2e7d4f;color:#9fe6b4;font-weight:700}
 .jgrid{display:grid;grid-template-columns:minmax(0,1fr) 24px 38px 44px 58px 62px;gap:5px;align-items:center;padding:6px 0;border-bottom:1px solid var(--panel2);font-size:.78rem}
 .jgrid.jhead{color:var(--dim);font-size:.68rem;border-bottom:1px solid var(--dim);padding:2px 0}
@@ -408,12 +408,15 @@ const PRIZE={2:22000,3:45000,4:90000,5:550000,stage:12000};
 /* Blocs de saison : un coureur est au sommet pendant tout un bloc, pas un seul jour.
    Découpage assez fin pour qu'aucun plateau ne dépasse six semaines. */
 const PERIODS=[["Ouverture",1,8],["Flandriennes",9,15],["Ardennaises",16,18],["Giro",19,22],
-  ["Préparation Tour",23,26],["Tour",27,30],["Vuelta / Été",31,36],["Automne",37,42]];
-const PSHORT=["Ouv","Flandr","Ard","Giro","Prép","Tour","Vuelta","Aut"];
-const PCHIP=["O","F","A","G","P","T","V","Au"];
+  ["Tour",23,30],["Vuelta / Été",31,36],["Automne",37,42]];
+const PSHORT=["Ouv","Flandr","Ard","Giro","Tour","Vuelta","Aut"];
+const PCHIP=["O","F","A","G","T","V","Au"];
+/* Le bloc Tour inclut sa préparation : Dauphiné et Suisse se courent en montée de
+   forme (86-97%), le vrai sommet tombe sur le Tour lui-même. */
+const RAMPTO=[0,0,0,0,27,0,0];
 const PC=PERIODS.map(p=>(p[1]+p[2])/2);
 PC[4]=28; // pic centré sur le Tour (S27-30), montée de forme dès le Dauphiné
-const inPeriod=(p,w)=>w>=PERIODS[p][1]&&w<=PERIODS[p][2];
+const inPeriod=(p,w)=>p!=null&&p>=0&&!!PERIODS[p]&&w>=PERIODS[p][1]&&w<=PERIODS[p][2];
 const nextPeak=(r,w)=>{const c=[r.p1,r.p2].sort((a,b)=>PC[a]-PC[b]);for(const p of c)if(PERIODS[p][2]>=w)return p;return c[0];};
 
 /* ================= ÉTAT ================= */
@@ -456,12 +459,12 @@ function newRider(base,ti){
   r.key=key||("gen-"+n.replace(/[^A-Za-z]/g,"").toLowerCase()+"-"+an);
   return r;
 }
-const GTP=[3,5,6]; // blocs contenant un grand tour
+const GTP=[3,4,5]; // blocs contenant un grand tour
 
 const TIER0=TEAMS.map(t=>[t[2],t[3]]);
 function init(teamIdx,slot){
   TEAMS.forEach((t,i)=>{t[2]=TIER0[i][0];t[3]=TIER0[i][1];});
-  G={me:teamIdx,slot:slot||0,year:2026,week:1,phase:"peaks",tab:"home",
+  G={me:teamIdx,blocV:2,slot:slot||0,year:2026,week:1,phase:"peaks",tab:"home",
     riders:[],teams:TEAMS.map((t,i)=>({i,pts:0,cash:t[4]*1e6*0.25,budget:t[4]*1e6,wins:0})),
     log:[],season:1,history:[],pending:[],selBuf:null,lastRes:[],progInit:false};
   ROSTERS.forEach((ros,ti)=>ros.forEach(b=>{
@@ -521,12 +524,12 @@ const MAJEURES=()=>RACES.map((rc,i)=>({rc,i}))
   .sort((a,b)=>a.rc[1]-b.rc[1]);
 /* Paires de blocs cohérentes par profil : un flandrien ne prépare pas la Vuelta */
 const BLOCS={
-  mon:[[4,5],[3,6],[5,6],[3,5],[6,7],[4,6],[0,3],[3,7],[2,5]],
-  spr:[[0,1],[1,5],[5,7],[0,5],[1,6],[0,7],[0,6]],
-  pun:[[1,2],[2,7],[1,7],[2,5],[2,6],[0,2],[2,4]],
-  fla:[[0,1],[1,7],[1,2],[1,6],[0,2]],
-  chr:[[1,5],[4,5],[3,7],[5,7],[1,7],[4,6],[0,4]],
-  pla:[[0,1],[1,5],[4,6],[5,7],[3,6],[1,2],[0,4]]
+  mon:[[4,5],[3,5],[2,4],[3,6],[5,6],[0,3],[4,6],[1,4]],
+  spr:[[0,1],[1,4],[4,6],[0,4],[1,5],[0,6],[0,5]],
+  pun:[[1,2],[2,6],[1,6],[2,4],[2,5],[0,2],[2,3]],
+  fla:[[0,1],[1,6],[1,2],[1,5],[0,2]],
+  chr:[[1,4],[3,4],[3,6],[4,6],[1,6],[0,3]],
+  pla:[[0,1],[1,4],[4,5],[3,6],[1,2],[0,4]]
 };
 const blocList=r=>BLOCS[r.prof]||BLOCS.pla;
 function autoPeaks(r){const pg=U.pick(blocList(r));r.p1=pg[0];r.p2=pg[1];r.p3=-1;}
@@ -535,16 +538,9 @@ function autoPeaks(r){const pg=U.pick(blocList(r));r.p1=pg[0];r.p2=pg[1];r.p3=-1
 /* Besoin réel d'un bloc : la semaine la plus chargée, 8 coureurs par grand tour
    et 7 par autre course. Purement indicatif — rien n'est bloquant. */
 function blocNeeds(){
-  const need=Array(PERIODS.length).fill(0);
-  PERIODS.forEach((p,i)=>{
-    for(let w=p[1];w<=p[2];w++){
-      const rs=RACES.filter(r=>r[1]===w&&invitedTeams(r).includes(G.me));
-      if(!rs.length)continue;
-      const n=rs.reduce((s,r)=>s+(r[2]==="gt"?8:7),0);
-      if(n>need[i])need[i]=n;
-    }
-  });
-  return need;
+  // seuils conseillés, fixés d'un commun accord : 8 coureurs par grand tour seul,
+  // davantage sur les blocs à plusieurs courses simultanées. Jamais bloquant.
+  return [7,14,12,8,12,12,12];
 }
 /* Courses d'un bloc, pour le détail dépliable */
 function blocRaces(i){
@@ -584,12 +580,15 @@ function assignBlocs(list){
   });
   // les blocs encore dégarnis se comblent avec un troisième pic donné aux équipiers,
   // qui y perdent un peu de sommet mais assurent la présence
+  // les blocs encore dégarnis se comblent par un 3e pic donné aux moins forts
+  // (40% du bas de l'effectif) : présents plus souvent, sommet un peu plus bas
+  const seuil3=tri[Math.floor(tri.length*0.6)]?tri[Math.floor(tri.length*0.6)].moy:70;
   let guard=0;
-  while(guard++<40){
-    let p=-1;
-    for(let i=0;i<PERIODS.length;i++)if(need[i]>0&&cov[i]<need[i]){p=i;break;}
+  while(guard++<60){
+    let p=-1,pire=-1;
+    for(let i=0;i<PERIODS.length;i++){const d=need[i]-cov[i];if(need[i]>0&&d>0&&d>pire){pire=d;p=i;}}
     if(p<0)break;
-    const cand=tri.filter(r=>blocsOf(r).length===2&&!blocsOf(r).includes(p)&&r.moy<82)
+    const cand=tri.filter(r=>blocsOf(r).length===2&&!blocsOf(r).includes(p)&&r.moy<=seuil3)
       .sort((a,b)=>a.moy-b.moy)[0];
     if(!cand)break;
     cand.p3=p;cov[p]++;
@@ -634,9 +633,12 @@ function formOf(r,w){
     if(p==null||p<0||!PERIODS[p])continue;
     n++;
     const a=PERIODS[p][1],z=PERIODS[p][2];
-    const v=w>=a&&w<=z?1
-      :w<a?Math.exp(-((a-w)*(a-w))/26)
-      :Math.exp(-((w-z)*(w-z))/9);
+    const rs=RAMPTO[p]||0;
+    let v;
+    if(w<a)v=Math.exp(-((a-w)*(a-w))/26);
+    else if(w>z)v=Math.exp(-((w-z)*(w-z))/9);
+    else if(rs&&w<rs)v=0.86+0.12*(w-a)/Math.max(1,rs-1-a); // montée à travers la préparation
+    else v=1;
     if(v>b)b=v;
   }
   // on ne culmine pas trois fois dans une saison : viser un troisième bloc
@@ -1079,7 +1081,7 @@ const curSlot=()=>(G&&G.slot)||0;
 function saveGame(){
   if(!G||G.me==null||G.live||G.oneDay)return;
   try{
-    const s={v:1,me:G.me,year:G.year,week:G.week,season:G.season,phase:G.phase,nextId:G.nextId,draft:G.draft||null,
+    const s={v:1,blocV:G.blocV||2,me:G.me,year:G.year,week:G.week,season:G.season,phase:G.phase,nextId:G.nextId,draft:G.draft||null,
       tiers:TEAMS.map(t=>t[2]),gts:TEAMS.map(t=>t[3]),
       teams:G.teams,riders:G.riders,history:G.history,promo:G.promo||null,
       renew:G.renew||[],poolIds:(G.pool||[]).map(r=>r.id),agreed:G.agreed||{},nego:G.nego||{},
@@ -1101,7 +1103,7 @@ function loadGame(str,slot){
     const s=JSON.parse(str||localStorage.getItem(slotKey(slot||0))||"null");
     if(!s||s.v!==1||!Array.isArray(s.riders)||s.riders.length<100||s.me==null||!Array.isArray(s.teams)||s.teams.length!==TEAMS.length)return false;
     s.tiers.forEach((t,i)=>{if(TEAMS[i]){TEAMS[i][2]=t;TEAMS[i][3]=s.gts[i];}});
-    G={me:s.me,slot:slot!=null?slot:(s.slot||0),year:s.year,week:s.week,season:s.season,phase:s.phase,tab:"home",
+    G={me:s.me,blocV:s.blocV||0,slot:slot!=null?slot:(s.slot||0),year:s.year,week:s.week,season:s.season,phase:s.phase,tab:"home",
       riders:s.riders,teams:s.teams,history:s.history||[],promo:s.promo,
       renew:s.renew||[],pool:(s.poolIds||[]).map(i=>s.riders.find(r=>r.id===i)).filter(Boolean),
       agreed:s.agreed||{},nego:s.nego||{},offers:{},
@@ -1118,6 +1120,16 @@ function loadGame(str,slot){
 function migrateTargets(){
   if(!G||!G.riders)return;
   const nb=PERIODS.length;
+  // sauvegardes 8 blocs (Prép séparé) : Prép et Tour fusionnent en 4, la suite recule d'un cran
+  if(G.blocV!==2){
+    const map=i=>i==null||i<0?-1:(i<=4?Math.min(i,4):i===5?4:i-1);
+    G.riders.forEach(r=>{
+      r.p1=map(r.p1);r.p2=map(r.p2);r.p3=map(r.p3);
+      if(r.p2===r.p1)r.p2=-1;
+      if(r.p3===r.p1||r.p3===r.p2)r.p3=-1;
+    });
+    G.blocV=2;
+  }
   G.riders.forEach(r=>{
     if(r.c1!=null)delete r.c1;
     if(r.c2!=null)delete r.c2;
@@ -1145,7 +1157,9 @@ async function advance(){
   const todo=racesStarting(G.week);
   const mine=todo.filter(r=>invitedTeams(r).includes(G.me));
   if(mine.length){
-    mine.sort((a,b)=>b[5]-a[5]);
+    // les classiques se décident d'abord : on n'y verrouille pas un flandrien
+    // déjà engagé sur une course à étapes de la même semaine
+    mine.sort((a,b)=>(a[5]>1)-(b[5]>1)||b[4]-a[4]);
     G.pending=mine.map(r=>({race:r,decided:false}));
     const mm=mine.filter(r=>r[5]>1);
     if(mm.length>1){const plan=aiPlanWeek(G.me,mm);G.pending.forEach(x=>{if(plan.has(x.race))x.sug=plan.get(x.race);});}
@@ -1765,7 +1779,7 @@ function renderDraft(){
   app().innerHTML=`<div class="card" style="position:sticky;top:46px;z-index:5">
   <h3>Programme de saison ${G.year}</h3>
   <p class="stat">Chaque coureur vise un à trois blocs : il y est au sommet du début à la fin. Le chiffre de droite est l'effectif qu'il faudrait pour couvrir la semaine la plus chargée du bloc — c'est un repère, jamais une obligation. Touchez un bloc pour voir ses courses.</p>
-  <div class="covgrid" style="grid-template-columns:repeat(8,1fr)">${PERIODS.map((p,i)=>{
+  <div class="covgrid" style="grid-template-columns:repeat(7,1fr)">${PERIODS.map((p,i)=>{
     const c=cov[i],t=need[i];
     const cl=t===0||c>=t*0.5?"cok":c>=t*0.3?"cmid":"cko";
     return `<div class="cov ${cl} ${d.bloc===i?"jon":""}" data-bloc="${i}" style="cursor:pointer"><b>${PSHORT[i]}</b><span>${c}${t?"/"+t:""}</span></div>`}).join("")}</div>
@@ -1779,19 +1793,30 @@ function renderDraft(){
   </div>`:""}
   <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
   <button class="btn sec sm" id="dauto">Répartition automatique</button>
+  <button class="btn sec sm" id="dsort">${d.byBloc?"Liste simple":"Trier par bloc"}</button>
   <button class="btn sm" id="dgo">Lancer la saison ▸</button></div>
   ${manque.length?`<p class="stat" style="margin-top:6px">Blocs les plus légers : ${manque.join(" · ")}</p>`:""}</div>
-  <div class="card"><h3>Blocs de forme</h3>
-  <p class="stat">Deux blocs pour un spécialiste, trois pour couvrir davantage — mais le sommet est alors un peu plus bas.</p>
-  ${rs.map(r=>{
-    const bs=blocsOf(r);
-    return `<div style="padding:6px 0;border-bottom:1px solid var(--panel2)">
-  <div style="display:flex;gap:8px;align-items:center;min-width:0">
-  <span class="nm lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
-  ${bs.length>=3?'<span class="tag" style="font-size:.6rem">sommet 82 %</span>':""}
-  <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span><b class="${col(r.moy)}">${r.moy}</b></div>
-  <div class="pkchips">${PERIODS.map((p,i)=>`<span class="pkc ${bs.includes(i)?"on":""}" data-r="${r.id}" data-p="${i}">${PCHIP[i]}</span>`).join("")}</div>
-  </div>`}).join("")}</div>`;
+  ${(()=>{
+    const ligne=r=>{
+      const bs=blocsOf(r);
+      return `<div style="display:flex;gap:6px;align-items:center;min-width:0;padding:4px 0;border-bottom:1px solid var(--panel2)">
+      <span class="nm lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem">${U.esc(r.n)}${bs.length>=3?' <span class="stat" style="font-size:.6rem">82%</span>':""}</span>
+      <span class="tag ${PROFTAG[r.prof]}" style="font-size:.56rem">${PROFA[r.prof]}</span><b class="${col(r.moy)}" style="font-size:.78rem">${r.moy}</b>
+      <span class="pkchips">${PERIODS.map((p,i)=>`<span class="pkc ${bs.includes(i)?"on":""}" data-r="${r.id}" data-p="${i}">${PCHIP[i]}</span>`).join("")}</span>
+      </div>`;};
+    if(d.byBloc){
+      return `<div class="card"><h3>Effectif par bloc</h3>
+      <p class="stat">Un coureur à plusieurs blocs apparaît dans chacun.</p>
+      ${PERIODS.map((p,i)=>{
+        const l=rs.filter(r=>blocsOf(r).includes(i));
+        return `<div style="margin:10px 0 2px;font-weight:700;color:var(--acc);font-size:.82rem">${p[0]} <span class="stat">(${l.length})</span></div>
+        ${l.map(ligne).join("")||'<p class="stat" style="font-size:.74rem">Personne.</p>'}`;
+      }).join("")}</div>`;
+    }
+    return `<div class="card"><h3>Blocs de forme</h3>
+    <p class="stat">Deux blocs pour un spécialiste, trois pour couvrir davantage — le sommet est alors un peu plus bas.</p>
+    ${rs.map(ligne).join("")}</div>`;
+  })()}`;
 
   document.querySelectorAll("[data-bloc]").forEach(c=>c.onclick=()=>{
     const i=+c.dataset.bloc;
@@ -1815,6 +1840,7 @@ function renderDraft(){
     if(act.length===3)notice("Trois blocs : présent plus souvent, mais sommet plus bas.");
     renderDraft();saveGame();
   });
+  const ds=$("#dsort");if(ds)ds.onclick=()=>{d.byBloc=!d.byBloc;renderDraft();};
   $("#dauto").onclick=()=>{autoProgram();notice("Blocs répartis sur la saison.");renderDraft();saveGame();};
   $("#dgo").onclick=()=>{
     // aucun blocage : les jauges informent, elles n'interdisent pas
@@ -2067,8 +2093,11 @@ function renderSelect(){
   const n=Math.min(race[2]==="gt"?8:7,Math.max(4,eligN));
   const mand=race[2]==="gt"&&eligN>=4;
   const autoPick=wF=>{
-    const sc=r=>baseScore(r,race[3])*Math.pow(formOf(r,race[1]),wF)*fatMult(r.fat);
-    const hot=r=>inPeriod(r.p1,race[1])||inPeriod(r.p2,race[1]);
+    // priorité 1 : la course est dans un bloc de forme du coureur ; 2 : l'affinité
+    // au profil de l'épreuve ; 3 : le pourcentage de forme départage
+    const sc=wF>=3?(r=>baseScore(r,race[3])*Math.pow(formOf(r,race[1]),wF)*fatMult(r.fat))
+      :(r=>(Math.round(baseScore(r,race[3])/4)*4)*10+((formOf(r,race[1])-0.94)/0.14)*9*fatMult(r.fat));
+    const hot=r=>[r.p1,r.p2,r.p3].some(q=>inPeriod(q,race[1]));
     const el=pool.filter(elig);
     const a=el.filter(hot).sort((x,y)=>sc(y)-sc(x));
     const b=el.filter(r=>!hot(r)).sort((x,y)=>sc(y)-sc(x));
@@ -2119,6 +2148,7 @@ function renderSelect(){
     </tr>`}).join("")})()}
   </tbody></table></div>
   <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+  ${G.pending.some(x=>x.decided)?'<button class="btn sec" id="wback">◂ Course précédente</button>':""}
   <button class="btn" id="go">Valider la sélection ▸</button>
   ${mand?"":'<button class="btn sec" id="skip">Faire l\'impasse</button>'}
   </div></div>`;
@@ -2147,6 +2177,13 @@ function renderSelect(){
     p.entry={sel,roles:ar.roles,leader:ar.leader};
     p.stage="roles";
     renderSelect();
+  };
+  const wb=$("#wback");
+  if(wb)wb.onclick=()=>{
+    const done=G.pending.filter(x=>x.decided);
+    const prev=done[done.length-1];
+    prev.decided=false;prev.stage=null;prev.entry=null;
+    G.selBuf=null;renderSelect();
   };
   const sk=$("#skip");
   if(sk)sk.onclick=()=>{
