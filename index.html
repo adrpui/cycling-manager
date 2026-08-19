@@ -397,13 +397,35 @@ function groupGaps(rows,sp,brkGap,extra){
 }
 
 /* Barèmes points UCI (top 15) par tier ; GT: barème GC + bonus étape */
-const PTS={
-  2:[300,220,165,125,95,75,60,50,40,35,30,25,20,15,10],
-  3:[500,375,300,240,190,155,125,105,85,70,60,50,40,30,20],
-  4:[800,640,520,420,340,270,225,185,150,125,105,85,70,60,50],
-  5:[1300,1000,850,700,575,460,380,320,260,220,185,155,130,110,95]
-};
-const STAGE_PTS=[120,50,25];
+/* ===== Barème UCI officiel =====
+   Généraux et classiques payés en profondeur (jusqu'à la 60e place sur le Tour
+   et les Monuments), étapes au top 5 (GT) ou top 3, maillots vert et pois des
+   grands tours récompensés. Le blanc et les maillots des courses d'une semaine
+   ne rapportent rien, conformément au règlement. */
+const dec=(arr,from,step,to)=>{const a=arr.slice();let v=arr[arr.length-1];while(a.length<to){v=Math.max(1,v-step);a.push(v);}return a;};
+const PTS_TDF=dec([1300,1040,880,750,660,570,490,420,360,300,240,210,190,170,155,140,130,125,120,115,110,105,100,95,90,85,80,75,70,65,60,55,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10,8,6,5,4,3,2,1],0,0,60);
+const PTS_GV=dec([1100,880,750,640,560,480,410,350,300,250,200,175,160,145,130,120,115,110,105,100,95,90,85,80,75,70,65,60,55,50,45,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10,8,6,5,4,3,2,1],0,0,60);
+const PTS_MONU=dec([800,640,520,440,360,280,240,200,160,120,110,100,90,80,70,60,50,40,35,30,28,26,24,22,20,18,16,14,12,10,9,8,7,6,5],1,1,60);
+const PTS_500=dec([500,400,325,275,225,175,150,125,100,85,70,60,50,40,35,30,28,26,24,22,20,18,16,14,12,10,9,8,7,6,5],1,1,40);
+const PTS_WCRR=dec([600,475,400,325,275,225,175,150,125,100,85,70,60,50,40,35,30,28,26,24,22,20,18,16,14,12,10,9,8,7,6,5],1,1,50);
+const PTS_WCTT=[350,250,200,150,125,100,90,80,70,60,50,40,35,30,25,20,15,10,5,3];
+const PTS_NATRR=[100,75,60,50,40,30,25,20,15,10];
+const PTS_NATTT=[70,55,40,30,25,20,15,10,5,3];
+/* Barème du classement final d'une course, selon sa nature */
+function uciScale(race){
+  if(race[2]==="nat")return race[3]==="t"?PTS_NATTT:PTS_NATRR;
+  if(race[2]==="wc")return race[3]==="t"?PTS_WCTT:PTS_WCRR;
+  if(race[2]==="gt")return race[0].indexOf("France")>=0?PTS_TDF:PTS_GV;
+  if(race[4]>=4)return PTS_MONU;
+  return PTS_500;
+}
+/* Points d'étape : top 5 sur un grand tour, top 3 ailleurs */
+function uciStageScale(race){
+  if(race[2]==="gt")return race[0].indexOf("France")>=0?[210,150,110,80,60]:[150,110,80,60,40];
+  return [60,25,10];
+}
+/* Maillots finals d'un grand tour : vert et pois seulement */
+const uciJersey=race=>race[2]==="gt"?(race[0].indexOf("France")>=0?120:80):0;
 /* Primes (€) au vainqueur par tier, dégressives */
 const PRIZE={2:22000,3:45000,4:90000,5:550000,stage:12000};
 
@@ -962,6 +984,9 @@ function simStage(rs,playerMod){
   if(brkRows.length&&(sp==="m"||sp==="v"))[8,5,3,2].forEach((p,i)=>{if(brkRows[i])rs.st.get(brkRows[i].r).kom+=p});
   rs.stageWins.push({st:rs.si+1,prof:sp,r:surv[0].r,brk:!!surv[0].brk});
   if(rs.winsBy)rs.winsBy.set(surv[0].r,(rs.winsBy.get(surv[0].r)||0)+1);
+  // points UCI de l'étape (top 5 GT, top 3 ailleurs), conservés même en cas d'abandon ultérieur
+  rs.uciPts=rs.uciPts||new Map();
+  uciStageScale(rs.race).forEach((pv,i)=>{if(surv[i])rs.uciPts.set(surv[i].r,(rs.uciPts.get(surv[i].r)||0)+pv);});
   rs.lastStage={rows:surv,sp};
   rs.si++;
   if(rs.si>=rs.profs.length)rs.done=true;
@@ -1063,20 +1088,25 @@ function logCompact(race,res){
 }
 /* Application des résultats : points, primes, fatigue, stats */
 function applyResults(race,res){
-  const tier=race[4],scale=PTS[tier];
+  const tier=race[4],scale=uciScale(race);
   const gains=new Map();
-  res.rank.slice(0,15).forEach((r,i)=>{
+  res.rank.slice(0,scale.length).forEach((r,i)=>{
     r.pts+=scale[i];
-    if(i===0){r.wins++;G.teams[r.t].wins++;}
-    r.hist.push([race[0],i+1,race[4]]);
-    const p=PRIZE[tier]*Math.pow(0.62,i);
-    gains.set(r.t,(gains.get(r.t)||0)+p);
+    if(i===0){r.wins++;if(r.t>=0)G.teams[r.t].wins++;}
+    if(i<15)r.hist.push([race[0],i+1,race[4]]);
+    if(r.t>=0){const p=PRIZE[tier]*Math.pow(0.62,i);gains.set(r.t,(gains.get(r.t)||0)+p);}
   });
+  if(res.rs&&res.rs.uciPts)res.rs.uciPts.forEach((v,r)=>{r.pts+=v;});
   if(res.stages)res.stages.forEach(sw=>{
-    sw.r.pts+=STAGE_PTS[0]/(race[4]===5?1:2.4);
-    sw.r.wins++;G.teams[sw.r.t].wins++;
-    gains.set(sw.r.t,(gains.get(sw.r.t)||0)+PRIZE.stage);
+    sw.r.wins++;if(sw.r.t>=0)G.teams[sw.r.t].wins++;
+    if(sw.r.t>=0)gains.set(sw.r.t,(gains.get(sw.r.t)||0)+PRIZE.stage);
   });
+  // maillots finals d'un grand tour : vert et pois au barème officiel
+  if(res.rs&&uciJersey(race)){
+    const J=jerseysOf(res.rs),bonus=uciJersey(race);
+    if(J.pts)J.pts.pts+=bonus;
+    if(J.kom)J.kom.pts+=bonus;
+  }
   gains.forEach((v,ti)=>G.teams[ti].cash+=v);
   // fatigue + stats participants
   res.entries.forEach(e=>e.sel.forEach(r=>{
@@ -1396,9 +1426,10 @@ function endSeason(){
     if(r.retired||r.ctr>0||r.t<0)return;
     if(r.t===G.me){G.renew.push(r.id);return;}
     const age=G.year-r.an;
-    const pKeep=U.cl(0.92-(age-29)*0.06+(r.moy-70)*0.012,0.05,0.97);
+    // les cadors ne partent presque jamais : une equipe garde sa star sous contrat
+    const pKeep=U.cl(0.92-(age-29)*0.06+(r.moy-70)*0.012,0.05,r.moy>=80?0.995:0.97);
     if(U.r()<pKeep){r.ctr=1+Math.floor(U.r()*3);r.sal=askSalary(r);}
-    else{r.t=-1;G.pool.push(r);}
+    else{r.prevT=r.t;r.t=-1;G.pool.push(r);}
   });
   for(let i=0;i<20;i++)G.pool.push(genNeo());
   G.phase="endseason";G.mktResolved=false;G.mktRes=null;G.agreed={};G.nego={};
@@ -1463,7 +1494,7 @@ function resolveMarket(){
   const keepN=Math.max(0,8-(teamRiders(G.me).length-exp.length));
   exp.forEach((r,i)=>{
     if(i<keepN){r.ctr=1;r.sal=askSalary(r);G.mktRes.forced=(G.mktRes.forced||[]).concat(r.n);}
-    else{r.t=-1;G.pool.push(r);}
+    else{r.prevT=r.t;r.t=-1;G.pool.push(r);}
   });
   G.renew=[];
   const cap=t=>t.budget*0.50;
@@ -1490,6 +1521,8 @@ function resolveMarket(){
     const win=bids.map(b=>({b,sc:b.amt*(0.8+0.4*standing(b.ti))*(0.9+0.2*U.r())*(b.ti===G.me?1.08:1)}))
       .sort((a,b)=>b.sc-a.sc)[0].b;
     r.t=win.ti;r.sal=win.amt;r.ctr=2+Math.floor(U.r()*2);
+    if(win.ti!==G.me)(G.mktRes.moves=G.mktRes.moves||[]).push(
+      {n:r.n,moy:r.moy,from:r.prevT!=null?r.prevT:-1,to:win.ti,amt:win.amt,dur:r.ctr});
     G.pool.splice(G.pool.indexOf(r),1);
     if(win.ti===G.me){G.mktRes.signed.push({n:r.n,amt:win.amt});}
     else if(my)G.mktRes.lost.push({n:r.n,by:TEAMS[win.ti][0],amt:win.amt,mine:my,ok:myOk});
@@ -1730,7 +1763,63 @@ function render(){
   app().innerHTML=h;bindTabs();
   const adv=$("#adv");if(adv)adv.onclick=advance;
   bindSquad();
-  document.querySelectorAll("[data-sign]").forEach(b=>b.onclick=()=>signFree(+b.dataset.sign));
+  document.querySelectorAll("[data-mngo]").forEach(b=>b.onclick=()=>{
+    const id=+b.dataset.mngo;
+    G.mktNego=G.mktNego&&G.mktNego.id===id&&!G.mktNego.blocs?null:{id};
+    G.mktOff=null;render();});
+  document.querySelectorAll("[data-mksal]").forEach(b=>b.onclick=()=>{
+    const r=rid(G.mktNego.id);
+    const o=G.mktOff||{sal:askSalary(r),dur:1,role:"EQ"};
+    o.sal=Math.max(70000,Math.round(o.sal*(b.dataset.mksal==="+"?1.1:0.9)/1000)*1000);
+    const d=$("#mkdur"),ro=$("#mkrole");
+    if(d)o.dur=+d.value;if(ro)o.role=ro.value;
+    G.mktOff=o;render();});
+  const mkp=$("#mkprop");if(mkp)mkp.onclick=()=>{
+    const r=rid(G.mktNego.id);
+    const o=G.mktOff||{sal:askSalary(r),dur:1,role:"EQ"};
+    o.dur=+$("#mkdur").value;o.role=$("#mkrole").value;
+    if(teamRiders(G.me).length>=maxSquad(G.me)){notice("Effectif au complet.");return;}
+    if(masse(G.me)+o.sal>G.teams[G.me].budget*0.5){notice("Plafond salarial dépassé.");return;}
+    const st=negoAnswer(r,o);G.mktOff=o;
+    if(st.agreed){G.mktNego.accord=st.agreed;if(G.agreed)delete G.agreed[r.id];}
+    render();saveGame();};
+  const mka=$("#mkacc");if(mka)mka.onclick=()=>{
+    const r=rid(G.mktNego.id);
+    const c=G.nego[r.id].counter;
+    if(masse(G.me)+c.sal>G.teams[G.me].budget*0.5){notice("Plafond salarial dépassé.");return;}
+    const st=negoAnswer(r,{...c});G.mktOff={...c};
+    if(st.agreed){G.mktNego.accord=st.agreed;if(G.agreed)delete G.agreed[r.id];}
+    render();saveGame();};
+  const mko=$("#mkok");if(mko)mko.onclick=()=>{
+    const r=rid(G.mktNego.id),a=G.mktNego.accord;
+    const cout=proRata(a.sal);
+    if(teamRiders(G.me).length>=maxSquad(G.me)){notice("Effectif au complet.");return;}
+    if(masse(G.me)+a.sal>G.teams[G.me].budget*0.5){notice("Plafond salarial dépassé.");return;}
+    if(cout>G.teams[G.me].cash){notice("Trésorerie insuffisante : "+U.eur(cout)+" nécessaires.");return;}
+    r.t=G.me;r.sal=a.sal;r.ctr=a.dur;r.free=0;r.fat=0;r.out=0;r.weekLock=false;r.racedThisWeek=false;
+    if(a.role==="L"||a.role==="LT")r.role=a.role;
+    G.teams[G.me].cash-=cout;
+    if(r.p1<0&&r.p2<0)autoPeaks(r);
+    delete (G.nego||{})[r.id];
+    G.mktNego={id:r.id,blocs:true};
+    notice(U.esc(r.n)+" signe pour "+a.dur+" an(s).");
+    render();saveGame();};
+  const mkn=$("#mkno");if(mkn)mkn.onclick=()=>{G.mktNego=null;render();};
+  document.querySelectorAll("[data-mkb]").forEach(c=>c.onclick=()=>{
+    const r=rid(G.mktNego.id),i=+c.dataset.mkb;
+    const ps=[r.p1==null?-1:r.p1,r.p2==null?-1:r.p2,r.p3==null?-1:r.p3];
+    const k=ps.indexOf(i);
+    if(k>=0)ps[k]=-1;
+    else{const libre=ps.indexOf(-1);
+      if(libre<0){notice("Trois blocs au maximum : décochez-en un d'abord.");return;}
+      ps[libre]=i;}
+    const act=ps.filter(x=>x>=0).sort((a,b)=>a-b);
+    r.p1=act.length>0?act[0]:-1;r.p2=act.length>1?act[1]:-1;r.p3=act.length>2?act[2]:-1;
+    render();saveGame();});
+  const mkb=$("#mkbok");if(mkb)mkb.onclick=()=>{
+    const r=rid(G.mktNego.id);
+    if(!blocsOf(r).length){notice("Choisissez au moins un bloc.");return;}
+    G.mktNego=null;notice("Programme enregistré.");render();saveGame();};
   document.querySelectorAll("[data-cal]").forEach(tr=>tr.onclick=e=>{
     if(e.target.closest("[data-rp],[data-tp]"))return;
     G.calSel=+tr.dataset.cal;G.tab="racelog";render();
@@ -2013,7 +2102,23 @@ function freeAgentsAI(){
     if(r.p1<0||r.p2<0)autoPeaks(r);
   });
 }
+/* Après la signature : le joueur choisit le programme de sa recrue.
+   Les blocs déjà passés sont grisés. */
+function vMarketBlocs(r){
+  const bs=blocsOf(r);
+  return `<div class="card"><h3>Programme de ${U.esc(r.n)}</h3>
+  <p class="stat">Choisissez ses blocs de forme (1 à 3 — au troisième, le sommet plafonne à 82 %). Les blocs déjà passés sont grisés.</p>
+  <div class="pkchips" style="margin-top:8px">${PERIODS.map((pp,i)=>{
+    const past=pp[2]<G.week;
+    return `<span class="pkc ${bs.includes(i)?"on":""}" data-mkb="${i}" style="${past?"opacity:.3;pointer-events:none":""}">${PCHIP[i]}</span>`}).join("")}</div>
+  <p class="stat" style="margin-top:6px">${bs.length?bs.map(i=>PERIODS[i][0]).join(" · "):"Aucun bloc choisi"}</p>
+  <button class="btn" id="mkbok" style="margin-top:8px">Valider le programme</button></div>`;
+}
 function vMarket(){
+  if(G.mktNego&&G.mktNego.blocs){
+    const r=rid(G.mktNego.id);
+    if(r)return vMarketBlocs(r);
+  }
   const libres=freeAgents();
   const cap=G.teams[G.me].budget*0.50,m=masse(G.me);
   const n=teamRiders(G.me).length,mx=maxSquad(G.me),cash=G.teams[G.me].cash;
@@ -2025,13 +2130,39 @@ function vMarket(){
   <span class="pill">Trésorerie <b>${U.eur(cash)}</b></span></div></div>
   ${libres.length?`<div class="card">${libres.slice(0,40).map(r=>{
     const ask=askSalary(r),cout=proRata(ask),ko=n>=mx||m+ask>cap||cout>cash;
-    return `<div class="selrow one">
+    const N9=G.mktNego,st=(G.nego||{})[r.id];
+    let row=`<div class="selrow one">
     <span class="nm lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(r.n)}</span>
     <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
     <b class="${col(r.moy)}">${r.moy}</b>
-    <span class="stat">${G.year-r.an}a</span>
+    <span class="stat">${G.year-r.an} ans</span>
     <span class="stat">${U.eur(cout)}</span>
-    <button class="btn ${ko?"sec":""} sm" data-sign="${r.id}" ${ko?"disabled":""}>Signer</button></div>`}).join("")}
+    ${st&&st.broken?'<span class="tag warn">Rompu</span>'
+      :`<button class="btn ${ko?"sec":""} sm" data-mngo="${r.id}" ${ko?"disabled":""}>${N9&&N9.id===r.id?"Fermer":"Négocier"}</button>`}</div>`;
+    if(N9&&N9.id===r.id&&!(st&&st.broken)){
+      if(N9.accord){
+        row+=`<div class="card" style="margin:4px 0 10px;background:var(--panel2)">
+        <p style="font-size:.84rem">Accord trouvé : <b>${U.eur(N9.accord.sal)}/an</b> · ${N9.accord.dur} an(s) · rôle ${N9.accord.role}.
+        Coût cette saison (prorata) : <b>${U.eur(proRata(N9.accord.sal))}</b>.</p>
+        <div style="display:flex;gap:6px;margin-top:8px">
+        <button class="btn sm" id="mkok">Confirmer le transfert</button>
+        <button class="btn sec sm" id="mkno">Annuler</button></div></div>`;
+      }else{
+        const o=G.mktOff||{sal:ask,dur:1,role:"EQ"};
+        row+=`<div class="card" style="margin:4px 0 10px;background:var(--panel2)">
+        <p class="stat">Demande estimée : <b>${U.eur(ask)}</b> · essai ${(st?st.tries:0)}/3</p>
+        ${st&&st.msg?`<p style="font-size:.84rem;margin:4px 0">${st.msg}</p>`:""}
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:6px">
+        <span class="pill">Salaire <b>${U.eur(o.sal)}</b></span>
+        <button class="btn sec sm" data-mksal="-">−10%</button><button class="btn sec sm" data-mksal="+">+10%</button>
+        <select id="mkdur">${[1,2,3].map(d=>`<option value="${d}" ${o.dur===d?"selected":""}>${d} an${d>1?"s":""}</option>`).join("")}</select>
+        <select id="mkrole">${[["L","Leader"],["LT","Lieutenant"],["EQ","Équipier"]].map(x=>`<option value="${x[0]}" ${o.role===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select>
+        <button class="btn sm" id="mkprop">Proposer</button>
+        ${st&&st.counter?'<button class="btn sec sm" id="mkacc">Accepter sa demande</button>':""}
+        </div></div>`;
+      }
+    }
+    return row;}).join("")}
     ${libres.length>40?`<p class="stat" style="margin-top:8px">${libres.length-40} autre(s) coureur(s) disponible(s).</p>`:""}</div>`
   :'<div class="card"><p class="stat">Aucun coureur disponible pour le moment.</p></div>'}`;
 }
@@ -2194,11 +2325,12 @@ function renderSelect(){
     <td><span class="pk ${hot?"hot":""}">${PSHORT[nx]}</span></td>
     </tr>`}).join("")})()}
   </tbody></table></div>
-  <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-  ${G.pending.some(x=>x.decided)?'<button class="btn sec" id="wback">◂ Course précédente</button>':""}
-  <button class="btn" id="go">Valider la sélection ▸</button>
-  ${mand?"":'<button class="btn sec" id="skip">Faire l\'impasse</button>'}
-  </div></div>`;
+  <div style="height:64px"></div></div>
+  <div style="position:fixed;left:0;right:0;bottom:0;z-index:40;background:linear-gradient(0deg,#0e1420f2,#0e1420d8);border-top:1px solid var(--line);padding:9px 12px;display:flex;gap:6px">
+  <button class="btn sec" id="wback" style="flex:1;min-width:0;padding:10px 4px">◂ Retour</button>
+  ${mand?"":'<button class="btn sec" id="skip" style="flex:1;min-width:0;padding:10px 4px">Impasse</button>'}
+  <button class="btn" id="go" style="flex:1.3;min-width:0;padding:10px 4px">Valider</button>
+  </div>`;
   document.querySelectorAll(".seltab th.srt").forEach(t=>t.onclick=()=>{
     const k=t.dataset.st;
     if(buf.sort===k)buf.sdir=-buf.sdir;
@@ -2229,9 +2361,14 @@ function renderSelect(){
   const wb=$("#wback");
   if(wb)wb.onclick=()=>{
     const done=G.pending.filter(x=>x.decided);
-    const prev=done[done.length-1];
-    prev.decided=false;prev.stage=null;prev.entry=null;
-    G.selBuf=null;renderSelect();
+    if(done.length){
+      const prev=done[done.length-1];
+      prev.decided=false;prev.stage=null;prev.entry=null;
+      G.selBuf=null;renderSelect();
+      return;
+    }
+    // premier écran de la semaine : retour à l'accueil, la semaine reste à jouer
+    G.pending=[];G.otherRaces=[];G.selBuf=null;G.tab="home";render();
   };
   const sk=$("#skip");
   if(sk)sk.onclick=()=>{
@@ -2460,7 +2597,13 @@ function renderStageResult(){
   <div class="scroll"><table><tbody>
   ${stRows.map((x,i)=>`<tr ${x.r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><b class="lnk ${meCls(x.r)}" data-rp="${x.r.id}">${U.esc(x.r.n)}</b></td><td class="lnk" data-tp="${x.r.t}">${jer(x.r.t)}<span class="stat">${TEAMS[x.r.t][0]}</span></td><td class="stat">${i===0?"—":(x.gap<1?"m.t.":U.tm(x.gap))}</td></tr>`).join("")}
   </tbody></table></div>
-  <button class="btn sec sm exps">${exp.stage?"Réduire":"Tout afficher"}</button>
+  ${(()=>{const miens=rows.map((x,i)=>({x,i})).filter(o=>o.x.r.t===G.me&&o.i>=10).slice(0,3);
+    return miens.length?`<div style="margin-top:8px;border-top:1px solid var(--panel2);padding-top:6px">
+    ${miens.map(o=>`<div style="display:flex;gap:8px;align-items:center;font-size:.8rem;padding:2px 0">
+    <span class="stat" style="width:34px;flex:none">${o.i+1}ᵉ</span>
+    <span class="lnk ldr" data-rp="${o.x.r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${U.esc(o.x.r.n)}</span>
+    <span class="stat">${o.x.gap<1?"m.t.":U.tm(o.x.gap)}</span></div>`).join("")}</div>`:"";})()}
+  <button class="btn sec sm exps" style="margin-top:12px">${exp.stage?"Réduire":"Tout afficher"}</button>
   ${evts.length?`<div style="margin-top:6px">${evts.map(e=>`<div class="evt">${e}</div>`).join("")}</div>`:""}
   </div>
   <div class="card"><h3>Classements</h3>
@@ -2471,7 +2614,7 @@ function renderStageResult(){
   <span class="pill jbtn ${view==="young"?"jon":""}" data-v="young" style="background:#d9dee8;color:#111">${J.young?U.esc(J.young.n):"—"}</span></div>
   ${exp.full?'<button class="btn sec sm expg" style="margin-bottom:6px">Réduire</button>':""}
   ${standingsTable(rs,view,exp.full?1000:5)}
-  <button class="btn sec sm expg">${exp.full?"Réduire":"Classement complet"}</button>
+  <button class="btn sec sm expg" style="margin-top:12px">${exp.full?"Réduire":"Classement complet"}</button>
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
   <button class="btn" id="nx">${rs.done?"Terminer la course ▸":"Étape suivante ▸"}</button>
@@ -2502,7 +2645,7 @@ function renderResults(){
       x+=`<tr ${r.t===G.me?'class="me"':''}><td class="stat">${i+1}</td><td><b class="lnk ${meCls(r)}" data-rp="${r.id}">${U.esc(r.n)}</b></td>
       <td class="lnk" data-tp="${r.t}">${jer(r.t)}<span class="stat">${TEAMS[r.t][0]}</span></td>
       ${hasGap?`<td class="stat">${i===0?"—":race[5]>1?U.tm(res.times.get(r).time-t0):(res.gaps.get(r)<1?"m.t.":U.tm(res.gaps.get(r)))}</td>`:""}
-      <td class="n80">${PTS[race[4]][i]||""}</td></tr>`;
+      <td class="n80">${uciScale(race)[i]||""}</td></tr>`;
     });
     x+=`</tbody></table></div>
     <button class="btn sec sm" data-exf="${ri}">${exp&&exp.full?"Réduire":"Classement complet"}</button>`;
@@ -2595,11 +2738,10 @@ function renderEndSeason(){
   $("#tocont").onclick=()=>{G.phase="contracts";render();saveGame();};
 }
 /* --- Détail de la progression hivernale --- */
-const AK={pla:"PLA",mon:"MON",spr:"SPR",chr:"CHR",pun:"PUN",end:"END"};
+const AK={pla:"PLA",mon:"MON",spr:"SPR",chr:"CHR",pun:"PUN",end:"END",pav:"PAV"};
 function renderProgDetail(){
   const log=(G.progLog||[]).slice().sort((a,b)=>b.d-a.d);
   app().innerHTML=tabsHtml()+`<div class="card"><h3>Détail de la progression ${G.year}</h3>
-  <p class="stat">Moteurs : jours de course (plafond d'effet 35 j), points UCI, marge de potentiel, âge.</p>
   ${log.map(x=>{
     const r=rid(x.id);if(!r)return "";
     const age=G.year-r.an;
@@ -2627,8 +2769,8 @@ function renderContracts(){
     return `<button class="btn sec sm" data-role="${r.id}" style="min-width:44px;${forced?"border-color:var(--acc)":"opacity:.7"}">${r.role==="EQ"?"ÉQ":eff}</button>`;
   };
   app().innerHTML=specBar()+`<div class="card"><h3>Contrats · sous contrat ${G.year+1} : <b class="${proj<8?"ko":""}">${proj}</b> coureur(s)</h3>
-  <p class="stat">Prolongez ou laissez partir les contrats expirants (départ au marché). Plancher 8, plafond ${maxSquad(G.me)}. Masse ${U.eur(masse(G.me))} / plafond ${U.eur(cap)}.</p>
-  <p class="stat">Rôle : tapez la pastille pour forcer <b>L</b> (leader), <b>LT</b> (lieutenant), <b>ÉQ</b> (équipier) ou revenir en auto (pastille estompée).</p></div>
+  <p class="stat">Prolongez ou laissez partir les contrats expirants.<br>Plancher 8, plafond ${maxSquad(G.me)}.<br>Masse ${U.eur(masse(G.me))} / plafond ${U.eur(cap)}.</p>
+  </div>
   <div class="card"><h3>Contrats expirants (${exp.length})</h3>
   ${exp.length?exp.map(r=>{
     const ask=askSalary(r);
@@ -2657,12 +2799,12 @@ function renderContracts(){
     r.ctr=2;r.sal=ask;G.renew=G.renew.filter(id=>id!==r.id);renderContracts();saveGame();});
   document.querySelectorAll("[data-relx]").forEach(b=>b.onclick=()=>{
     const r=rid(+b.dataset.relx);
-    r.t=-1;r.ctr=0;r.role=undefined;G.pool.push(r);
+    r.prevT=r.t;r.t=-1;r.ctr=0;r.role=undefined;G.pool.push(r);
     G.renew=(G.renew||[]).filter(id=>id!==r.id);renderContracts();saveGame();});
   document.querySelectorAll("[data-rel]").forEach(b=>b.onclick=()=>{
     const r=rid(+b.dataset.rel);
     if(teamRiders(G.me).length<=8){notice("Effectif minimum atteint (8 coureurs).");return;}
-    r.t=-1;r.ctr=0;r.role=undefined;G.pool.push(r);G.renew=(G.renew||[]).filter(id=>id!==r.id);renderContracts();saveGame();});
+    r.prevT=r.t;r.t=-1;r.ctr=0;r.role=undefined;G.pool.push(r);G.renew=(G.renew||[]).filter(id=>id!==r.id);renderContracts();saveGame();});
   document.querySelectorAll("[data-role]").forEach(b=>b.onclick=()=>{
     const r=rid(+b.dataset.role);
     r.role=r.role==null?"L":r.role==="L"?"LT":r.role==="LT"?"EQ":undefined;
@@ -2764,14 +2906,13 @@ function renderMercato(){
     const pool=G.pool.filter(r=>r.t===-1&&!r.gen).sort((a,b)=>b.moy-a.moy);
     const open=G.negoOpen;
     body=specBar()+`<div class="card"><h3>Mercato (${pool.length}) · masse ${U.eur(masse(G.me))} / plafond ${U.eur(cap)}</h3>
-    <p class="stat">Négociez salaire, durée et rôle promis. Un accord de principe est définitif. Les hésitants restent exposés aux enchères des autres équipes à la clôture.</p>
     ${pool.map(r=>{
       const ask=askSalary(r);
       const st=(G.nego||{})[r.id];
       const agreed=(G.agreed||{})[r.id];
       let row=`<div class="selrow one"><span class="nm lnk" data-rp="${r.id}">${U.esc(r.n)}${r.gen?" <span class='tag'>N</span>":""}</span>
       <span class="tag ${PROFTAG[r.prof]}">${PROFA[r.prof]}</span>
-      <b class="${col(r.moy)}">${r.moy}</b><span class="stat">${G.year-r.an}a</span>
+      <b class="${col(r.moy)}">${r.moy}</b><span class="stat">${G.year-r.an} ans</span>
       <span class="stat">${U.eur(ask)}</span>
       ${agreed?`<span class="tag" style="background:#1f4d2c;color:#9fe8b5">Accord ✔ ${U.eur(agreed.sal)}·${agreed.dur}an</span><button class="btn sec sm" data-nago="${r.id}">✕</button>`
         :st&&st.broken?`<span class="tag warn">Rompu</span>`
@@ -2799,7 +2940,11 @@ function renderMercato(){
     ${(R.forced||[]).length?`<div class="evt">Renouvellements automatiques (effectif minimum) : ${R.forced.map(x=>U.esc(x)).join(", ")}</div>`:""}
     ${R.signed.length?R.signed.map(s=>`<div class="evt">✔ <b>${U.esc(s.n)}</b> recruté · ${U.eur(s.amt)}/an</div>`).join(""):'<div class="evt stat">Aucune recrue signée.</div>'}
     ${R.lost.map(l=>`<div class="evt">✘ ${U.esc(l.n)} · ${l.by?`surenchère de <b>${U.esc(l.by)}</b> (${U.eur(l.amt)}, votre offre ${U.eur(l.mine)})`:"offre non recevable (plafond salarial ou effectif plein)"}</div>`).join("")}
-    <p class="stat" style="margin-top:6px">Les équipes IA complètent leurs effectifs au lancement de la saison.</p></div>`;
+    ${(G.mktRes.moves&&G.mktRes.moves.length)?`<div style="margin-top:10px;border-top:1px solid var(--panel2);padding-top:8px">
+    <p class="stat" style="font-weight:700;color:var(--acc);margin-bottom:4px">Transferts marquants</p>
+    ${G.mktRes.moves.slice().sort((a,b)=>b.moy-a.moy).slice(0,10).map(m=>
+      `<div class="evt"><b>${U.esc(m.n)}</b> ${m.moy} · ${m.from>=0?U.esc(TEAMS[m.from][0]):"Sans équipe"} → ${U.esc(TEAMS[m.to][0])} · ${U.eur(m.amt)}/an · ${m.dur} an(s)</div>`).join("")}
+    </div>`:""}</div>`;
   }
   const bottom=G.mktResolved
     ?`<button class="btn" id="ns2">Lancer la saison ${G.year+1} ▸</button>`
@@ -2876,7 +3021,7 @@ function renderPreval(){
     delete G.agreed[+b.dataset.pvx];renderPreval();saveGame();});
   document.querySelectorAll("[data-pvr]").forEach(b=>b.onclick=()=>{
     const r=rid(+b.dataset.pvr);
-    r.t=-1;r.ctr=0;r.role=undefined;if(!G.pool.includes(r))G.pool.push(r);
+    r.prevT=r.t;r.t=-1;r.ctr=0;r.role=undefined;if(!G.pool.includes(r))G.pool.push(r);
     G.renew=(G.renew||[]).filter(id=>id!==r.id);
     renderPreval();saveGame();});
   $("#pvback").onclick=()=>{G.phase="mercato";G.msub="market";render();};
