@@ -928,7 +928,7 @@ function simStage(rs,playerMod){
   // au peloton à la vitesse pure — c'est le vrai levier du maillot vert
   const brkRows=rows.filter(x=>x.brk&&!rs.st.get(x.r).ab);
   const interPool=brkRows.length>=4?brkRows
-    :brkRows.concat(surv.filter(x=>!x.brk).slice(0,30).sort((a,b)=>baseScore(b.r,"p")-baseScore(a.r,"p")));
+    :brkRows.concat(surv.filter(x=>!x.brk).sort((a,b)=>baseScore(b.r,"p")-baseScore(a.r,"p")).slice(0,8));
   PTS_INTER.forEach((p,i)=>{if(interPool[i])rs.st.get(interPool[i].r).pts+=p});
   if(brkRows.length&&(sp==="m"||sp==="v"))[8,5,3,2].forEach((p,i)=>{if(brkRows[i])rs.st.get(brkRows[i].r).kom+=p});
   rs.stageWins.push({st:rs.si+1,prof:sp,r:surv[0].r,brk:!!surv[0].brk});
@@ -1099,7 +1099,7 @@ function migrateTargets(){
     if(r.p1==null||r.p1>=nb||r.p2==null||r.p2>=nb||(r.p1<0&&r.p2<0))autoPeaks(r);
   });
 }
-const _loadGame=loadGame;loadGame=function(str){const ok=_loadGame(str);if(ok){migratePot();migrateTargets();}return ok;};
+const _loadGame=loadGame;loadGame=function(str,slot){const ok=_loadGame(str,slot);if(ok){migratePot();migrateTargets();}return ok;};
 function hasSave(i){try{return !!localStorage.getItem(slotKey(i||0))}catch(e){return false}}
 function wipeSave(i){try{localStorage.removeItem(slotKey(i||0))}catch(e){}}
 function saveInfo(i){try{
