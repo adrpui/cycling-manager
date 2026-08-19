@@ -336,13 +336,15 @@ const U={
 };
 
 /* Poids d'attributs par profil d'étape/course */
+/* Le pavé (PAV) est l'attribut roi des classiques pavées, et un appoint sur les
+   classiques rapides — Gand-Wevelgem a ses monts pavés, pas Milan-San Remo. */
 const WGT={
-  p:{pla:.28,spr:.58,pun:.08,chr:.06,mon:0},
-  s:{pla:.32,spr:.30,pun:.28,chr:.10,mon:0}, // classique rapide : MSR, Gand-Wevelgem
-  c:{pla:.50,pun:.25,spr:.15,chr:.10,mon:0},
-  v:{pun:.45,mon:.28,pla:.15,spr:.12,chr:0},
-  m:{mon:.62,chr:.12,pun:.14,pla:.12,spr:0},
-  t:{chr:.80,pla:.16,pun:.04,mon:0,spr:0}
+  p:{pla:.28,spr:.58,pun:.08,chr:.06,mon:0,pav:0},
+  s:{pla:.28,spr:.28,pun:.22,chr:.10,mon:0,pav:.12}, // classique rapide
+  c:{pav:.48,pla:.22,pun:.14,spr:.10,chr:.06,mon:0},
+  v:{pun:.45,mon:.28,pla:.15,spr:.12,chr:0,pav:0},
+  m:{mon:.62,chr:.12,pun:.14,pla:.12,spr:0,pav:0},
+  t:{chr:.80,pla:.16,pun:.04,mon:0,spr:0,pav:0}
 };
 /* ===== Écarts de temps : modèle de groupes d'arrivée =====
    t = K × (d − d0)^E  où d = écart de score au premier du peloton.
@@ -359,7 +361,7 @@ const WORK={p:0.5,s:1.2,c:2.0,v:2.5,m:5.0,t:0};
 const DECR={p:0.03,s:0.05,c:0.08,v:0.10,m:0.16,t:0};
 /* Hors-délai : durée type d'étape (s) et pourcentage toléré */
 const DUREE={p:16200,s:19800,c:21600,v:17100,m:18000,t:2700};
-const DELAI={p:0.16,s:0.15,c:0.14,v:0.13,m:0.115,t:0.25};
+const DELAI={p:0.16,s:0.15,c:0.14,v:0.13,m:0.085,t:0.25};
 /* Conversion score → temps, puis regroupement en pelotons.
    rows est trié par score décroissant ; extra(x) ajoute un surcoût d'écart. */
 function groupGaps(rows,sp,brkGap,extra){
@@ -375,10 +377,15 @@ function groupGaps(rows,sp,brkGap,extra){
     const d=Math.max(0,pelTop-x.s)+(extra?extra(x):0);
     x._t=d<=d0?0:K*Math.pow(d-d0,E);
   });
+  // En montagne et en vallon, la fenêtre de regroupement grandit avec le retard :
+  // devant, les rescapés arrivent au compte-goutte ; derrière, les lâchés se
+  // rassemblent en paquets de plus en plus gros jusqu'au gruppetto.
+  const dyn=sp==="m"||sp==="v";
   let gStart=null,gT=0;
   rows.forEach(x=>{
     if(x.brk){x.gap=x._t;return;}
-    if(gStart===null||x._t-gStart>W){gStart=x._t;gT=x._t;}
+    const Weff=dyn?W*(0.15+Math.pow(x._t/600,1.6)):W;
+    if(gStart===null||x._t-gStart>Weff){gStart=x._t;gT=x._t;}
     x.gap=gT+brkGap;
   });
   let prev=0;
@@ -442,8 +449,8 @@ function newRider(base,ti){
   // Un rouleur qui grimpe presque aussi bien est un coureur de général, pas un spécialiste
   // du chrono : sans ça, Evenepoel (chr 94 / mon 90) ne pourrait jamais viser un grand tour.
   if(r.prof==="chr"&&mon>=80&&chr-mon<8)r.prof="mon";
-  // Flandrien : dominante plaine avec punch ou pointe de vitesse (spécialiste des pavés)
-  if(r.prof==="pla"&&(pun>=62||spr>=68))r.prof="fla";
+  // Flandrien : dominante plaine avec punch, pointe de vitesse, ou vraie note de pavé
+  if(r.prof==="pla"&&(pun>=62||spr>=68||(pav!=null&&pav>=78)))r.prof="fla";
   r.pot=pot!=null?pot:Math.min(93,r.moy+Math.round(Math.max(0,25-(((G&&G.year)||2026)-an))*1.5));
   r.pav=pav!=null?pav:pavCalc(r);   // après r.prof : le repli dépend du profil flandrien
   r.key=key||("gen-"+n.replace(/[^A-Za-z]/g,"").toLowerCase()+"-"+an);
@@ -487,7 +494,7 @@ const squadTarget=ti=>TEAMS[ti][2]===0?30:26;
 const maxSquad=ti=>Math.max(TEAMS[ti][2]===0?30:26,(ROSTERS[ti]||[]).length);
 const askSalary=r=>{
   const age=G.year-r.an;
-  let f=1+Math.min(0.5,r.pts/2500)+(r.moy>=85?0.18:0)-(age>=33?0.18:0)-(age>=36?0.15:0);
+  let f=1+Math.min(0.5,r.pts/2500)+(r.moy>=80?0.18:0)-(age>=33?0.18:0)-(age>=36?0.15:0);
   if(r.t===-1){ // sans équipe : prétentions revues à la baisse, d'autant plus que la saison avance
     let d=1-Math.min(0.12,(r.free||0)*0.06);
     if(G.phase==="run")d*=0.74-Math.min(0.24,(G.week||1)/42*0.24);
@@ -645,16 +652,17 @@ const raceFatCost=(race)=>race[5]*2.6;
 /* ================= SIMULATION ================= */
 function baseScore(r,prof){
   const w=WGT[prof];
-  return r.pla*w.pla+r.mon*w.mon+r.spr*w.spr+r.chr*w.chr+r.pun*w.pun;
+  return r.pla*w.pla+r.mon*w.mon+r.spr*w.spr+r.chr*w.chr+r.pun*w.pun
+    +(w.pav?(typeof r.pav==="number"?r.pav:r.pla)*w.pav:0);
 }
 /* Sélection IA d'une équipe pour une course */
 function aiSelect(ti,race,n){
   const prof=race[3],multi=race[5]>1;
-  const ok=r=>r.out===0&&!r.weekLock&&r.days+race[5]<=(r.moy>=88?85:100)&&(!multi||!r.racedThisWeek)
-    &&!(r.moy>=84&&race[4]<=2&&!inPeriod(r.p1,race[1])&&!inPeriod(r.p2,race[1])); // les stars snobent les petites courses hors pic
+  const ok=r=>r.out===0&&!r.weekLock&&r.days+race[5]<=(r.moy>=80?85:100)&&(!multi||!r.racedThisWeek)
+    &&!(r.moy>=79&&race[4]<=2&&!inPeriod(r.p1,race[1])&&!inPeriod(r.p2,race[1])); // les stars snobent les petites courses hors pic
   let pool=teamRiders(ti).filter(r=>ok(r)&&r.fat<78);
   if(pool.length<n)pool=teamRiders(ti).filter(r=>ok(r)&&r.fat<90); // repêchage
-  const scored=pool.map(r=>({r,s:baseScore(r,prof)*Math.pow(formOf(r,race[1]),3)*fatMult(r.fat)*(r.racedThisWeek?0.93:1)*(1-Math.max(0,r.days-(r.moy>=88?42:55))*(r.moy>=88?0.007:0.004))}))
+  const scored=pool.map(r=>({r,s:baseScore(r,prof)*Math.pow(formOf(r,race[1]),3)*fatMult(r.fat)*(r.racedThisWeek?0.93:1)*(1-Math.max(0,r.days-(r.moy>=80?42:55))*(r.moy>=80?0.007:0.004))}))
     .sort((a,b)=>b.s-a.s);
   return scored.slice(0,n).map(x=>x.r);
 }
@@ -664,8 +672,8 @@ function aiPlanWeek(ti,races){
   const okB=r=>r.out===0&&!r.weekLock&&!r.racedThisWeek;
   let pool=teamRiders(ti).filter(r=>okB(r)&&r.fat<78);
   if(pool.length<rs2.length*5)pool=teamRiders(ti).filter(r=>okB(r)&&r.fat<90);
-  const sc=(r,race)=>baseScore(r,race[3])*Math.pow(formOf(r,race[1]),3)*fatMult(r.fat)*(1-Math.max(0,r.days-(r.moy>=88?42:55))*(r.moy>=88?0.007:0.004));
-  const eligR=(r,race)=>r.days+race[5]<=(r.moy>=88?85:100)&&!(r.moy>=84&&race[4]<=2&&!inPeriod(r.p1,race[1])&&!inPeriod(r.p2,race[1]));
+  const sc=(r,race)=>baseScore(r,race[3])*Math.pow(formOf(r,race[1]),3)*fatMult(r.fat)*(1-Math.max(0,r.days-(r.moy>=80?42:55))*(r.moy>=80?0.007:0.004));
+  const eligR=(r,race)=>r.days+race[5]<=(r.moy>=80?85:100)&&!(r.moy>=79&&race[4]<=2&&!inPeriod(r.p1,race[1])&&!inPeriod(r.p2,race[1]));
   const quota=rs2.map(r=>r[2]==="gt"?8:7),sel=rs2.map(()=>[]),taken=new Set();
   let act=true;
   while(act){act=false;
@@ -827,7 +835,7 @@ function initStageRace(race,entries){
   const profs=stageProfiles(race);
   const st=new Map();const all=[];
   entries.forEach(e=>e.sel.forEach(r=>{all.push(r);st.set(r,{time:0,f:0,ab:false,pts:0,kom:0});}));
-  return {race,entries,profs,st,all,si:0,stageWins:[],events:[],done:false,lastStage:null,mgTarget:null,mgMult:null};
+  return {race,entries,profs,st,all,si:0,stageWins:[],winsBy:new Map(),events:[],done:false,lastStage:null,mgTarget:null,mgMult:null};
 }
 /* Contexte d'étape : rôles par équipe (survivants uniquement) */
 function stageLeaders(rs,sp){return buildCtxRoles(rs.entries,sp,rs.st);}
@@ -837,9 +845,20 @@ function simStage(rs,playerMod){
   const live=rs.all.filter(r=>!rs.st.get(r).ab);
   const gcTop=new Set();
   if(rs.si>0&&(sp==="m"||sp==="v"))live.slice().sort((a,b)=>rs.st.get(a).time-rs.st.get(b).time).slice(0,8).forEach(r=>gcTop.add(r));
+  // état du général : qui mène, et avec quelle avance
+  let gcL=null,gcLead=0;
+  if(rs.si>0){
+    const o=live.slice().sort((a,b)=>rs.st.get(a).time-rs.st.get(b).time);
+    if(o.length>1){gcL=o[0];gcLead=rs.st.get(o[1]).time-rs.st.get(o[0]).time;}
+  }
   let rows=live.map(r=>{
     let s=riderScore(r,sp,rs.race[1],{...ctx,extraFat:rs.st.get(r).f});
     if(gcTop.has(r))s*=1.03; // les favoris du général se marquent et restent devant
+    // marquage et usure : chaque victoire d'étape déjà acquise coûte un peu
+    const wct=(rs.winsBy&&rs.winsBy.get(r))||0;
+    if(wct&&sp!=="t")s*=Math.pow(0.974,wct);
+    // gestion de course : un leader bien installé défend, il ne dispute plus la gagne
+    if(r===gcL&&gcLead>120&&sp!=="t")s*=gcLead>300?0.962:0.978;
     if(playerMod&&playerMod.rider===r)s*=playerMod.mult;
     return {r,s};
   }).sort((a,b)=>b.s-a.s);
@@ -847,7 +866,9 @@ function simStage(rs,playerMod){
   const gcT=live.slice().sort((a,b)=>rs.st.get(a).time-rs.st.get(b).time).slice(0,3);
   let control=0;
   gcT.forEach(g=>{const h=ctx.helpers.get(g.t)||0;if(h>control)control=h});
-  const pBrk=BRK[sp]*(U.r()<0.40+0.55*control?0.7:1.6);
+  let pBrk=BRK[sp]*(U.r()<0.40+0.55*control?0.7:1.6);
+  // général plié : l'équipe du maillot laisse filer l'échappée, surtout en 2e moitié
+  if(rs.race[2]==="gt"&&rs.si>=10&&gcLead>240)pBrk*=1.5;
   // échappée victorieuse : groupe de taille variable, raids du général possibles (rarissimes)
   let raidBig=false;
   if(U.r()<pBrk&&rs.si<rs.profs.length-1){
@@ -932,6 +953,7 @@ function simStage(rs,playerMod){
   PTS_INTER.forEach((p,i)=>{if(interPool[i])rs.st.get(interPool[i].r).pts+=p});
   if(brkRows.length&&(sp==="m"||sp==="v"))[8,5,3,2].forEach((p,i)=>{if(brkRows[i])rs.st.get(brkRows[i].r).kom+=p});
   rs.stageWins.push({st:rs.si+1,prof:sp,r:surv[0].r,brk:!!surv[0].brk});
+  if(rs.winsBy)rs.winsBy.set(surv[0].r,(rs.winsBy.get(surv[0].r)||0)+1);
   rs.lastStage={rows:surv,sp};
   rs.si++;
   if(rs.si>=rs.profs.length)rs.done=true;
@@ -1259,7 +1281,7 @@ function endSeason(){
   G.riders.forEach(r=>{
     const m0=r.moy;
     const age=G.year-r.an;
-    const ks=["pla","mon","spr","chr","pun","end"];
+    const ks=["pla","mon","spr","chr","pun","end","pav"];
     const a0={};ks.forEach(k=>a0[k]=r[k]);
     let pot=r.pot||r.moy;
     // une saison énorme révèle un coureur au-delà de ce qu'on imaginait de lui
@@ -1334,20 +1356,20 @@ const NEO={
 /* Progression ciblée : un coureur progresse d'abord dans ce qu'il travaille en course.
    Un grimpeur gagne en montagne et en endurance, pas au sprint. */
 const GROWW={
-  mon:{mon:1.35,end:1.15,pun:0.95,chr:0.85,pla:0.60,spr:0.35},
-  spr:{spr:1.35,pla:1.15,end:0.90,pun:0.80,chr:0.60,mon:0.35},
-  pun:{pun:1.35,mon:1.05,end:1.00,pla:0.85,chr:0.70,spr:0.60},
-  fla:{pla:1.30,pun:1.10,end:1.05,spr:0.95,chr:0.75,mon:0.40},
-  chr:{chr:1.35,pla:1.15,end:1.00,pun:0.70,mon:0.65,spr:0.50},
-  pla:{pla:1.30,end:1.05,spr:0.90,pun:0.85,chr:0.85,mon:0.50}
+  mon:{mon:1.35,end:1.15,pun:0.95,chr:0.85,pla:0.60,spr:0.35,pav:0.35},
+  spr:{spr:1.35,pla:1.15,end:0.90,pun:0.80,chr:0.60,mon:0.35,pav:0.85},
+  pun:{pun:1.35,mon:1.05,end:1.00,pla:0.85,chr:0.70,spr:0.60,pav:0.70},
+  fla:{pav:1.35,pla:1.25,pun:1.10,end:1.05,spr:0.95,chr:0.75,mon:0.40},
+  chr:{chr:1.35,pla:1.15,end:1.00,pun:0.70,mon:0.65,spr:0.50,pav:0.75},
+  pla:{pla:1.30,end:1.05,spr:0.90,pun:0.85,chr:0.85,mon:0.50,pav:1.05}
 };
 function rollPot(moy){
   // tirage de rareté : le potentiel est décorrélé du niveau actuel
   const x=U.r();
-  if(x<0.03)return 86+Math.floor(U.r()*6);              // ★★★★ phénomène
-  if(x<0.15)return 79+Math.floor(U.r()*7);              // ★★★
-  if(x<0.45)return 72+Math.floor(U.r()*7);              // ★★
-  return U.cl(moy+2+Math.floor(U.r()*7),moy+2,71);      // ★ équipier de métier
+  if(x<0.03)return 79+Math.floor(U.r()*4);              // ★★★★ phénomène (79-82)
+  if(x<0.15)return 73+Math.floor(U.r()*6);              // ★★★
+  if(x<0.45)return 67+Math.floor(U.r()*6);              // ★★
+  return U.cl(moy+2+Math.floor(U.r()*6),moy+2,66);      // ★ équipier de métier
 }
 function genNeo(){
   const nat=U.pick(Object.keys(NEO));
@@ -1484,7 +1506,8 @@ const PROFN={mon:"Grimpeur",spr:"Sprinteur",pun:"Puncheur",chr:"Chrono",pla:"Rou
 const PROFTAG={mon:"mon",spr:"spr",pun:"gc",chr:"chrt",pla:"rou",fla:"fla"};
 const TABR=["UAD","TVL","RBH","LTK","INE","SOQ","APT","DCC","EFE","GFC","LTI","MOV","NSN","JAY","TPP","TBV","UNO","XAT","TUD","Q36","COF","TEN","URR","PTV","BCF","CJR","BBH","EKP","EUS","FLB","TNN","MBH","MAP","STN"];
 const pavOf=r=>typeof r.pav==="number"?r.pav:pavCalc(r);
-const NSTARS=p=>p>=86?4:p>=79?3:p>=72?2:1;
+/* Échelle calée sur les notes réelles 2026 : 4★ = les tout meilleurs (82+) */
+const NSTARS=p=>p>=82?4:p>=75?3:p>=68?2:1;
 const starsHtml=n=>`<span class="stars">${"★".repeat(n)}${n<4?`<span class="off">${"★".repeat(4-n)}</span>`:""}</span>`;
 const potTag=r=>starsHtml(NSTARS(r.pot||r.moy));
 
