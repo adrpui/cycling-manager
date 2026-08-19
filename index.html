@@ -22,6 +22,7 @@ button{font-family:inherit}
 #top .jersey{width:18px;height:18px}
 #top b{color:var(--acc)}
 #top .it{font-size:.8rem;color:var(--dim)}
+#top .it+.it{border-left:1px solid var(--line);padding-left:10px}
 #top .it b{font-size:.9rem}
 .jersey{display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:6px;vertical-align:-2px;border:1px solid rgba(255,255,255,.25)}
 /* Tabs */
@@ -129,7 +130,9 @@ select{background:var(--panel2);border:1px solid var(--line);color:var(--txt);pa
 .seltab{font-size:.78rem}
 .seltab td{white-space:nowrap;padding:6px 3px}
 .seltab th{padding:6px 3px;white-space:nowrap}
-.seltab th.srt{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.seltab th.srt{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;position:relative}
+.seltab th.srt.on.dn::after{content:"▾";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);font-size:.6rem}
+.seltab th.srt.on.up::after{content:"▴";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);font-size:.6rem}
 .seltab th.srt.on{color:var(--acc)}
 .rchip{padding:4px 8px;border-radius:8px;border:1px solid var(--panel2);color:var(--dim);font-size:.68rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;white-space:nowrap}
 .rchip.on{background:#4a3812;border-color:var(--acc);color:var(--acc);font-weight:700}
@@ -700,16 +703,11 @@ function autoRoles(sel,race){
   const byS=sel.slice().sort((a,b)=>baseScore(b,prof)-baseScore(a,prof));
   const forced=sel.find(r=>r.role==="L"&&byS.indexOf(r)<3);
   const ld=forced||byS[0];
+  // équipier par défaut : seuls le leader et un vrai sprinteur sortent du rang
   sel.forEach(r=>R[r.id]={ro:"EQ",or:"gc"});
   R[ld.id]={ro:"L",or:race[5]>1?"gc":"gagne"};
-  if(race[5]>1){
-    const spr=sel.filter(r=>r!==ld&&r.prof==="spr").sort((a,b)=>b.spr-a.spr)[0];
-    if(spr)R[spr.id]={ro:"SPR",or:"gc"};
-    const el=sel.filter(r=>r!==ld&&r!==spr&&byS.indexOf(r)>=3).sort((a,b)=>baseScore(b,"v")-baseScore(a,"v"))[0];
-    if(el)R[el.id]={ro:"EL",or:"echap"};
-  }else if(race[4]>=3&&byS[1]&&byS[1]!==ld&&byS[1].moy>=byS[0].moy-3){
-    R[byS[1].id]={ro:"EL",or:"gagne"}; // second couteau fort : carte à jouer
-  }
+  const spr=sel.filter(r=>r!==ld&&r.prof==="spr"&&r.spr>=80).sort((a,b)=>b.spr-a.spr)[0];
+  if(spr)R[spr.id]={ro:"SPR",or:"sprint"};
   return {roles:R,leader:ld};
 }
 const aiTactic=autoRoles;
@@ -894,7 +892,9 @@ function simStage(rs,playerMod){
     }
     const roleW=x=>{
       const ro=ctx.roles.get(x.r.id)||{ro:"EQ",or:"gc"};
-      let w=ro.ro==="EQ"?0.15:ro.ro==="SPR"?0.3:1;
+      let w=ro.ro==="EQ"?0.15
+        :ro.ro==="SPR"?((ro.or==="inter"&&(sp==="v"||sp==="m")&&(x.r.mon*0.4+x.r.pun*0.3+x.r.end*0.3)>=62)?3.5:0.3)
+        :1;
       if(ro.ro==="EL"||ro.ro==="L"){
         const o=ro.or;
         if(o==="echap")w=6;
@@ -949,14 +949,15 @@ function simStage(rs,playerMod){
   PTS_STAGE[sp].forEach((p,i)=>{if(surv[i])rs.st.get(surv[i].r).pts+=p});
   const nc=sp==="m"?3:sp==="v"?1:0;
   for(let c=0;c<nc;c++){
-    const climb=live.filter(r=>!rs.st.get(r).ab).map(r=>({r,w:r.mon*formOf(r,rs.race[1])*(0.5+U.r())})).sort((a,b)=>b.w-a.w);
+    const climb=live.filter(r=>!rs.st.get(r).ab).map(r=>({r,w:r.mon*formOf(r,rs.race[1])*(0.5+U.r())*(((ctx.roles.get(r.id)||{}).or==="pois")?1.6:1)})).sort((a,b)=>b.w-a.w);
     [10,8,6,4,2].forEach((p,i)=>{if(climb[i])rs.st.get(climb[i].r).kom+=p});
   }
   // sprint intermédiaire : à l'échappée si elle est assez fournie, sinon disputé
   // au peloton à la vitesse pure — c'est le vrai levier du maillot vert
   const brkRows=rows.filter(x=>x.brk&&!rs.st.get(x.r).ab);
+  const spSc=x=>{const ro=ctx.roles.get(x.r.id)||{};return baseScore(x.r,"p")*(ro.or==="inter"?1.35:1);};
   const interPool=brkRows.length>=4?brkRows
-    :brkRows.concat(surv.filter(x=>!x.brk).sort((a,b)=>baseScore(b.r,"p")-baseScore(a.r,"p")).slice(0,8));
+    :brkRows.concat(surv.filter(x=>!x.brk).sort((a,b)=>spSc(b)-spSc(a)).slice(0,8));
   PTS_INTER.forEach((p,i)=>{if(interPool[i])rs.st.get(interPool[i].r).pts+=p});
   if(brkRows.length&&(sp==="m"||sp==="v"))[8,5,3,2].forEach((p,i)=>{if(brkRows[i])rs.st.get(brkRows[i].r).kom+=p});
   rs.stageWins.push({st:rs.si+1,prof:sp,r:surv[0].r,brk:!!surv[0].brk});
@@ -1008,10 +1009,26 @@ function worldsEntries(race){
   });
   return entries;
 }
+/* Championnats nationaux : chrono + course en ligne, semaine 26, comme dans la
+   vraie vie juste avant le Tour. Quatorze nations seulement. */
+const NATIONALS={
+  BEL:["Belgique","c"],FRA:["France","v"],ITA:["Italie","v"],DEN:["Danemark","p"],
+  ESP:["Espagne","m"],GBR:["Grande-Bretagne","v"],NED:["Pays-Bas","p"],AUS:["Australie","v"],
+  SLO:["Slovénie","v"],USA:["États-Unis","v"],NOR:["Norvège","v"],GER:["Allemagne","p"],
+  COL:["Colombie","m"],SUI:["Suisse","m"]};
+const NAT_WEEK=26;
+function natRaces(){
+  const out=[];
+  Object.entries(NATIONALS).forEach(([code,[nom,prof]])=>{
+    out.push(["Championnat · "+nom+" — chrono",NAT_WEEK,"nat","t",2,1,code]);
+    out.push(["Championnat · "+nom+" — route",NAT_WEEK,"nat",prof,2,1,code]);
+  });
+  return out;
+}
 /* Invitations à une course */
 function invitedTeams(race){
   const out=[];
-  if(race[2]==="wc")return out; // sélections nationales : aucune équipe n'est conviée
+  if(race[2]==="wc"||race[2]==="nat")return out; // sélections nationales : aucune équipe n'est conviée
   if(race[2]==="gt"){
     const mask=race[0].includes("Giro")?1:race[0].includes("France")?2:4;
     TEAMS.forEach((t,i)=>{if(t[3]&mask)out.push(i)});
@@ -1154,8 +1171,11 @@ async function advance(){
   if(G.pending.length)return; // sélection en cours
   showVeil();
   await new Promise(rs=>setTimeout(rs,30));
-  const todo=racesStarting(G.week);
-  const mine=todo.filter(r=>invitedTeams(r).includes(G.me));
+  let todo=racesStarting(G.week);
+  if(G.week===NAT_WEEK)todo=todo.concat(natRaces());
+  const mine=todo.filter(r=>r[2]==="nat"
+    ?teamRiders(G.me).some(x=>x.nat===r[6]&&x.out===0)
+    :invitedTeams(r).includes(G.me));
   if(mine.length){
     // les classiques se décident d'abord : on n'y verrouille pas un flandrien
     // déjà engagé sur une course à étapes de la même semaine
@@ -1185,6 +1205,26 @@ function runWeek(list){
     cnt.forEach((c,ti)=>{if(c>1&&ti!==G.me)plans.set(ti,aiPlanWeek(ti,multiR.filter(r=>invitedTeams(r).includes(ti))));});
   }
   list.forEach(({race,player})=>{
+    if(race[2]==="nat"){
+      const nat=race[6],tt=race[3]==="t";
+      const chosen=player&&player.sel?player.sel:[];
+      const ids=new Set(chosen.map(r=>r.id));
+      let field=G.riders.filter(r=>r.t>=0&&r.t!==G.me&&!r.retired&&r.nat===nat&&r.out===0&&!ids.has(r.id));
+      field=field.sort((a,b)=>baseScore(b,race[3])*formOf(b,NAT_WEEK)-baseScore(a,race[3])*formOf(a,NAT_WEEK))
+        .slice(0,tt?15:40);
+      const sel=chosen.concat(field);
+      if(sel.length<4)return;
+      // chacun sa carte : pas de consignes d'équipe de marque aux championnats
+      const roles={};sel.forEach(r=>roles[r.id]={ro:"EL",or:"gagne"});
+      const entries=[{ti:-9,sel,leader:sel[0],roles}];
+      const res=simOneDay(race,entries,null,r=>r.id);
+      res.entries=entries;res.race=race;
+      applyResults(race,res);
+      if(res.rank[0]){res.rank[0].natC=G.year;res.rank[0].natCN=NATIONALS[nat][0]+(tt?" (chrono)":"");}
+      G.lastRes.push(res);
+      G.log.unshift({w:G.week,race,res});
+      return;
+    }
     if(race[2]==="wc"){ // championnats du monde : sélections nationales, pas de choix du joueur
       const entries=worldsEntries(race);
       if(entries.length){
@@ -1559,7 +1599,8 @@ function showRider(id){
   $("#pbox").innerHTML=`<h3 style="color:var(--acc)">${U.esc(r.n)} <span class="stat" style="font-weight:400">${r.nat} · ${G.year-r.an} ans</span></h3>
   <p style="margin:5px 0;display:flex;gap:6px;align-items:center;flex-wrap:wrap">${t?`<span class="lnk" data-tp="${r.t}">${jer(r.t)}${t[0]}</span>`:'<span class="stat">Sans équipe</span>'}
   <span class="tag ${PROFTAG[r.prof]}">${PROFN[r.prof]}</span> ${potTag(r)}
-  ${r.wc?`<span class="tag" style="background:linear-gradient(90deg,#4da3ff,#e30613,#1a1a1a,#ffd200,#1e8f4e);color:#fff;font-weight:700;text-shadow:0 1px 2px #0009">Champion du monde ${r.wc}</span>`:""}</p>
+  ${r.wc?`<span class="tag" style="background:linear-gradient(90deg,#4da3ff,#e30613,#1a1a1a,#ffd200,#1e8f4e);color:#fff;font-weight:700;text-shadow:0 1px 2px #0009">Champion du monde ${r.wc}</span>`:""}
+  ${r.natC?`<span class="tag" style="background:#2a3550;color:#cdd8ea;font-weight:700">Champion ${U.esc(r.natCN||"national")} ${r.natC}</span>`:""}</p>
   <p class="stat" style="margin:2px 0">Contrat ${Math.max(0,r.ctr)} an(s) · ${U.eur(r.sal||salary(r))}/an</p>
   ${hr}
   <div class="attr8">
@@ -1607,9 +1648,9 @@ function topBar(){
   const team=TEAMS[G.me],me=G.teams[G.me];
   const rk=G.teams.slice().sort((a,b)=>b.pts-a.pts).findIndex(x=>x.i===G.me)+1;
   t.innerHTML=`${jer(G.me)}<b class="tn">${team[0]}</b>
-  <span class="it">${G.year}·S<b>${Math.min(G.week,42)}</b></span>
-  <span class="it"><b>${Math.round(me.pts)}</b> pts (${rk}ᵉ)</span>
-  <span class="it">V <b>${me.wins}</b></span>
+  <span class="it"><b>S${Math.min(G.week,42)}</b> · ${G.year}</span>
+  <span class="it"><b>${rk}ᵉ</b> · ${Math.round(me.pts)} pts</span>
+  <span class="it"><b>${me.wins}</b> vict.</span>
   <span class="it"><b class="${me.cash<0?"ko":""}">${U.eur(me.cash)}</b></span>
   <button id="gset" style="margin-left:auto;background:none;border:none;color:var(--dim);font-size:1.05rem;cursor:pointer;padding:2px 6px">⚙</button>`;
   const gs=document.getElementById("gset");if(gs)gs.onclick=openSettings;
@@ -2021,17 +2062,20 @@ function vFin(){
 }
 
 /* --- Rôles : composants partagés --- */
-const ROLLM=["L","EQ","SPR","EL"],ROLL1=["L","EQ","EL"];
+/* Équipier = défaut implicite : on ne coche que ce qui sort du rang.
+   L joue sa carte (GC ou la gagne), SPR les sprints (option : sprints
+   intermédiaires), EL est un leader bis sur une étape (options : échappée, pois). */
+const ROLLM=["L","SPR","EL"],ROLL1=["L","EL"];
 const ROLN={L:"L",EQ:"ÉQ",SPR:"SPR",EL:"EL"};
-const ORIS={L:["gc","echap","pois","vert"],EL:["gagne","echap","pois","vert"]};
-const ORIS1={L:null,EL:["gagne","echap"]};
-const ORIN={gc:"GC",gagne:"Gagne",echap:"Échap",pois:"Pois",vert:"Vert"};
+const ORIS={L:["gc","echap","pois"],EL:["echap","pois"],SPR:["inter"]};
+const ORIS1={L:null,EL:["echap"],SPR:null};
+const ORIN={gc:"GC",gagne:"Gagne",echap:"Échap",pois:"Pois",inter:"Sprints interm."};
 function rolesHtml(sel,roles,oneday,dead){
   return sel.map(r=>{
     const st=roles[r.id]||(roles[r.id]={ro:"EQ",or:"gc"});
     const ab=dead&&dead.has(r.id);
     const list=oneday?ROLL1:ROLLM;
-    const oris=ab?null:(oneday?ORIS1[st.ro]:ORIS[st.ro]);
+    const oris=ab||st.ro==="EQ"?null:(oneday?ORIS1[st.ro]:ORIS[st.ro]);
     return `<div style="padding:5px 0;border-bottom:1px solid var(--panel2)${ab?";opacity:.35":""}">
     <div style="display:flex;gap:5px;align-items:center;min-width:0">
     <span class="lnk" data-rp="${r.id}" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem">${U.esc(r.n)}${ab?" ✕":""}</span>
@@ -2046,13 +2090,15 @@ function rolesHtml(sel,roles,oneday,dead){
 function bindRoles(roles,rerender){
   document.querySelectorAll("[data-ro]").forEach(c=>c.onclick=()=>{
     const [id,k]=c.dataset.ro.split("|");
+    if(roles[+id]&&roles[+id].ro===k){roles[+id]={ro:"EQ",or:"gc"};rerender();return;} // décocher = équipier
     if(k==="L")Object.keys(roles).forEach(i2=>{if(roles[i2].ro==="L")roles[i2]={ro:"EQ",or:"gc"};});
-    roles[+id]={ro:k,or:k==="EL"?"echap":"gc"};
+    roles[+id]={ro:k,or:k==="EL"?"gagne":k==="SPR"?"sprint":"gc"};
     rerender();
   });
   document.querySelectorAll("[data-or]").forEach(c=>c.onclick=()=>{
     const [id,o]=c.dataset.or.split("|");
-    roles[+id].or=o;
+    const def=roles[+id].ro==="EL"?"gagne":roles[+id].ro==="SPR"?"sprint":"gc";
+    roles[+id].or=roles[+id].or===o?def:o;
     rerender();
   });
 }
@@ -2088,9 +2134,10 @@ function renderSelect(){
     if(multi||x.race[5]>1)x.entry.sel.forEach(r=>already.add(r.id));
   });
   const elig=r=>r.out===0&&!already.has(r.id)&&(!multi||!r.racedThisWeek);
-  const pool=teamRiders(G.me);
+  const pool=teamRiders(G.me).filter(r=>race[2]!=="nat"||r.nat===race[6]);
   const eligN=pool.filter(elig).length;
-  const n=Math.min(race[2]==="gt"?8:7,Math.max(4,eligN));
+  const capN=race[2]==="nat"?(race[3]==="t"?3:9):(race[2]==="gt"?8:7);
+  const n=Math.min(capN,Math.max(race[2]==="nat"?1:4,eligN));
   const mand=race[2]==="gt"&&eligN>=4;
   const autoPick=wF=>{
     // priorité 1 : la course est dans un bloc de forme du coureur ; 2 : l'affinité
@@ -2129,7 +2176,7 @@ function renderSelect(){
   <button class="btn sec sm" id="autoF">Auto forme</button>
   <button class="btn sec sm" id="clr">Vider</button>
   <span class="pill">Sélection : <b>${buf.ids.size}</b>/${n}</span></div>
-  <div><table class="seltab"><thead><tr><th>✓</th>${(()=>{const ar=k=>buf.sort===k?(buf.sdir>0?" ▼":" ▲"):"";const th=(k,l)=>`<th class="srt ${buf.sort===k?"on":""}" data-st="${k}">${l}${ar(k)}</th>`;return th("nom","Coureur")+th("spec","Spé")+th("adeq","ADQ")+th("forme","Forme")+th("fatigue","Fat")+th("jours","J")+th("pic","Pic");})()}</tr></thead><tbody>
+  <div><table class="seltab"><thead><tr><th>✓</th>${(()=>{const th=(k,l)=>`<th class="srt ${buf.sort===k?"on "+(buf.sdir>0?"dn":"up"):""}" data-st="${k}">${l}</th>`;return th("nom","Coureur")+th("spec","Spé")+th("adeq","ADQ")+th("forme","Forme")+th("fatigue","Fat")+th("jours","J")+th("pic","Pic");})()}</tr></thead><tbody>
   ${(()=>{return rs.map(r=>{
     const dis=!elig(r);
     const on=buf.ids.has(r.id);
@@ -2171,7 +2218,8 @@ function renderSelect(){
     renderSelect();
   });
   $("#go").onclick=()=>{
-    if(buf.ids.size!==n){notice(`Sélection incomplète : ${buf.ids.size}/${n}.`);return;}
+    const okN=race[2]==="nat"?(buf.ids.size>=1&&buf.ids.size<=n):(buf.ids.size===n);
+    if(!okN){notice(race[2]==="nat"?`Entre 1 et ${n} coureur(s).`:`Sélection incomplète : ${buf.ids.size}/${n}.`);return;}
     const sel=[...buf.ids].map(i=>rid(i));
     const ar=autoRoles(sel,race);
     p.entry={sel,roles:ar.roles,leader:ar.leader};
@@ -2199,10 +2247,10 @@ function renderRolesPre(p){
   app().innerHTML=`<div class="card"><h3>Rôles : ${race[0]}</h3>
   <p class="stat">L soutenu par les ÉQ${multi?", SPR pour les sprints massifs":""}, EL électron libre. Un seul leader.</p>
   <div>${rolesHtml(p.entry.sel,roles,!multi,null)}</div>
-  <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-  <button class="btn sec" id="rback">◂ Sélection</button>
-  <button class="btn" id="rgo">${multi?"Simulation en bloc ▸":"Simuler ▸"}</button>
-  <button class="btn" id="rlive" style="background:var(--info);color:#fff">${multi?"Étape par étape ▸":"Jouer la course ▸"}</button>
+  <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:nowrap">
+  <button class="btn sec" id="rback" style="flex:1;min-width:0;padding:10px 4px">◂ Retour</button>
+  <button class="btn" id="rgo" style="flex:1;min-width:0;padding:10px 4px">Simuler ▸</button>
+  <button class="btn" id="rlive" style="flex:1;min-width:0;padding:10px 4px;background:var(--info);color:#fff">Jouer ▸</button>
   </div></div>`;
   bindRoles(roles,()=>renderRolesPre(p));
   $("#rback").onclick=()=>{p.stage=null;p.entry=null;render();};
@@ -2850,7 +2898,8 @@ window.TestAPI={
   autoSeason(){ // joue la saison entière, sélections auto pour le joueur
     let guard=0;
     while(G.week<=42&&guard++<400){
-      const todo=racesStarting(G.week);
+      let todo=racesStarting(G.week);
+      if(G.week===NAT_WEEK)todo=todo.concat(natRaces());
       const list=todo.map(race=>{
         if(!invitedTeams(race).includes(G.me))return {race,player:null};
         const n=race[2]==="gt"?8:7;
@@ -2864,7 +2913,7 @@ window.TestAPI={
   }
 };
 function runWeekSync(list){const t=G.tab;runWeek(list);G.tab=t;}
-function advanceSync(){const todo=racesStarting(G.week);runWeekSync(todo.map(r=>({race:r,player:null})));}
+function advanceSync(){let todo=racesStarting(G.week);if(G.week===NAT_WEEK)todo=todo.concat(natRaces());runWeekSync(todo.map(r=>({race:r,player:null})));}
 
 /* ================= DÉMARRAGE ================= */
 render();
