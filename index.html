@@ -468,6 +468,9 @@ function init(teamIdx,slot){
     const r=newRider(b,ti);G.riders.push(r);
   }));
   G.riders.forEach((r,i)=>{r.id=i;r.sal=salary(r);});
+  // le sponsor couvre toujours la masse existante : budget plancher à 2,2x la masse
+  G.teams.forEach(t=>{const m=teamRiders(t.i).reduce((s,r)=>s+r.sal,0);
+    if(t.budget<m*2.2){t.budget=Math.ceil(m*2.2/1e5)*1e5;t.cash=t.budget*0.25;}});
   // Transferts déjà signés : contrat prolongé jusqu'à la prise d'effet, sinon le mercato
   // enverrait le coureur ailleurs avant que le transfert réel ne s'applique.
   TRANSFERTS.forEach(([key,from,,an])=>{
@@ -481,7 +484,9 @@ function init(teamIdx,slot){
   TEAMS.forEach((t,i)=>teamPeaks(i));
 }
 const teamRiders=ti=>G.riders.filter(r=>r.t===ti&&!r.retired);
-const salary=r=>Math.max(100000,Math.round((25000*Math.max(0,r.moy-50)+(r.moy>72?Math.pow(r.moy-72,2.7)*1280:0))/1000)*1000);
+/* Recalibrée sur les effectifs réels 2026 : les 34 équipes tiennent sous leur
+   plafond salarial (50% du budget), petites ProTeams comprises. */
+const salary=r=>Math.max(70000,Math.round((4200*Math.pow(Math.max(0,r.moy-48),1.28)+(r.moy>76?Math.pow(r.moy-76,3.7)*250:0))/1000)*1000);
 const masse=ti=>teamRiders(ti).reduce((s,r)=>s+(r.sal||salary(r)),0);
 /* Tailles d'effectif, calées sur les effectifs réels 2026 :
    WorldTeams — médiane 30, moyenne 29,9 (18 équipes, de 28 à 32)
@@ -1257,10 +1262,11 @@ function endSeason(){
   G.history.push({year:G.year,rank:meRank,pts:G.teams[G.me].pts,wins:G.teams[G.me].wins,best:meBest?meBest.n:"—"});
   // écrêtage trésorerie : surplus réinvesti par le sponsor, déficit partiellement épongé
   G.teams.forEach(t=>{t.cash=U.cl(t.cash,-8e6,t.budget*0.6);});
-  // budget suivant selon classement
+  // budget suivant : ajustement à la marge selon le classement (±5% environ) ;
+  // les mouvements significatifs viennent de la promotion et de la relégation
   G.teams.forEach(t=>{
     const rk=rankT.findIndex(x=>x.i===t.i);
-    const f=1.14-rk*0.011;
+    const f=1+(16.5-rk)*0.003;
     t.budget=U.cl(t.budget*f,4e6,72e6);
   });
   // promotion / relégation : dernier WorldTeam ↔ meilleure ProTeam
@@ -1272,8 +1278,9 @@ function endSeason(){
     const nat=TEAMS[down][1];
     TEAMS[down][3]=nat==="ITA"?1:nat==="FRA"?2:4; // le relégué garde son grand tour national
     TEAMS[up][3]=7;
-    G.teams[down].budget=U.cl(G.teams[down].budget*0.85,4e6,72e6);
-    G.teams[up].budget=U.cl(G.teams[up].budget*1.12,4e6,72e6);
+    // montée en WorldTour : le sponsor suit (+25%) ; descente : coupe franche (-20%)
+    G.teams[down].budget=U.cl(G.teams[down].budget*0.80,4e6,72e6);
+    G.teams[up].budget=U.cl(G.teams[up].budget*1.25,4e6,72e6);
     G.promo={down,up};
   }
   // progression / vieillissement
@@ -1417,8 +1424,7 @@ function resolveMarket(){
       bids.push({ti:G.me,amt:my});myOk=true;}
     G.teams.forEach(t=>{
       if(t.i===G.me)return;
-      const target=TEAMS[t.i][2]===0?26:22;
-      if(teamRiders(t.i).length>=target+2)return;
+      if(teamRiders(t.i).length>=squadTarget(t.i))return;
       if(room(t)<ask)return;
       const want=U.cl((r.moy-62)/30,0.08,0.85);
       if(U.r()<want)bids.push({ti:t.i,amt:Math.round(ask*(0.95+U.r()*0.3))});
@@ -1446,7 +1452,8 @@ function restockTeams(){
     const cible=t.i===G.me?SQUAD_MIN:Math.min(squadTarget(t.i),maxSquad(t.i));
     let need=cible-teamRiders(t.i).length;
     while(need-->0){
-      const r=libres.length?libres.shift():genNeo();
+      // on laisse un reliquat d'agents libres : le marché en cours de saison doit vivre
+      const r=libres.length>25?libres.shift():genNeo();
       r.t=t.i;r.sal=askSalary(r);r.ctr=1+Math.floor(U.r()*3);r.free=0;
       if(r.p1<0||r.p2<0)autoPeaks(r);
     }
@@ -1489,6 +1496,9 @@ function newSeason(){
   reindex();
   TEAMS.forEach((t,i)=>teamPeaks(i));
   G.teams.forEach(t=>{t.pts=0;t.wins=0;t.cash=Math.max(t.cash,t.budget*0.12);});
+  // même plancher sponsor à chaque intersaison : les renouvellements ne noient personne
+  G.teams.forEach(t=>{const m=masse(t.i);
+    if(t.budget<m*2.1)t.budget=Math.ceil(m*2.1/1e5)*1e5;});
   G.log=[];G.logC=[];G.phase="peaks";G.tab="home";G.progInit=false;
   render();saveGame();
 }
